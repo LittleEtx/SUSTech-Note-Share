@@ -9,6 +9,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name", defaultValue = "CS304") String name) {
+        System.out.println("check");
         return String.format("Hello %s!", name);
     }
 }

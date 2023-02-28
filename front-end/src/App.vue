@@ -1,19 +1,38 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import TheWelcome from './components/TheWelcome.vue'</script>
+
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      msg: "Hello!"
+    }
+  },
+  mounted() {
+    axios.get('/api/hello')
+        .then(res => {
+          console.log(res)
+          this.msg = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+  }
+}
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
+    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125"/>
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld :msg="msg"/>
     </div>
   </header>
-
   <main>
-    <TheWelcome />
+    <TheWelcome/>
   </main>
 </template>
 
