@@ -3,9 +3,16 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
+<<<<<<< HEAD
     url: jdbc:mysql://localhost:3306/SUSTechNote?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
+=======
+#    url: jdbc:mysql://localhost:3306/SUSTechNote?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/SUSTechNote?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: admin
+>>>>>>> 35a6721f2c0413d67909e5604e9c1cc2fe683de2
   jpa:
     hibernate:
       ddl-auto: update
