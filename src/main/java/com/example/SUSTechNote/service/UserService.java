@@ -18,4 +18,6 @@ public interface UserService {
     public int deleteUser(Integer userID);
 
     public List<User> findAllUser();
+
+    public User findUserById(Integer userID);
 }
