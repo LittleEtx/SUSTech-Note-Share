@@ -16,3 +16,31 @@ spring:
         hibernate:
           temp:
             use_jdbc_metadata_defaults: false
+  mail:
+    host: smtp.sustech.edu.cn
+    port: 465
+    username: 12011118@mail.sustech.edu.cn
+    password: CHen20020825
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+        #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
+        debug: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      jedis:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 200
+      password:
+      database: 0
+
+
+
+
