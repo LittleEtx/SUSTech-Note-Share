@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(Integer userID){
+    public User findUserById(int userID){
         return userRepository.findUserByUserID(userID);
     }
 
@@ -89,7 +89,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public  int resetPassword(boolean ){
-            token = StpUtil.
+    public  int resetPassword( ){
+        return 0;
+    }
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 }

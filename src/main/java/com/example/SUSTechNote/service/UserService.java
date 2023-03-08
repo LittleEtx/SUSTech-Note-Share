@@ -20,9 +20,10 @@ public interface UserService {
 
     public List<User> findAllUser();
 
-    public User findUserById(Integer userID);
-
     public int logout();
 
-    public int resetPassword(String token);
+    public int resetPassword();
+    public User findUserById(int userID);
+
+    public User findUserByEmail(String email);
 }
