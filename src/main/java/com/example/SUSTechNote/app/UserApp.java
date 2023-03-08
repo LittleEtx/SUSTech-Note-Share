@@ -2,6 +2,7 @@ package com.example.SUSTechNote.app;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.temp.SaTempUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.MailService;
@@ -121,12 +122,31 @@ public class UserApp {
     @PostMapping("reset-password/verify-email")
     public String verifyEmail(@RequestBody JSONObject jsonObject) {
         String email = jsonObject.getString("email");
+
         String verificationCode = jsonObject.getString("verificationCode");
         if (verificationCode.equals(redisService.getString(email))) {
-            return "success";
+            String token = SaTempUtil.createToken(email,900);
+            return token;
         } else {
             return "fail";
         }
+    }
+    @PostMapping("reset-password/reset-password")
+    public String resetPassword(String token, String password){
+        if (SaTempUtil.getTimeout(token) > 0){
+            String emailValue = SaTempUtil.parseToken(token,String.class);
+            User user = userService.findUserByEmail(emailValue);
+            if (password.equals(user.getPassword())){
+                return "密码与原密码相同，修改失败";
+            }
+            if(password.length() <= 6){
+                return "密码过短，修改失败";
+            }
+            user.setPassword(password);
+            userService.updateUser(user);
+            return "密码修改成功";
+        }
+        return "token已过期，修改失败";
     }
 
     @PostMapping("/updateUser")
