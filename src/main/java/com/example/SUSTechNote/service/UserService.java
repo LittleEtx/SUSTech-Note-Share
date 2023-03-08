@@ -19,5 +19,7 @@ public interface UserService {
 
     public List<User> findAllUser();
 
-    public User findUserById(Integer userID);
+    public User findUserById(int userID);
+
+    public User findUserByEmail(String email);
 }

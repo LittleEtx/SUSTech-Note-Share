@@ -39,19 +39,38 @@ public class UserApp {
 //        return "登录失败";
 //    }
 
-    @PostMapping("/login")
-    public int login(@RequestBody JSONObject jsonpObject) {
-        int userID = Integer.parseInt(jsonpObject.getString("userID"));
-        String password = jsonpObject.getString("password");
+    @PostMapping("/login/password-login")
+    public int login(@RequestBody JSONObject jsonObject) {
+        int userID = Integer.parseInt(jsonObject.getString("userID"));
+        String password = jsonObject.getString("password");
         if (userService.login(userID,password) == 1){
             StpUtil.login(userID);
         }
         return userService.login(userID,password);
     }
 
+    @PostMapping("login/email-code-login")
+    public int loginWithEmail(@RequestBody JSONObject jsonObject) {
+        String email = jsonObject.getString("email");
+        int userID = Integer.parseInt(email.substring(0, 9));
+        String verificationCode = jsonObject.getString("verificationCode");
+        String rememberMe =  jsonObject.getString("rememberMe");
+        if (verificationCode.equals(redisService.getString(email))) {
+            StpUtil.login(userID);
+            if (userService.findUserById(userID) == null) {
+                userService.register(userID, "", email, "SUSTecher");
+            }
+            if (rememberMe.equals("1")) {
+                StpUtil.renewTimeout(604800);
+            }
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     @PostMapping("/sendEmailCode")
     public String sendEmailCode(@RequestBody JSONObject jsonObject) {
-        // read properties
         String from = "12011118@mail.sustech.edu.cn";
         String to = jsonObject.getString("email");
         if (!to.endsWith("@mail.sustech.edu.cn") && !to.endsWith("@sustech.edu.cn")) {
@@ -81,6 +100,27 @@ public class UserApp {
             return userService.register(userID, password, email, userName);
         } else {
             return 0;
+        }
+    }
+
+    @PostMapping("reset-password/confirm-email")
+    public String confirmEmail(@RequestBody JSONObject jsonObject) {
+        String email = jsonObject.getString("email");
+        if (userService.findUserByEmail(email) == null) {
+            return "邮箱未注册";
+        } else {
+            return sendEmailCode(jsonObject);
+        }
+    }
+
+    @PostMapping("reset-password/verify-email")
+    public String verifyEmail(@RequestBody JSONObject jsonObject) {
+        String email = jsonObject.getString("email");
+        String verificationCode = jsonObject.getString("verificationCode");
+        if (verificationCode.equals(redisService.getString(email))) {
+            return "success";
+        } else {
+            return "fail";
         }
     }
 

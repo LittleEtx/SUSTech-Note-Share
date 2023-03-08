@@ -41,7 +41,6 @@
 		</dependency>
 
 		<dependency>
-
 			<groupId>cn.dev33</groupId>
 			<artifactId>sa-token-spring-boot3-starter</artifactId>
 			<version>1.34.0</version>
