@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.service;
 
+import com.example.SUSTechNote.config.SaTokenConfigure;
 import com.example.SUSTechNote.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +21,8 @@ public interface UserService {
     public List<User> findAllUser();
 
     public User findUserById(Integer userID);
+
+    public int logout();
+
+    public int resetPassword(String token);
 }

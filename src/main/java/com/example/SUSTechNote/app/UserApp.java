@@ -40,12 +40,16 @@ public class UserApp {
 //    }
 
     @PostMapping("/login")
-    public int login(@RequestBody JSONObject jsonpObject) {
-        int userID = Integer.parseInt(jsonpObject.getString("userID"));
-        String password = jsonpObject.getString("password");
+    public int login(@RequestBody JSONObject jsonObject) {
+        int userID = Integer.parseInt(jsonObject.getString("userID"));
+        String password = jsonObject.getString("password");
         if (userService.login(userID,password) == 1){
             StpUtil.login(userID);
+            if (jsonObject.getInteger("remeberMe") == 1){
+                StpUtil.renewTimeout(604800);
+            }
         }
+        System.out.println(StpUtil.getTokenTimeout());
         return userService.login(userID,password);
     }
 
@@ -105,6 +109,11 @@ public class UserApp {
     @GetMapping("/findAllUser")
     public List<User> findAll() {
         return userService.findAllUser();
+    }
+
+    @PostMapping("logout")
+    public int logout(){
+        return userService.logout();
     }
 
     @GetMapping("/test")

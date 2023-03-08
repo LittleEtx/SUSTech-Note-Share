@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.service.Impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.example.SUSTechNote.api.UserRepository;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.UserService;
@@ -79,5 +80,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserById(Integer userID){
         return userRepository.findUserByUserID(userID);
+    }
+
+    @Override
+    public int logout(){
+        StpUtil.logout();
+        return 1;
+    }
+
+    @Override
+    public  int resetPassword(boolean ){
+            token = StpUtil.
     }
 }
