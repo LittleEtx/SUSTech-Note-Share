@@ -133,7 +133,7 @@
     <orderEntry type="library" name="Maven: cn.hutool:hutool-json:5.8.9" level="project" />
     <orderEntry type="library" name="Maven: cn.hutool:hutool-core:5.8.9" level="project" />
     <orderEntry type="library" name="Maven: cn.hutool:hutool-crypto:5.8.9" level="project" />
-    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.46" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.67_noneautotype2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-redis:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-redis:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-keyvalue:3.0.1" level="project" />
