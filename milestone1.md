@@ -1,15 +1,14 @@
 # [CS307] Milestone 1 Report
 
-Project Team Number: 117
+Project Team ID: 117
 
 Project Name: SUSTech Note Share
 
 Project Member: 陈孙兵，黄宇海，杨子德，李田，徐立达
 
-## Revision Version
+## Revision History
 
-| Date | Revision Version | Description | Author |
-|------|------------------|-------------|--------|
+![milestone1-revision-history.jpg](markdown-resources/milestone1/milestone1-revision-history.jpg)
 
 ## 1. Overview
 
@@ -129,7 +128,7 @@ including the login registration function, the view history access record functi
 the class schedule import function, and the note recording function.
 The note recording can upload pictures, and the notes can be sorted, merged, and exported.
 
-We will put our documentation and test suits on API management system.
+We will put our documentation and test suits on API management system [eolink](https://www.eolink.com).
 
 ### 3.2 Milestone 3 Deliverable
 
