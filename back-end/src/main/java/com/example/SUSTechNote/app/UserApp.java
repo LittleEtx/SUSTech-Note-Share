@@ -26,28 +26,31 @@ public class UserApp {
     @Autowired
     private MailService mailService;
 
-//    @PostMapping ("doLogin")
-//    public String doLogin(@RequestBody JSONObject jsonpObject) {
-//        String username = jsonpObject.getString("username");
-//        String password = jsonpObject.getString("password");
-//        // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
-//        if("zhang".equals(username) && "123456".equals(password)) {
-//            StpUtil.login(10001);
-//            System.out.println();
-//            System.out.println(StpUtil.getPermissionList());
-//            return "登录成功";
-//        }
-//        return "登录失败";
-//    }
+    @PostMapping ("doLogin")
+    public String doLogin(@RequestBody JSONObject jsonpObject) {
+        String username = jsonpObject.getString("username");
+        String password = jsonpObject.getString("password");
+        // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
+        if("zhang".equals(username) && "123456".equals(password)) {
+            StpUtil.login(10001);
+            System.out.println();
+            System.out.println(StpUtil.getPermissionList());
+            return "登录成功";
+        }
+        return "登录失败";
+    }
 
 
     @PostMapping("/login/password-login")
     public int login(@RequestBody JSONObject jsonObject) {
-        int userID = Integer.parseInt(jsonObject.getString("userID"));
+        String email = jsonObject.getString("email");
         String password = jsonObject.getString("password");
+        String rememberMe =  jsonObject.getString("rememberMe");
+        int userID = Integer.parseInt(email.substring(0, 8));
         if (userService.login(userID,password) == 1){
             StpUtil.login(userID);
-            if (jsonObject.getInteger("remeberMe") == 1){
+            System.out.println(StpUtil.getTokenInfo());
+            if (rememberMe.equals("1")){
                 StpUtil.renewTimeout(604800);
             }
         }
@@ -58,7 +61,7 @@ public class UserApp {
     @PostMapping("login/email-code-login")
     public int loginWithEmail(@RequestBody JSONObject jsonObject) {
         String email = jsonObject.getString("email");
-        int userID = Integer.parseInt(email.substring(0, 9));
+        int userID = Integer.parseInt(email.substring(0, 8));
         String verificationCode = jsonObject.getString("verificationCode");
         String rememberMe =  jsonObject.getString("rememberMe");
         if (verificationCode.equals(redisService.getString(email))) {
@@ -132,7 +135,9 @@ public class UserApp {
         }
     }
     @PostMapping("reset-password/reset-password")
-    public String resetPassword(String token, String password){
+    public String resetPassword(@RequestBody JSONObject jsonObject){
+        String token = jsonObject.getString("token");
+        String password = jsonObject.getString("password");
         if (SaTempUtil.getTimeout(token) > 0){
             String emailValue = SaTempUtil.parseToken(token,String.class);
             User user = userService.findUserByEmail(emailValue);

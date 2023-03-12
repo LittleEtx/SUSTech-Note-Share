@@ -2,29 +2,14 @@ server:
   port: 8088
   servlet:
     context-path: /api
+
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/SUSTechNote?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: admin
-  jpa:
-    hibernate:
-      ddl-auto: update
 
-  mail:
-    host: smtp.sustech.edu.cn
-    port: 465
-    username: 12011118@mail.sustech.edu.cn
-    password: CHen20020825
-    default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
-        #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
-        debug: true
   data:
     redis:
       host: localhost
@@ -36,21 +21,4 @@ spring:
           max-idle: 200
       password:
       database: 0
-############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
-sa-token:
-  # token名称 (同时也是cookie名称)
-  token-name: satoken
-  # token有效期，单位s 默认30天, -1代表永不过期
-  timeout: 3600
-  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
-  activity-timeout: -1
-  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
-  is-concurrent: true
-  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
-  is-share: true
-  # token风格
-  token-style: uuid
-  # 是否输出操作日志
-  is-log: false
-  jwt-secret-key: jsaldjasjfojfkwemw
 
