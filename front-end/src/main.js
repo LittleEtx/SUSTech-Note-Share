@@ -6,10 +6,10 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import './assets/globle.css'
-import axios from 'axios'
+// import axios from 'axios'
 
-axios.defaults.withCredentials = true
-axios.defaults.baseURL = '/api'
+// axios.defaults.withCredentials = true
+// axios.defaults.baseURL = '/api'
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 

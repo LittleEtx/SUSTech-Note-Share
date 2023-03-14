@@ -21,8 +21,8 @@
           <el-col :span="10">
             <el-form-item prop="region" style="margin-left: -80px">
               <el-select v-model="emailLogForm.region" placeholder="请选择邮箱后缀">
-                <el-option label="mail.SUSTech.edu.cn" value="mail.SUSTech.edu.cn"></el-option>
-                <el-option label="SUSTech.edu.cn" value="SUSTech.edu.cn"></el-option>
+                <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
+                <el-option label="SUSTech.edu.cn" value="sustech.edu.cn"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -112,7 +112,7 @@ export default {
     next (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const url = 'http://10.26.118.25:8088/api/auth/reset-password/verify-email'
+          const url = 'http://10.26.225.40:8088/api/auth/reset-password/verify-email'
           axios.post(url, {
             email: this.emailLogForm.ID + '@' + this.emailLogForm.region,
             verificationCode: this.emailLogForm.emailCode
@@ -134,12 +134,17 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.changePwd.pwd === this.changePwd.pwd1) {
-            const url = 'http://10.26.118.25:8088/api/auth/reset-password/reset-password'
+            const url = 'http://10.26.225.40:8088/api/auth/reset-password/reset-password'
+            console.log(this.token)
             axios.post(url, {
-              email: this.emailLogForm.ID + '@' + this.emailLogForm.region,
-              newPwd: this.changePwd.pwd
+              token: this.token,
+              password: this.changePwd.pwd
             }).then((res) => {
-              this.active++
+              if (res.data === '密码修改成功') {
+                this.active++
+              } else {
+                this.$message.error(res.data)
+              }
             })
           } else {
             this.$alert('密码输入不一致，请重新输入密码！', '', {
@@ -166,14 +171,15 @@ export default {
       }, 1000)
     },
     getEmailValidateCode () {
-      this.tackBtn()
-      const url = 'ttp://10.26.118.25:8088/api/auth/reset-password/confirm-email'
+      const url = 'http://10.26.225.40:8088/api/auth/reset-password/confirm-email'
       axios.post(url, {
         email: this.emailLogForm.ID + '@' + this.emailLogForm.region
       }).then((res) => {
         console.log(res.data)
-        if (res.data === '邮箱为未注册') {
+        if (res.data === '邮箱未注册') {
           this.$message.error('该邮箱未注册')
+        } else {
+          this.tackBtn()
         }
       })
     },

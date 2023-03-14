@@ -17,8 +17,8 @@
           <el-col :span="10">
             <el-form-item prop="region" style="margin-left: -80px">
               <el-select v-model="pwdLogForm.region" placeholder="请选择邮箱后缀">
-                <el-option label="mail.SUSTech.edu.cn" value="mail.SUSTech.edu.cn"></el-option>
-                <el-option label="SUSTech.edu.cn" value="SUSTech.edu.cn"></el-option>
+                <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
+                <el-option label="SUSTech.edu.cn" value="sustech.edu.cn"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -144,7 +144,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const url = 'http://10.12.110.180:8088/api/auth/login/password-login'
+          const url = 'http://10.26.225.40:8088/api/auth/login/password-login'
           if (this.checked || this.checked1) {
             this.rememberMe = 1
           } else {
@@ -171,7 +171,7 @@ export default {
     submitForm1 (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const url = 'http://10.12.110.180:8088/api/auth/login/email-code-login'
+          const url = 'http://10.26.225.40:8088/api/auth/login/email-code-login'
           if (this.checked || this.checked1) {
             this.rememberMe = 1
           } else {
@@ -218,7 +218,7 @@ export default {
     },
     getEmailValidateCode () {
       this.tackBtn()
-      const url = 'http://10.12.110.180:8088/api/auth/sendEmailCode'
+      const url = 'http://10.26.225.40:8088/api/auth/sendEmailCode'
       axios.post(url, {
         email: this.emailLogForm.ID + '@' + this.emailLogForm.region
       }).then((res) => {
