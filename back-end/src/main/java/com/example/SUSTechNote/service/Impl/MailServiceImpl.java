@@ -1,6 +1,7 @@
 package com.example.SUSTechNote.service.Impl;
 
 import com.example.SUSTechNote.service.MailService;
+import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -21,7 +22,7 @@ public class MailServiceImpl implements MailService {
      * JavaMailSender是Spring Boot在MailSenderPropertiesConfiguration 类中配直好的，该类在 Mail
      * 自动配置类 MailSenderAutoConfiguration 中导入 因此这里注入 JavaMailSender 就可以使用了
      */
-    @Autowired
+    @Resource
     private JavaMailSender mailSender;
 
 
