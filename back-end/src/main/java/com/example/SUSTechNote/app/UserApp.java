@@ -80,7 +80,7 @@ public class UserApp {
 
     @PostMapping("/sendEmailCode")
     public String sendEmailCode(@RequestBody JSONObject jsonObject) {
-        String from = "12011118@mail.sustech.edu.cn";
+        String from = "392546005@qq.com";
         String to = jsonObject.getString("email");
         if (!to.endsWith("@mail.sustech.edu.cn") && !to.endsWith("@sustech.edu.cn")) {
             return "The mailbox format is incorrect";

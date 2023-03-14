@@ -12,23 +12,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-  mail:
-#    host: smtp.sustech.edu.cn
-#    port: 465
-#    username: 12011118@mail.sustech.edu.cn
-#    password: CHen20020825
-    host: smtp.qq.com
-    port: 465
-    username: 392546005@qq.com
-    password: gbmopzaxunsqbijh
-    default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
-        #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
-        debug: true
   data:
     redis:
       host: localhost
@@ -40,4 +23,3 @@ spring:
           max-idle: 200
       password:
       database: 0
-

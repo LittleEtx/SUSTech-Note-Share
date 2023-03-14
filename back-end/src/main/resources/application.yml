@@ -4,12 +4,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
   mail:
     host: smtp.qq.com
     port: 465
-    username: 690882194@qq.com
-    password: xu20021120/
+    username: 392546005@qq.com
+    password: gbmopzaxunsqbijh
     default-encoding: UTF-8
     properties:
       mail:
