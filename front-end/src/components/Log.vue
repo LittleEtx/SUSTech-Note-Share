@@ -144,7 +144,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const url = 'http://10.12.110.180:8088/api/auth/login/password-login'
+          const url = '/api/auth/login/password-login'
           if (this.checked || this.checked1) {
             this.rememberMe = 1
           } else {
@@ -171,7 +171,7 @@ export default {
     submitForm1 (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const url = 'http://10.12.110.180:8088/api/auth/login/email-code-login'
+          const url = '/api/auth/login/email-code-login'
           if (this.checked || this.checked1) {
             this.rememberMe = 1
           } else {
@@ -218,7 +218,7 @@ export default {
     },
     getEmailValidateCode () {
       this.tackBtn()
-      const url = 'http://10.12.110.180:8088/api/auth/sendEmailCode'
+      const url = '/api/auth/sendEmailCode'
       axios.post(url, {
         email: this.emailLogForm.ID + '@' + this.emailLogForm.region
       }).then((res) => {

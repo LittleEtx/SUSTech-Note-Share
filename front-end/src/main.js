@@ -8,8 +8,9 @@ import router from './router'
 import './assets/globle.css'
 import axios from 'axios'
 
-axios.defaults.withCredentials = true
-axios.defaults.baseURL = '/api'
+Vue.prototype.$http = axios
+Vue.prototype.$axios = axios
+
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 

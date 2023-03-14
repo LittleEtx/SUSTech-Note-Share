@@ -112,7 +112,7 @@ export default {
     next (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const url = 'http://10.26.118.25:8088/api/auth/reset-password/verify-email'
+          const url = '/api/auth/reset-password/verify-email'
           axios.post(url, {
             email: this.emailLogForm.ID + '@' + this.emailLogForm.region,
             verificationCode: this.emailLogForm.emailCode
@@ -134,11 +134,11 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.changePwd.pwd === this.changePwd.pwd1) {
-            const url = 'http://10.26.118.25:8088/api/auth/reset-password/reset-password'
+            const url = '/api/auth/reset-password/reset-password'
             axios.post(url, {
               email: this.emailLogForm.ID + '@' + this.emailLogForm.region,
               newPwd: this.changePwd.pwd
-            }).then((res) => {
+            }).then(() => {
               this.active++
             })
           } else {
@@ -167,7 +167,7 @@ export default {
     },
     getEmailValidateCode () {
       this.tackBtn()
-      const url = 'ttp://10.26.118.25:8088/api/auth/reset-password/confirm-email'
+      const url = '/api/auth/reset-password/confirm-email'
       axios.post(url, {
         email: this.emailLogForm.ID + '@' + this.emailLogForm.region
       }).then((res) => {
