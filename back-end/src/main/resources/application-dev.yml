@@ -4,8 +4,8 @@ server:
     context-path: /api
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/SUSTechNote?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/SUSTechNote?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: root
     password: admin
   jpa:
@@ -13,10 +13,14 @@ spring:
       ddl-auto: update
 
   mail:
-    host: smtp.sustech.edu.cn
+#    host: smtp.sustech.edu.cn
+#    port: 465
+#    username: 12011118@mail.sustech.edu.cn
+#    password: CHen20020825
+    host: smtp.qq.com
     port: 465
-    username: 12011118@mail.sustech.edu.cn
-    password: CHen20020825
+    username: 392546005@qq.com
+    password: gbmopzaxunsqbijh
     default-encoding: UTF-8
     properties:
       mail:
