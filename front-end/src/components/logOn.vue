@@ -14,6 +14,8 @@
         <div class="login-box">
           <Log v-show="!isPush" :isPush="isPush" @choseItem="choseItem"></Log>
           <re-pwd v-show="isPush"></re-pwd>
+          <el-button v-show="isPush" icon="el-icon-back"
+                     @click="isPush = !isPush" circle class="return-button"></el-button>
         </div>
       </div>
     </transition>
@@ -21,7 +23,7 @@
     <transition name="basic-fade">
       <div class="buttons" v-show="!isShowBox">
         <el-button style="margin-right: 10px" type="info" icon="el-icon-s-home" circle
-                   @click="isShowBox = !isShowBox" :disabled="!isShowBox"></el-button>
+                   @click="isShowBox = !isShowBox"></el-button>
         <el-button style type="primary" icon="el-icon-download" circle @click="downloadBackground"></el-button>
       </div>
     </transition>
@@ -121,11 +123,14 @@ export default {
   height: 370px;
   background-color: white;
   border: 1px solid #2c3e50;
-  box-shadow: #2c3e50;
   border-radius: 5px;
+  z-index: 100;
+  position: relative;
 }
-.login-box {
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0 5px #fff;
+.return-button {
+  position: absolute;
+  top: 15px;
+  left: 15px;
 }
+
 </style>
