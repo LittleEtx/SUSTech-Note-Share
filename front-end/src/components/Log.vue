@@ -17,8 +17,8 @@
           <el-col :span="10">
             <el-form-item prop="region" style="margin-left: -80px">
               <el-select v-model="pwdLogForm.region" placeholder="请选择邮箱后缀">
-                <el-option label="mail.SUSTech.edu.cn" value="mail.SUSTech.edu.cn"></el-option>
-                <el-option label="SUSTech.edu.cn" value="SUSTech.edu.cn"></el-option>
+                <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
+                <el-option label="SUSTech.edu.cn" value="sustech.edu.cn"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
