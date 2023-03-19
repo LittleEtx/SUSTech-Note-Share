@@ -134,6 +134,7 @@ public class UserApp {
             return "fail";
         }
     }
+
     @PostMapping("reset-password/reset-password")
     public String resetPassword(@RequestBody JSONObject jsonObject){
         String token = jsonObject.getString("token");
@@ -152,29 +153,6 @@ public class UserApp {
             return "密码修改成功";
         }
         return "token已过期，修改失败";
-    }
-
-    @PostMapping("/updateUser")
-    public int update(@RequestBody JSONObject jsonObject) {
-        User user = new User();
-        user.setUserID(Integer.parseInt(jsonObject.getString("userID")));
-        user.setUserName(jsonObject.getString("userName"));
-        user.setPassword(jsonObject.getString("password"));
-        user.setEmail(jsonObject.getString("email"));
-        user.setSchedule(jsonObject.getString("schedule"));
-        user.setAvatar(jsonObject.getString("avatar"));
-        return userService.updateUser(user);
-    }
-    @SaCheckRole("admin")
-    @PostMapping("/deleteUser")
-    public int deleteUser(@RequestBody JSONObject jsonObject) {
-        int userID = Integer.parseInt(jsonObject.getString("userID"));
-        return userService.deleteUser(userID);
-    }
-
-    @GetMapping("/findAllUser")
-    public List<User> findAll() {
-        return userService.findAllUser();
     }
 
     @PostMapping("logout")
