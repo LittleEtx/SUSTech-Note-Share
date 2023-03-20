@@ -82,14 +82,12 @@
 
 <script>
 import axios from 'axios'
+import router from '../router'
 
 export default {
   name: 'Log',
   props: {
     isPush: Boolean
-  },
-  mounted () {
-    this.getCookie()
   },
   data () {
     return {
@@ -145,24 +143,23 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const url = '/api/auth/login/password-login'
-          if (this.checked || this.checked1) {
+          if (this.checked) {
             this.rememberMe = 1
           } else {
             this.rememberMe = 0
           }
           axios.post(url, {email: this.pwdLogForm.ID + '@' + this.pwdLogForm.region,
             password: this.pwdLogForm.pwd,
-            rememberMe: this.rememberMe}).then((res) => {
+            rememberMe: this.rememberMe
+          }).then((res) => {
             if (res.data === 1) {
-              this.$alert('登录成功！', '', {
-                confirmButtonText: '确定'
-              })
+              router.push({path: '/home'})
             } else {
-              this.$alert('登录失败，请重新登录！', '', {
-                confirmButtonText: '确定'
-              })
-              this.resetForm('pwdLogForm')
+              alert('登录失败，请重新登录！')
+              this.pwdLogForm.pwd = ''
             }
+          }).catch((err) => {
+            alert(err)
           })
         }
       })
@@ -172,7 +169,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const url = '/api/auth/login/email-code-login'
-          if (this.checked || this.checked1) {
+          if (this.checked1) {
             this.rememberMe = 1
           } else {
             this.rememberMe = 0
@@ -183,21 +180,16 @@ export default {
             rememberMe: this.rememberMe
           }).then((res) => {
             if (res.data === 1) {
-              this.$alert('登录成功！', '', {
-                confirmButtonText: '确定'
-              })
+              router.push({path: '/home'})
             } else {
-              this.$alert('登录失败，请重新登录！', '', {
-                confirmButtonText: '确定'
-              })
+              alert('登录失败，请重新登录')
               this.emailLogForm.emailCode = ''
             }
+          }).catch((err) => {
+            alert(err)
           })
         }
       })
-    },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
     },
     tackBtn () { // 验证码倒数60秒
       let time = 60
@@ -227,56 +219,6 @@ export default {
     },
     temp () {
       this.activeName = 'second'
-    },
-    rememberUser () {
-      const that = this
-      // 判断复选框是否被勾选 勾选则调用配置cookie方法
-      if (that.checked === true) {
-        // 传入账号名，密码，和保存天数三个参数
-        const account = that.pwdLogForm.ID + '@' + that.pwdLogForm.region
-        that.setCookie(account, that.pwdLogForm.pwd, 7)
-      } else {
-        // 清空Cookie
-        that.clearCookie()
-      }
-    },
-
-    // 设置cookie
-    // eslint-disable-next-line camelcase
-    setCookie (c_name, c_pwd, exdays) {
-      let exdate = new Date() // 获取时间
-      console.log(c_pwd)
-      exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays) // 保存的天数
-      // 字符串拼接cookie
-      window.document.cookie =
-        // eslint-disable-next-line camelcase
-        'account' + '=' + c_name + ';path=/;expires=' + exdate.toGMTString()
-      window.document.cookie =
-        // eslint-disable-next-line camelcase
-        'password' + '=' + c_pwd + ';path=/;expires=' + exdate.toGMTString()
-    },
-    // 读取cookie
-    getCookie: function () {
-      // let that = this
-      if (document.cookie.length > 0) {
-        // let arr = document.cookie.split('; ') // 这里显示的格式需要切割一下自己可输出看下
-        // for (let i = 0; i < arr.length; i++) {
-        //   let arr2 = arr[i].split('=') // 再次切割
-        //   // 判断查找相对应的值
-        //   if (arr2[0] === 'account') {
-        //     let account = arr2[1].split('@') // 保存到保存数据的地方
-        //     that.pwdLogForm.ID = account[0]
-        //     that.pwdLogForm.region = account[1]
-        //   } else if (arr2[0] === 'password') {
-        //     that.pwdLogForm.pwd = arr2[1]
-        //   }
-        // }
-        this.choseItem()
-      }
-    },
-    // 清除cookie
-    clearCookie: function () {
-      this.setCookie('', '', -1) // 修改两个值都为空，天数为-1天就好了
     }
   }
 }
@@ -302,6 +244,6 @@ h4 {
 
 hr {
   background-color: #444;
-  margin: 0px;
+  margin: 0;
 }
 </style>

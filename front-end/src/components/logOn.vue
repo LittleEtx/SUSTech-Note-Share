@@ -33,6 +33,8 @@
 <script>
 import Log from './Log'
 import rePwd from './rePwd'
+import router from '../router'
+import Cookies from 'js-cookie'
 export default {
   name: 'logOn',
   data () {
@@ -64,6 +66,12 @@ export default {
       let month = date.getMonth() + 1 //  返回的月份上个月的月份，记得+1才是当月
       if (month < 10) { month = '0' + month } // 格式化
       return require('../assets/login-page/background-img/' + year + '.' + month + '.png')
+    }
+  },
+  beforeMount () {
+    // check whether the user has logged in
+    if (Cookies.get('satoken')) {
+      router.push('/home')
     }
   }
 }

@@ -17,14 +17,9 @@ export default new Router({
       component: () => import('../components/logOn')
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../components/register')
-    },
-    {
-      path: '/rePwd',
-      name: 'rePwd',
-      component: () => import('../components/rePwd')
+      path: '/home',
+      name: 'home',
+      component: () => import('../components/homePage')
     }
   ]
 })
