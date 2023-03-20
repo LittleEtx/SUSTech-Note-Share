@@ -1,7 +1,6 @@
 <template>
   <div>
   <h4 style="text-align: center">登录</h4>
-  <hr>
   <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true" style="margin-top: -20px" type="card">
     <el-tab-pane label="密码登录" name="first">
       <el-form :model="pwdLogForm" :rules="pwdRules" ref="pwdLogForm" label-width="100px" class="demo-ruleForm">

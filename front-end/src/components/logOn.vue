@@ -130,8 +130,8 @@ export default {
   width: 600px;
   height: 370px;
   background-color: white;
-  border: 1px solid #2c3e50;
   border-radius: 5px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   z-index: 100;
   position: relative;
 }
