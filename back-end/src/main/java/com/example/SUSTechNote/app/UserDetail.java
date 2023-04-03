@@ -1,6 +1,7 @@
 package com.example.SUSTechNote.app;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.UserService;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
+
 import java.util.List;
 
 @RestController
@@ -28,7 +31,6 @@ public class UserDetail {
         user.setAvatar(jsonObject.getString("avatar"));
         return userService.updateUser(user);
     }
-
     @PostMapping("/upload-avatar")
     public int uploadAvatar(@RequestParam("avatar") MultipartFile[] files) {
         System.out.println("The number of files received: " + files.length);
@@ -56,7 +58,6 @@ public class UserDetail {
         }
         return 200;
     }
-
     @SaCheckRole("admin")
     @PostMapping("/deleteUser")
     public int deleteUser(@RequestBody JSONObject jsonObject) {
@@ -68,5 +69,30 @@ public class UserDetail {
     public List<User> findAll() {
         return userService.findAllUser();
     }
+    @GetMapping("/get-id")
+    public int getID(){
+        return StpUtil.getLoginIdAsInt();
+    }
+    @GetMapping("/get-info")
+    public User getInfo(@RequestBody JSONObject jsonObject){
+        int userID = jsonObject.getInteger("userID");
+        return userService.findUserById(userID);
+    }
 
+    @PostMapping("/update-info")
+    public int updateInfo(@RequestBody JSONObject jsonObject) {
+        User user = userService.findUserById(jsonObject.getInteger("userID"));
+        LocalDateTime lastUpdateTime = user.getUpdateTime();
+        LocalDateTime now = LocalDateTime.now();
+        if (lastUpdateTime == null || lastUpdateTime.plusWeeks(1).isBefore(now)) {
+            user.setUserName(jsonObject.getString("userName"));
+            user.setDescription(jsonObject.getString("description"));
+            user.setGender(jsonObject.getInteger("gender"));
+            user.setBirth(jsonObject.getSqlDate("date"));
+            user.setUpdateTime(now);
+            return userService.updateUser(user);
+        } else {
+            return 403;
+        }
+    }
 }

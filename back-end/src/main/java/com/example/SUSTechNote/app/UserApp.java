@@ -47,6 +47,7 @@ public class UserApp {
         String password = jsonObject.getString("password");
         String rememberMe =  jsonObject.getString("rememberMe");
         int userID = Integer.parseInt(email.substring(0, 8));
+
         if (userService.login(userID,password) == 1){
             StpUtil.login(userID);
             System.out.println(StpUtil.getTokenInfo());

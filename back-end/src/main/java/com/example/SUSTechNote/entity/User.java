@@ -2,6 +2,8 @@ package com.example.SUSTechNote.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,6 +19,16 @@ public class User {
     private String avatar;
 
     private String permission;
+
+
+
+    private String description;
+
+    private Integer gender = -1;
+
+    private Date birth;
+
+    private LocalDateTime updateTime;
 
     /**
      * OneToMany和ManyToOne配合使用时，由ManyToOne多方进行关系管理
@@ -46,6 +58,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "course_id")       // 将对方表id，存储到第三方表，列名为dept_id
     )
     private List<Course> courseList;
+
+
+
 
     public Integer getUserID() {
         return userID;
@@ -102,4 +117,35 @@ public class User {
     public void setPermission(String permission) {
         this.permission = permission;
     };
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Date getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Date birth) {
+        this.birth = birth;
+    }
 }
