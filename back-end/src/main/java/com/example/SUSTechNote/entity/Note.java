@@ -8,12 +8,10 @@ import java.time.LocalDateTime;
 @Table(name = "notes")
 public class Note {
     @Id
-    private Integer noteID;
+    private String noteID;
     private String noteName;
     private Integer authorID;
     private Integer isPublic;
-    private Integer likeNum;
-    private Integer star;
     private Integer status;
     private LocalDateTime removeTime;
     private String notebookID;
@@ -21,11 +19,11 @@ public class Note {
     public Note() {
     }
 
-    public Integer getNoteID() {
+    public String getNoteID() {
         return noteID;
     }
 
-    public void setNoteID(Integer noteID) {
+    public void setNoteID(String noteID) {
         this.noteID = noteID;
     }
 
@@ -54,22 +52,6 @@ public class Note {
         this.authorID = authorID;
     }
 
-    public Integer getLike() {
-        return likeNum;
-    }
-
-    public void setLike(Integer like) {
-        this.likeNum = like;
-    }
-
-    public Integer getStar() {
-        return star;
-    }
-
-    public void setStar(Integer star) {
-        this.star = star;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -84,14 +66,6 @@ public class Note {
 
     public void setRemoveTime(LocalDateTime removeTime) {
         this.removeTime = removeTime;
-    }
-
-    public Integer getLikeNum() {
-        return likeNum;
-    }
-
-    public void setLikeNum(Integer likeNum) {
-        this.likeNum = likeNum;
     }
 
     public String getNotebookID() {

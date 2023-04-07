@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "files")
 public class File {
     @Id
-    private Integer fileID;
+    private String fileID;
     private String fileName;
     private String fileUrl;
     private Integer status;
@@ -22,11 +22,11 @@ public class File {
     @JoinColumn(name = "note_id")
     private Note note;
 
-    public Integer getFileID() {
+    public String getFileID() {
         return fileID;
     }
 
-    public void setFileID(Integer fileID) {
+    public void setFileID(String fileID) {
         this.fileID = fileID;
     }
 

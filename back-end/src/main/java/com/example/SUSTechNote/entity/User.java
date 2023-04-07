@@ -36,19 +36,19 @@ public class User {
      */
     @ManyToMany
     @JoinTable(
-            name = "user_fav_notebook",
+            name = "user_like_notebook",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "notebook_id")
     )
-    private List<Notebook> favNotebookList;
+    private List<Notebook> likeNotebookList;
 
     @ManyToMany
     @JoinTable(
-            name = "user_fav_note",
+            name = "user_star_notebook",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "note_id")
+            inverseJoinColumns = @JoinColumn(name = "notebook_id")
     )
-    private List<Note> favNoteList;
+    private List<Notebook> starNotebookList;
 
     @ManyToMany
     @JoinTable(
