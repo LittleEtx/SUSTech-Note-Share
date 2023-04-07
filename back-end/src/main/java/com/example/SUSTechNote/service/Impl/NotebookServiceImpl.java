@@ -4,6 +4,7 @@ import com.example.SUSTechNote.api.NotebookRepository;
 
 import com.example.SUSTechNote.entity.Notebook;
 
+import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.NotebookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,4 +76,9 @@ public class NotebookServiceImpl implements NotebookService {
     public List<Notebook> findAllNotebook(){
         return notebookRepository.findAll();
     };
+
+    @Override
+    public Notebook findNotebookByID(String notebookID){
+        return notebookRepository.findNotebookByNotebookID(notebookID);
+    }
 }

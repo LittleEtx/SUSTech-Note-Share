@@ -19,4 +19,6 @@ public interface NotebookService {
     public Notebook getNotebookBasic(String notebookID);
 
     public List<Notebook> findAllNotebook();
+
+    public Notebook findNotebookByID(String notebookID);
 }

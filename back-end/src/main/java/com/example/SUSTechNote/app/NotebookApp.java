@@ -1,5 +1,7 @@
 package com.example.SUSTechNote.app;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.service.CourseService;
@@ -33,14 +35,21 @@ public class NotebookApp {
         return notebookService.updateNotebook(notebook);
     };
 
-
+    @SaCheckLogin
     @GetMapping("/deleteNotebook")
     public int deleteNotebook(String notebookID){
-        return notebookService.deleteNotebook(notebookID);
+        Notebook notebook = notebookService.findNotebookByID(notebookID);
+        if (StpUtil.getLoginIdAsInt() == notebook.getAuthorID()){
+            return notebookService.deleteNotebook(notebookID);
+        }else {
+            return 0;
+        }
     };
 
     @GetMapping("/findAllNotebook")
     public List<Notebook> findAllNotebook(){
         return notebookService.findAllNotebook();
     };
+
+
 }
