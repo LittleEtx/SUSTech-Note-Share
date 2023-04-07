@@ -17,7 +17,7 @@ public class CourseApp {
     CourseService courseService;
 
     @PostMapping("/addCourse")
-    public int addCourse(int courseID,String courseName){
+    public int addCourse(String courseID,String courseName){
         return courseService.addCourse( courseID, courseName);
     }
     @PostMapping("/updateCourse")
@@ -26,7 +26,7 @@ public class CourseApp {
     }
 
     @GetMapping("/deleteCourse")
-    public int deleteCourse(int courseID){
+    public int deleteCourse(String courseID){
         return courseService.deleteCourse(courseID);
     }
 

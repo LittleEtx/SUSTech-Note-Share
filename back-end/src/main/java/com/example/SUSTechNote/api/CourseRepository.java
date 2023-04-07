@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
-    public List<Course> findCoursesByCourseID(int CourseID);
+    public List<Course> findCoursesByCourseID(String CourseID);
+    public void deleteCourseByCourseID(String CourseID);
 }

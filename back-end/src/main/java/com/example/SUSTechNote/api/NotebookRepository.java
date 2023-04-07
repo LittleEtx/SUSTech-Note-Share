@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
-    public List<Notebook> findNotebooksByNotebookID(int notebookID);
+    public List<Notebook> findNotebooksByNotebookID(String notebookID);
+    public void deleteNotebooksByNotebookID(String notebookID);
 }

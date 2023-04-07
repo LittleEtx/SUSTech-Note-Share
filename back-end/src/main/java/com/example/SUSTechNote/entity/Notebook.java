@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "notebooks")
 public class Notebook {
     @Id
-    private Integer notebookID;
+    private String notebookID;
     private String notebookName;
     private String tag;
     private LocalDateTime updateTime;
@@ -21,31 +21,13 @@ public class Notebook {
     private Integer status;
     private LocalDateTime removeTime;
 
-    /**
-     * 多对一关系，由多方维系关系
-     * 通过course表的course_id字段和department表的id主键字段做关系映射
-     */
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    private Integer authorID;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-
-    /**
-     * OneToMany和ManyToOne配合使用时，由ManyToOne多方进行关系管理
-     * 此时只需要指定管理映射属性，为note中的notebook属性
-     */
-    @OneToMany(mappedBy = "notebook")
-    private List<Note> noteList;
-
-    public Integer getNotebookID() {
+    public String getNotebookID() {
         return notebookID;
     }
 
-    public void setNotebookID(Integer notebookID) {
+    public void setNotebookID(String notebookID) {
         this.notebookID = notebookID;
     }
 
@@ -56,21 +38,12 @@ public class Notebook {
     public void setNotebookName(String notebookName) {
         this.notebookName = notebookName;
     }
-
-    public Course getCourse() {
-        return course;
+    public Integer getUser() {
+        return authorID;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Integer authorID) {
+        this.authorID = authorID;
     }
 
     public Integer getIsPublic() {

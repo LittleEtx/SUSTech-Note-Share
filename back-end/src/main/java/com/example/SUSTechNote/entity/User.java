@@ -20,8 +20,6 @@ public class User {
 
     private String permission;
 
-
-
     private String description;
 
     private Integer gender = -1;
@@ -29,13 +27,6 @@ public class User {
     private Date birth;
 
     private LocalDateTime updateTime;
-
-    /**
-     * OneToMany和ManyToOne配合使用时，由ManyToOne多方进行关系管理
-     * 此时只需要指定管理映射属性，为Notebook中的user属性
-     */
-    @OneToMany(mappedBy = "user")
-    private List<Notebook> notebookList;
 
     /**
      * 多对多，通过JoinTable生成第三方表，指定各自主键的存放列名
@@ -66,8 +57,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "course_id")       // 将对方表id，存储到第三方表，列名为dept_id
     )
     private List<Course> courseList;
-
-
 
 
     public Integer getUserID() {

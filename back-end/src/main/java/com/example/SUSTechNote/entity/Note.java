@@ -16,15 +16,7 @@ public class Note {
     private Integer star;
     private Integer status;
     private LocalDateTime removeTime;
-
-    /**
-     * 多对一关系，由多方维系关系
-     * 通过note表的notebook_id字段和Notebook表的id主键字段做关系映射
-     */
-    @ManyToOne
-    @JoinColumn(name = "notebook_id")
-    private Notebook notebook;
-
+    private String notebookID;
 
     public Note() {
     }
@@ -94,11 +86,19 @@ public class Note {
         this.removeTime = removeTime;
     }
 
-    public Notebook getNotebook() {
-        return notebook;
+    public Integer getLikeNum() {
+        return likeNum;
     }
 
-    public void setNotebook(Notebook notebook) {
-        this.notebook = notebook;
+    public void setLikeNum(Integer likeNum) {
+        this.likeNum = likeNum;
+    }
+
+    public String getNotebookID() {
+        return notebookID;
+    }
+
+    public void setNotebookID(String notebookID) {
+        this.notebookID = notebookID;
     }
 }
