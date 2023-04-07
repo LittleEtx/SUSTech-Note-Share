@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -69,13 +70,21 @@ public class UserDetail {
     public List<User> findAll() {
         return userService.findAllUser();
     }
+
+    @SaCheckLogin
     @GetMapping("/get-id")
     public int getID(){
+        System.out.println("15");
+        System.out.println(StpUtil.getTokenInfo());
         return StpUtil.getLoginIdAsInt();
     }
+//    @GetMapping("/get-info")
+//    public User getInfo(@RequestBody JSONObject jsonObject){
+//        int userID = jsonObject.getInteger("userID");
+//        return userService.findUserById(userID);
+//    }
     @GetMapping("/get-info")
-    public User getInfo(@RequestBody JSONObject jsonObject){
-        int userID = jsonObject.getInteger("userID");
+    public User getInfo(int userID){
         return userService.findUserById(userID);
     }
 

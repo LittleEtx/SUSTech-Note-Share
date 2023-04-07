@@ -9,10 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class SUSTechNoteApplication implements WebMvcConfigurer{
-
-
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(SUSTechNoteApplication.class, args);
 	}
