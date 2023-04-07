@@ -14,11 +14,10 @@ public class NoteServiceImpl implements NoteService {
     NoteRepository NoteRepository;
 
     @Override
-    public int addNote(Integer noteID,String content,Integer isPublic){
+    public int addNote(Integer noteID,Integer isPublic){
         if (checkNote(noteID) == 0 ){
             Note note = new Note();
             note.setNoteID(noteID);
-            note.setContent(content);
             note.setIsPublic(isPublic);
             NoteRepository.save(note);
             return 1;

@@ -2,6 +2,7 @@ package com.example.SUSTechNote.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -10,8 +11,15 @@ public class Notebook {
     @Id
     private Integer notebookID;
     private String notebookName;
-
+    private String tag;
+    private LocalDateTime updateTime;
+    private String cover;
+    private String description;
     private Integer isPublic;
+    private Integer likeNum;
+    private Integer star;
+    private Integer status;
+    private LocalDateTime removeTime;
 
     /**
      * 多对一关系，由多方维系关系
@@ -25,9 +33,6 @@ public class Notebook {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "fav_user_notebook")
-    private User fav_user_notebook;
 
     /**
      * OneToMany和ManyToOne配合使用时，由ManyToOne多方进行关系管理

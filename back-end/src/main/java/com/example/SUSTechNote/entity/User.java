@@ -37,20 +37,28 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Notebook> notebookList;
 
-
-    @OneToMany(mappedBy = "fav_user_notebook")
-    private List<Notebook> favNotebookList;
-
-
-    @OneToMany(mappedBy = "fav_user_note")
-    private List<Note> favNoteList;
-
     /**
      * 多对多，通过JoinTable生成第三方表，指定各自主键的存放列名
      * joinColumns：将本表id，存储到第三方表，列名为per_id
      * inverseJoinColumns：将对方表id，存储到第三方表，列名为dept_id
      * 注意：此处存放到第三方表的列名，需要和对方的外键名称相一致
      */
+    @ManyToMany
+    @JoinTable(
+            name = "user_fav_notebook",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "notebook_id")
+    )
+    private List<Notebook> favNotebookList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_fav_note",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "note_id")
+    )
+    private List<Note> favNoteList;
+
     @ManyToMany
     @JoinTable(
             name = "user_course",    // 自动生成的第三方表名，可省略

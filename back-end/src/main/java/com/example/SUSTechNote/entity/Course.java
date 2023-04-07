@@ -47,4 +47,12 @@ public class Course {
     public void setUserList(List<User> userList) {
         this.userList = userList;
     }
+
+    public List<Notebook> getNotebookList() {
+        return notebookList;
+    }
+
+    public void setNotebookList(List<Notebook> notebookList) {
+        this.notebookList = notebookList;
+    }
 }

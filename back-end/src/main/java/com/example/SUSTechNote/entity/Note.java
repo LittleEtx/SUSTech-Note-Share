@@ -2,14 +2,20 @@ package com.example.SUSTechNote.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "notes")
 public class Note {
     @Id
     private Integer noteID;
-    private String content;
-
+    private String noteName;
+    private Integer authorID;
     private Integer isPublic;
+    private Integer likeNum;
+    private Integer star;
+    private Integer status;
+    private LocalDateTime removeTime;
 
     /**
      * 多对一关系，由多方维系关系
@@ -19,9 +25,6 @@ public class Note {
     @JoinColumn(name = "notebook_id")
     private Notebook notebook;
 
-    @ManyToOne
-    @JoinColumn(name = "fav_user_note")
-    private User fav_user_note;
 
     public Note() {
     }
@@ -34,13 +37,6 @@ public class Note {
         this.noteID = noteID;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public Integer getIsPublic() {
         return isPublic;
@@ -48,5 +44,61 @@ public class Note {
 
     public void setIsPublic(Integer isPublic) {
         this.isPublic = isPublic;
+    }
+
+    public String getNoteName() {
+        return noteName;
+    }
+
+    public void setNoteName(String noteName) {
+        this.noteName = noteName;
+    }
+
+    public Integer getAuthorID() {
+        return authorID;
+    }
+
+    public void setAuthorID(Integer authorID) {
+        this.authorID = authorID;
+    }
+
+    public Integer getLike() {
+        return likeNum;
+    }
+
+    public void setLike(Integer like) {
+        this.likeNum = like;
+    }
+
+    public Integer getStar() {
+        return star;
+    }
+
+    public void setStar(Integer star) {
+        this.star = star;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getRemoveTime() {
+        return removeTime;
+    }
+
+    public void setRemoveTime(LocalDateTime removeTime) {
+        this.removeTime = removeTime;
+    }
+
+    public Notebook getNotebook() {
+        return notebook;
+    }
+
+    public void setNotebook(Notebook notebook) {
+        this.notebook = notebook;
     }
 }

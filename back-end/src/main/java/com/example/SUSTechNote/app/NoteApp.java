@@ -16,7 +16,7 @@ public class NoteApp {
 
     @PostMapping("/addNote")
     public int addnote(Integer noteID,String content,Integer isPublic ){
-        return noteService.addNote(noteID,content,isPublic);
+        return noteService.addNote(noteID,isPublic);
     };
 
     @PostMapping("/updatenote")

@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface NoteService {
 
-    public int addNote(Integer noteID,String content,Integer isPublic );
+    public int addNote(Integer noteID,Integer isPublic );
 
     public int updateNote(Note note);
 
