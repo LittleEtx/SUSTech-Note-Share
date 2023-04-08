@@ -14,8 +14,8 @@
         <div class="login-box">
           <Log v-show="!isPush" :isPush="isPush" @choseItem="choseItem"></Log>
           <re-pwd v-show="isPush"></re-pwd>
-          <el-button v-show="isPush" icon="el-icon-back"
-                     @click="isPush = !isPush" circle class="return-button"></el-button>
+          <icon-button v-show="isPush" icon="el-icon-back"
+                     @click="isPush = !isPush" class="return-button"></icon-button>
         </div>
       </div>
     </transition>
@@ -35,6 +35,7 @@ import Log from './Log'
 import rePwd from './rePwd'
 import router from '../router'
 import Cookies from 'js-cookie'
+import IconButton from './subcomponents/IconButton.vue'
 export default {
   name: 'logOn',
   data () {
@@ -58,7 +59,7 @@ export default {
       a.dispatchEvent(event) // 触发a的单击事件
     }
   },
-  components: {Log, rePwd},
+  components: {IconButton, Log, rePwd},
   computed: {
     backgroundUrl: function () {
       const date = new Date()
