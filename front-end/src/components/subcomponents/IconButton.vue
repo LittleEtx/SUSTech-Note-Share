@@ -1,10 +1,14 @@
 <template>
-<i :class="icon" :style="{color : iconColor, fontSize : size}"
-   style="cursor: pointer"
-   @mouseover="iconColor = enterColor"
-   @mouseleave="iconColor = defaultColor"
-   @click="onClick"
-></i>
+<div style="cursor: pointer;"
+    @mouseover="iconColor = enterColor"
+    @mouseleave="iconColor = defaultColor"
+    @click="onClick"
+    :style="{color : iconColor}"
+>
+    <i :class="icon" :style="{fontSize: size}"></i>
+    <slot></slot>
+</div>
+
 </template>
 
 <script>
@@ -17,7 +21,7 @@ export default {
     },
     size: {
       type: String,
-      default: '30px'
+      default: '20px'
     },
     defaultColor: {
       type: String,
@@ -26,6 +30,11 @@ export default {
     enterColor: {
       type: String,
       default: '#409EFF'
+    },
+    attachPosition: {
+      type: String,
+      range: ['left', 'right', 'top', 'bottom'],
+      default: 'left'
     }
   },
   data () {

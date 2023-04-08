@@ -14,7 +14,7 @@
         <div class="login-box">
           <Log v-show="!isPush" :isPush="isPush" @choseItem="choseItem"></Log>
           <re-pwd v-show="isPush"></re-pwd>
-          <icon-button v-show="isPush" icon="el-icon-back"
+          <icon-button v-show="isPush" icon="el-icon-back" size="30px"
                      @click="isPush = !isPush" class="return-button"></icon-button>
         </div>
       </div>
