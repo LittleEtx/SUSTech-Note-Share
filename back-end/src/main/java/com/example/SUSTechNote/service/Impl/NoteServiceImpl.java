@@ -14,11 +14,10 @@ public class NoteServiceImpl implements NoteService {
     NoteRepository NoteRepository;
 
     @Override
-    public int addNote(Integer noteID,String content,Integer isPublic){
+    public int addNote(String noteID,Integer isPublic){
         if (checkNote(noteID) == 0 ){
             Note note = new Note();
             note.setNoteID(noteID);
-            note.setContent(content);
             note.setIsPublic(isPublic);
             NoteRepository.save(note);
             return 1;
@@ -42,7 +41,7 @@ public class NoteServiceImpl implements NoteService {
     };
 
     @Override
-    public int checkNote(Integer NoteID){
+    public int checkNote(String NoteID){
         List<Note> Notes = NoteRepository.findNotesByNoteID(NoteID);
         if (Notes.size() == 1) {
             return 1;
@@ -54,9 +53,9 @@ public class NoteServiceImpl implements NoteService {
     };
 
     @Override
-    public int deleteNote(Integer NoteID){
+    public int deleteNote(String NoteID){
         if (checkNote(NoteID) == 1){
-            NoteRepository.deleteById(NoteID);
+            NoteRepository.deleteNotesByNoteID(NoteID);
             return 1;
         }
         return 0;

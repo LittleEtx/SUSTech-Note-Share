@@ -2,6 +2,8 @@ package com.example.SUSTechNote.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -18,20 +20,13 @@ public class User {
 
     private String permission;
 
-    /**
-     * OneToMany和ManyToOne配合使用时，由ManyToOne多方进行关系管理
-     * 此时只需要指定管理映射属性，为Notebook中的user属性
-     */
-    @OneToMany(mappedBy = "user")
-    private List<Notebook> notebookList;
+    private String description;
 
+    private Integer gender = -1;
 
-    @OneToMany(mappedBy = "fav_user_notebook")
-    private List<Notebook> favNotebookList;
+    private Date birth;
 
-
-    @OneToMany(mappedBy = "fav_user_note")
-    private List<Note> favNoteList;
+    private LocalDateTime updateTime;
 
     /**
      * 多对多，通过JoinTable生成第三方表，指定各自主键的存放列名
@@ -41,11 +36,28 @@ public class User {
      */
     @ManyToMany
     @JoinTable(
+            name = "user_like_notebook",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "notebook_id")
+    )
+    private List<Notebook> likeNotebookList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_star_notebook",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "notebook_id")
+    )
+    private List<Notebook> starNotebookList;
+
+    @ManyToMany
+    @JoinTable(
             name = "user_course",    // 自动生成的第三方表名，可省略
             joinColumns = @JoinColumn(name = "user_id"),       // 将本表id，存储到第三方表，列名为per_id
             inverseJoinColumns = @JoinColumn(name = "course_id")       // 将对方表id，存储到第三方表，列名为dept_id
     )
     private List<Course> courseList;
+
 
     public Integer getUserID() {
         return userID;
@@ -102,4 +114,35 @@ public class User {
     public void setPermission(String permission) {
         this.permission = permission;
     };
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Date getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Date birth) {
+        this.birth = birth;
+    }
 }

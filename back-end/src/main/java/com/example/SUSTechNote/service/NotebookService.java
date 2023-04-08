@@ -8,13 +8,17 @@ import java.util.List;
 
 @Service
 public interface NotebookService {
-    public int addNotebook(Integer notebookID,String notebookName,Integer isPublic );
+    public int addNotebook(String notebookID,String notebookName,Integer isPublic );
 
     public int updateNotebook(Notebook notebook);
 
-    public int checkNotebook(Integer notebookID);
+    public int checkNotebook(String notebookID);
 
-    public int deleteNotebook(Integer notebookID);
+    public int deleteNotebook(String notebookID);
+
+    public Notebook getNotebookBasic(String notebookID);
 
     public List<Notebook> findAllNotebook();
+
+    public Notebook findNotebookByID(String notebookID);
 }

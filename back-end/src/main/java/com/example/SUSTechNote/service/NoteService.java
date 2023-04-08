@@ -9,13 +9,13 @@ import java.util.List;
 @Service
 public interface NoteService {
 
-    public int addNote(Integer noteID,String content,Integer isPublic );
+    public int addNote(String noteID,Integer isPublic );
 
     public int updateNote(Note note);
 
-    public int checkNote(Integer noteID);
+    public int checkNote(String noteID);
 
-    public int deleteNote(Integer noteID);
+    public int deleteNote(String noteID);
 
     public List<Note> findAllNote();
 }

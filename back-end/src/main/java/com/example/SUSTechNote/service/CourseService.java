@@ -9,13 +9,13 @@ import java.util.List;
 @Service
 public interface CourseService {
 
-    public int addCourse(int courseID,String courseName);
+    public int addCourse(String courseID,String courseName);
 
     public int updateCourse(Course course);
 
-    public int checkCourse(int courseID);
+    public int checkCourse(String courseID);
 
-    public int deleteCourse(int courseID);
+    public int deleteCourse(String courseID);
 
     public List<Course> findAllCourse();
 }

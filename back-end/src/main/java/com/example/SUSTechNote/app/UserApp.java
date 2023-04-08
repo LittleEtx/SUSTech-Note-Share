@@ -26,10 +26,10 @@ public class UserApp {
     @Autowired
     private MailService mailService;
 
-    @PostMapping ("doLogin")
-    public String doLogin(@RequestBody JSONObject jsonpObject) {
-        String username = jsonpObject.getString("username");
-        String password = jsonpObject.getString("password");
+    @GetMapping ("doLogin")
+    public String doLogin(String username,String password) {
+//        String username = jsonpObject.getString("username");
+//        String password = jsonpObject.getString("password");
         // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
         if("zhang".equals(username) && "123456".equals(password)) {
             StpUtil.login(10001);
@@ -46,7 +46,9 @@ public class UserApp {
         String email = jsonObject.getString("email");
         String password = jsonObject.getString("password");
         String rememberMe =  jsonObject.getString("rememberMe");
+        System.out.println(email);
         int userID = Integer.parseInt(email.substring(0, 8));
+
         if (userService.login(userID,password) == 1){
             StpUtil.login(userID);
             System.out.println(StpUtil.getTokenInfo());

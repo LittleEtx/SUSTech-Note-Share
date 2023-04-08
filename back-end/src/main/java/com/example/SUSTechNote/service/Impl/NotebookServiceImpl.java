@@ -4,6 +4,7 @@ import com.example.SUSTechNote.api.NotebookRepository;
 
 import com.example.SUSTechNote.entity.Notebook;
 
+import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.NotebookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class NotebookServiceImpl implements NotebookService {
     NotebookRepository notebookRepository;
     
     @Override
-    public int addNotebook(Integer notebookID,String notebookName,Integer isPublic){
+    public int addNotebook(String notebookID,String notebookName,Integer isPublic){
         if (checkNotebook(notebookID) == 0 ){
             Notebook notebook = new Notebook();
             notebook.setNotebookID(notebookID);
@@ -44,7 +45,7 @@ public class NotebookServiceImpl implements NotebookService {
     };
 
     @Override
-    public int checkNotebook(Integer notebookID){
+    public int checkNotebook(String notebookID){
         List<Notebook> notebooks = notebookRepository.findNotebooksByNotebookID(notebookID);
         if (notebooks.size() == 1) {
             return 1;
@@ -56,16 +57,28 @@ public class NotebookServiceImpl implements NotebookService {
     };
 
     @Override
-    public int deleteNotebook(Integer notebookID){
+    public int deleteNotebook(String notebookID){
         if (checkNotebook(notebookID) == 1){
-            notebookRepository.deleteById(notebookID);
+            notebookRepository.deleteNotebooksByNotebookID(notebookID);
             return 1;
         }
         return 0;
-    };
+    }
+
+    @Override
+    public Notebook getNotebookBasic(String notebookID) {
+        return notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+    }
+
+    ;
 
     @Override
     public List<Notebook> findAllNotebook(){
         return notebookRepository.findAll();
     };
+
+    @Override
+    public Notebook findNotebookByID(String notebookID){
+        return notebookRepository.findNotebookByNotebookID(notebookID);
+    }
 }

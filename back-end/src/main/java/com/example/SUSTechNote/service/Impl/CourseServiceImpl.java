@@ -13,7 +13,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     CourseRepository courseRepository;
     @Override
-    public int addCourse(int courseID,String courseName){
+    public int addCourse(String courseID,String courseName){
         if (checkCourse(courseID) == 0 ){
             Course course = new Course();
             course.setCourseID(courseID);
@@ -37,10 +37,10 @@ public class CourseServiceImpl implements CourseService {
             return 400;
         }
         return 0;
-    };
+    }
 
     @Override
-    public int checkCourse(int courseID){
+    public int checkCourse(String courseID){
         List<Course> courses = courseRepository.findCoursesByCourseID(courseID);
         if (courses.size() == 1) {
             return 1;
@@ -52,9 +52,9 @@ public class CourseServiceImpl implements CourseService {
     };
 
     @Override
-    public int deleteCourse(int courseID){
+    public int deleteCourse(String courseID){
         if (checkCourse(courseID) == 1){
-            courseRepository.deleteById(courseID);
+            courseRepository.deleteCourseByCourseID(courseID);
             return 1;
         }
         return 0;

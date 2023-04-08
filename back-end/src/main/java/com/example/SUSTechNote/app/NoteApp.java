@@ -15,8 +15,8 @@ public class NoteApp {
     NoteService noteService;
 
     @PostMapping("/addNote")
-    public int addnote(Integer noteID,String content,Integer isPublic ){
-        return noteService.addNote(noteID,content,isPublic);
+    public int addnote(String noteID,String content,Integer isPublic ){
+        return noteService.addNote(noteID,isPublic);
     };
 
     @PostMapping("/updatenote")
@@ -26,7 +26,7 @@ public class NoteApp {
 
 
     @GetMapping("/deletenote")
-    public int deletenote(Integer noteID){
+    public int deletenote(String noteID){
         return noteService.deleteNote(noteID);
     };
 

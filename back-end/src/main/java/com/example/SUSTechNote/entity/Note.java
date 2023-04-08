@@ -2,45 +2,31 @@ package com.example.SUSTechNote.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "notes")
 public class Note {
     @Id
-    private Integer noteID;
-    private String content;
-
+    private String noteID;
+    private String noteName;
+    private Integer authorID;
     private Integer isPublic;
-
-    /**
-     * 多对一关系，由多方维系关系
-     * 通过note表的notebook_id字段和Notebook表的id主键字段做关系映射
-     */
-    @ManyToOne
-    @JoinColumn(name = "notebook_id")
-    private Notebook notebook;
-
-    @ManyToOne
-    @JoinColumn(name = "fav_user_note")
-    private User fav_user_note;
+    private Integer status;
+    private LocalDateTime removeTime;
+    private String notebookID;
 
     public Note() {
     }
 
-    public Integer getNoteID() {
+    public String getNoteID() {
         return noteID;
     }
 
-    public void setNoteID(Integer noteID) {
+    public void setNoteID(String noteID) {
         this.noteID = noteID;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public Integer getIsPublic() {
         return isPublic;
@@ -48,5 +34,45 @@ public class Note {
 
     public void setIsPublic(Integer isPublic) {
         this.isPublic = isPublic;
+    }
+
+    public String getNoteName() {
+        return noteName;
+    }
+
+    public void setNoteName(String noteName) {
+        this.noteName = noteName;
+    }
+
+    public Integer getAuthorID() {
+        return authorID;
+    }
+
+    public void setAuthorID(Integer authorID) {
+        this.authorID = authorID;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getRemoveTime() {
+        return removeTime;
+    }
+
+    public void setRemoveTime(LocalDateTime removeTime) {
+        this.removeTime = removeTime;
+    }
+
+    public String getNotebookID() {
+        return notebookID;
+    }
+
+    public void setNotebookID(String notebookID) {
+        this.notebookID = notebookID;
     }
 }
