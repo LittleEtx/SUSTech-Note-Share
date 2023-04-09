@@ -1,9 +1,9 @@
 <template>
-<div style="cursor: pointer;"
+<div class="icon-button"
     @mouseover="iconColor = enterColor"
     @mouseleave="iconColor = defaultColor"
     @click="onClick"
-    :style="{color : iconColor}"
+    :style="{color : iconColor, flexDirection: flexDirection}"
 >
     <i :class="icon" :style="{fontSize: size}"></i>
     <slot></slot>
@@ -34,12 +34,26 @@ export default {
     attachPosition: {
       type: String,
       range: ['left', 'right', 'top', 'bottom'],
-      default: 'left'
+      default: 'right'
     }
   },
   data () {
     return {
       iconColor: this.defaultColor
+    }
+  },
+  computed: {
+    flexDirection () {
+      switch (this.attachPosition) {
+        case 'left':
+          return 'row-reverse'
+        case 'right':
+          return 'row'
+        case 'top':
+          return 'column-reverse'
+        case 'bottom':
+          return 'column'
+      }
     }
   },
   methods: {
@@ -50,3 +64,14 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.icon-button {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+</style>
