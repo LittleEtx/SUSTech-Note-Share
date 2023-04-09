@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import './assets/globle.css'
 import axios from 'axios'
+import './scripts/AxiosSettings.js'
 
 Vue.prototype.$http = axios
 Vue.prototype.$axios = axios
@@ -21,3 +22,4 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+

@@ -53,14 +53,16 @@
                         <i class="el-icon-arrow-right"></i>
                     </icon-button>
                 </div>
-                <icon-button slot="reference">
-                    <div><img :src="avatar" class="avatar" alt=""></div>
-                    <div style="display: flex; flex-direction: column;
-                    justify-content: center; align-items: flex-start">
-                        <h4 style="margin: 0">{{userName}}</h4>
-                        <p style="margin: 0; font-size: 10px"> {{userID}}</p>
-                    </div>
-                </icon-button>
+                <div slot="reference">
+                    <icon-button>
+                        <div><img :src="avatar" class="avatar" alt=""></div>
+                        <div style="display: flex; flex-direction: column;
+                        justify-content: center; align-items: flex-start">
+                            <h4 style="margin: 0">{{userName}}</h4>
+                            <p style="margin: 0; font-size: 10px"> {{userID}}</p>
+                        </div>
+                    </icon-button>
+                </div>
             </el-popover>
         </div>
     </el-col>
