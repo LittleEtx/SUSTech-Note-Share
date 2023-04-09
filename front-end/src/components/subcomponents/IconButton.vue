@@ -16,8 +16,7 @@ export default {
   name: 'IconButton',
   props: {
     icon: {
-      type: String,
-      default: 'el-icon-search'
+      type: String
     },
     size: {
       type: String,
@@ -71,7 +70,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 </style>

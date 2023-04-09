@@ -37,16 +37,30 @@
     </div>
     </el-col>
     <el-col :span="4">
-        <el-popover placement="bottom" trigger="hover" width="100"
-        content="This is content">
-
-            <div class="personal-info" slot="reference">
-                <div><img :src="avatar" class="avatar" alt="unfind"></div>
-                <div style="display: flex; flex-direction: column;
-                justify-content: center; align-items: flex-start">
-                    <h4 style="margin-bottom: 0">{{userName}}</h4>
-                    <p style="margin-top: 0"> {{userID}}</p>
-                </div>
+        <el-popover placement="bottom" trigger="hover" width="60">
+            <div class="pop-out" style="margin-left: 20px">
+                <icon-button icon="el-icon-user" class="pro-out-button">
+                    <h5 class="pop-out-word">个人中心</h5>
+                    <i class="el-icon-arrow-right"></i>
+                </icon-button>
+                <icon-button icon="el-icon-lock" class="pro-out-button">
+                    <h5 class="pop-out-word">修改密码</h5>
+                    <i class="el-icon-arrow-right"></i>
+                </icon-button>
+                <icon-button icon="el-icon-switch-button" class="pro-out-button">
+                    <h5 class="pop-out-word">登出</h5>
+                    <i class="el-icon-arrow-right"></i>
+                </icon-button>
+            </div>
+            <div slot="reference" class="personal-info">
+                <icon-button>
+                    <div><img :src="avatar" class="avatar" alt=""></div>
+                    <div style="display: flex; flex-direction: column;
+                    justify-content: center; align-items: flex-start">
+                        <h4 style="margin: 0">{{userName}}</h4>
+                        <p style="margin: 0; font-size: 10px"> {{userID}}</p>
+                    </div>
+                </icon-button>
             </div>
         </el-popover>
     </el-col>
@@ -119,9 +133,7 @@ export default {
 .personal-info {
     margin-right: 20px;
     display: flex;
-    align-items: center;
-    flex-direction: row;
-    justify-content: flex-end;
+    justify-content: right;
 }
 
 .avatar {
@@ -131,4 +143,21 @@ export default {
     margin-right: 10px;
 }
 
+.pop-out {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.pro-out-button {
+    width: 130px;
+
+}
+
+.pop-out-word {
+    width: 80px;
+    margin-left: 10px;
+}
 </style>
