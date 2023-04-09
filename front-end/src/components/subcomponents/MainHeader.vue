@@ -1,29 +1,41 @@
 <template>
 <div class="header-align">
-    <div class="icon">
+    <div class="icon" @click="router.go(0)">
         <img src="../../assets/icon/icon_with_word.svg"
              style="height: 50px; float: left;"  alt="">
     </div>
     <div class="section">
-        <icon-button icon="el-icon-menu" style="float: right">全部分区</icon-button>
+        <icon-button icon="el-icon-menu" style="float: right"><h4>全部分区</h4></icon-button>
     </div>
     <el-input placeholder="搜索笔记" class="search-bar" suffix-icon="el-icon-search"></el-input>
     <div class="fast-entry">
         <div>
-            <icon-button icon="el-icon-date"></icon-button>
-            <h5 style="margin: 0">课程</h5>
+            <icon-button icon="el-icon-date" attach-position="down">
+                <h5 style="margin: 0">课程</h5>
+            </icon-button>
         </div>
         <div>
-            <icon-button icon="el-icon-collection"></icon-button>
-            <h5 style="margin: 0">笔记</h5>
+            <icon-button icon="el-icon-collection" attach-position="down">
+                <h5 style="margin: 0">笔记</h5>
+            </icon-button>
         </div>
         <div>
-            <icon-button icon="el-icon-star-off"></icon-button>
-            <h5 style="margin: 0">收藏</h5>
+            <icon-button icon="el-icon-star-off" attach-position="down">
+                <h5 style="margin: 0">收藏</h5>
+            </icon-button>
         </div>
         <div>
-            <icon-button icon="el-icon-time"></icon-button>
-            <h5 style="margin: 0">历史</h5>
+            <icon-button icon="el-icon-time" attach-position="down">
+                <h5 style="margin: 0">历史</h5>
+            </icon-button>
+        </div>
+    </div>
+    <div class="personal-info">
+        <div><img :src="avatar" class="avatar" alt="unfind"></div>
+        <div style="display: flex; flex-direction: column;
+        justify-content: center; align-items: flex-start">
+            <h4 style="margin-bottom: 0">{{userName}}</h4>
+            <p style="margin-top: 0"> {{userID}}</p>
         </div>
     </div>
 </div>
@@ -31,10 +43,35 @@
 
 <script>
 import IconButton from './IconButton.vue'
+import axios from 'axios'
+import router from '../../router'
 
 export default {
   name: 'main-header',
-  components: {IconButton}
+  computed: {
+    router () {
+      return router
+    }
+  },
+  components: {IconButton},
+  data () {
+    return {
+      avatar: require('../../assets/default-file/default-avatar.png'),
+      userName: '未登录',
+      userID: ''
+    }
+  },
+  beforeMount () {
+    axios.get('/api/user/get-id').then((res) => {
+      this.userID = res.data
+      axios.get('/api/user/get-info', {
+        params: { userID: this.userID }
+      }).then((res) => {
+        // this.avatar = res.data.avatar
+        this.userName = res.data.userName
+      })
+    })
+  }
 }
 </script>
 
@@ -49,12 +86,13 @@ export default {
 
 .icon {
     flex-grow: 1;
-    margin-left: 10px
+    margin-left: 20px;
+    cursor: pointer;
 }
 
 .section {
     flex-grow: 1;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .search-bar {
@@ -73,5 +111,21 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.personal-info {
+    flex-grow: 1;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 </style>
