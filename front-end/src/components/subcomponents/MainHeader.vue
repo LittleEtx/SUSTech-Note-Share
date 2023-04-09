@@ -1,14 +1,19 @@
 <template>
-<div class="header-align">
-    <div class="icon" @click="router.go(0)">
-        <img src="../../assets/icon/icon_with_word.svg"
-             style="height: 50px; float: left;"  alt="">
-    </div>
-    <div class="section">
-        <icon-button icon="el-icon-menu" style="float: right"><h4>全部分区</h4></icon-button>
-    </div>
-    <el-input placeholder="搜索笔记" class="search-bar" suffix-icon="el-icon-search"></el-input>
-    <div class="fast-entry">
+<el-row type="flex" justify="center" align="middle" style="height: 100%">
+    <el-col :span="5">
+        <img src="../../assets/icon/icon_with_word.svg" class="icon"
+             @click="router.go(0)" alt="">
+    </el-col>
+    <el-col :span="4">
+        <icon-button icon="el-icon-menu" class="section">
+            <h4>全部分区</h4>
+        </icon-button>
+    </el-col>
+    <el-col :span="6">
+        <el-input placeholder="搜索笔记" class="search-bar" suffix-icon="el-icon-search"></el-input>
+    </el-col>
+    <el-col :span="5">
+        <div class="fast-entry">
         <div>
             <icon-button icon="el-icon-date" attach-position="down">
                 <h5 style="margin: 0">课程</h5>
@@ -30,15 +35,22 @@
             </icon-button>
         </div>
     </div>
-    <div class="personal-info">
-        <div><img :src="avatar" class="avatar" alt="unfind"></div>
-        <div style="display: flex; flex-direction: column;
-        justify-content: center; align-items: flex-start">
-            <h4 style="margin-bottom: 0">{{userName}}</h4>
-            <p style="margin-top: 0"> {{userID}}</p>
-        </div>
-    </div>
-</div>
+    </el-col>
+    <el-col :span="4">
+        <el-popover placement="bottom" trigger="hover" width="100"
+        content="This is content">
+
+            <div class="personal-info" slot="reference">
+                <div><img :src="avatar" class="avatar" alt="unfind"></div>
+                <div style="display: flex; flex-direction: column;
+                justify-content: center; align-items: flex-start">
+                    <h4 style="margin-bottom: 0">{{userName}}</h4>
+                    <p style="margin-top: 0"> {{userID}}</p>
+                </div>
+            </div>
+        </el-popover>
+    </el-col>
+</el-row>
 </template>
 
 <script>
@@ -76,29 +88,21 @@ export default {
 </script>
 
 <style scoped>
-.header-align {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .icon {
-    flex-grow: 1;
-    margin-left: 20px;
+    height: 50px;
+    float: left;
     cursor: pointer;
+    margin-left: 20px;
 }
 
 .section {
-    flex-grow: 1;
+    float: right;
     margin-right: 20px;
 }
 
 .search-bar {
-    margin-top: 10px;
-    width: 300px;
     height: 50px;
+    margin-top: 10px;
 }
 
 .search-bar >>> .el-input__inner {
@@ -107,14 +111,12 @@ export default {
 
 .fast-entry {
     margin-left: 20px;
-    flex-grow: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .personal-info {
-    flex-grow: 1;
     margin-right: 20px;
     display: flex;
     align-items: center;
@@ -128,4 +130,5 @@ export default {
     border-radius: 50%;
     margin-right: 10px;
 }
+
 </style>
