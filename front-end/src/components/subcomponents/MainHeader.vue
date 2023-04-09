@@ -37,23 +37,23 @@
     </div>
     </el-col>
     <el-col :span="4">
-        <el-popover placement="bottom" trigger="hover" width="60">
-            <div class="pop-out" style="margin-left: 20px">
-                <icon-button icon="el-icon-user" class="pro-out-button">
-                    <h5 class="pop-out-word">个人中心</h5>
-                    <i class="el-icon-arrow-right"></i>
-                </icon-button>
-                <icon-button icon="el-icon-lock" class="pro-out-button">
-                    <h5 class="pop-out-word">修改密码</h5>
-                    <i class="el-icon-arrow-right"></i>
-                </icon-button>
-                <icon-button icon="el-icon-switch-button" class="pro-out-button">
-                    <h5 class="pop-out-word">登出</h5>
-                    <i class="el-icon-arrow-right"></i>
-                </icon-button>
-            </div>
-            <div slot="reference" class="personal-info">
-                <icon-button>
+        <div class="personal-info">
+            <el-popover placement="bottom" trigger="hover" width="60">
+                <div class="pop-out" style="margin-left: 20px">
+                    <icon-button icon="el-icon-user" class="pro-out-button">
+                        <h5 class="pop-out-word">个人中心</h5>
+                        <i class="el-icon-arrow-right"></i>
+                    </icon-button>
+                    <icon-button icon="el-icon-lock" class="pro-out-button">
+                        <h5 class="pop-out-word">修改密码</h5>
+                        <i class="el-icon-arrow-right"></i>
+                    </icon-button>
+                    <icon-button icon="el-icon-switch-button" class="pro-out-button">
+                        <h5 class="pop-out-word">登出</h5>
+                        <i class="el-icon-arrow-right"></i>
+                    </icon-button>
+                </div>
+                <icon-button slot="reference">
                     <div><img :src="avatar" class="avatar" alt=""></div>
                     <div style="display: flex; flex-direction: column;
                     justify-content: center; align-items: flex-start">
@@ -61,8 +61,8 @@
                         <p style="margin: 0; font-size: 10px"> {{userID}}</p>
                     </div>
                 </icon-button>
-            </div>
-        </el-popover>
+            </el-popover>
+        </div>
     </el-col>
 </el-row>
 </template>
