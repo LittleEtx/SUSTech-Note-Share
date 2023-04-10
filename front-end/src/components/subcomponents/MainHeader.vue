@@ -40,17 +40,17 @@
         <div class="personal-info">
             <el-popover placement="bottom" trigger="hover" width="60">
                 <div class="pop-out" style="margin-left: 20px">
-                    <icon-button icon="el-icon-user" class="pro-out-button">
-                        <h5 class="pop-out-word">个人中心</h5>
+                    <icon-button icon="el-icon-user" class="popover-button">
+                        <h5 class="popver-word">个人中心</h5>
                         <i class="el-icon-arrow-right"></i>
                     </icon-button>
-                    <icon-button icon="el-icon-lock" class="pro-out-button">
-                        <h5 class="pop-out-word">修改密码</h5>
+                    <icon-button icon="el-icon-lock" class="popover-button">
+                        <h5 class="popver-word">修改密码</h5>
                         <i class="el-icon-arrow-right"></i>
                     </icon-button>
-                    <icon-button icon="el-icon-switch-button" class="pro-out-button">
-                        <h5 class="pop-out-word">登出</h5>
-                        <i class="el-icon-arrow-right"></i>
+                    <icon-button icon="el-icon-switch-button"
+                                 class="popover-button" @click="logout">
+                        <h5 class="popver-word">登出</h5>
                     </icon-button>
                 </div>
                 <div slot="reference">
@@ -99,6 +99,20 @@ export default {
         this.userName = res.data.userName
       })
     })
+  },
+  methods: {
+    logout () {
+      axios.post('/api/auth/logout').then((res) => {
+        if (res.data === 1) {
+          router.push('/login')
+        } else {
+          this.$message({
+            message: '登出失败',
+            type: 'error'
+          })
+        }
+      })
+    }
   }
 }
 </script>
@@ -153,12 +167,12 @@ export default {
     align-items: flex-start;
 }
 
-.pro-out-button {
+.popover-button {
     width: 130px;
 
 }
 
-.pop-out-word {
+.popver-word {
     width: 80px;
     margin-left: 10px;
 }
