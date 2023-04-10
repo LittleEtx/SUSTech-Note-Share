@@ -1,5 +1,6 @@
-import router from "../router"
-import axios from "axios"
+import router from '../router'
+import axios from 'axios'
+import Cookies from 'js-cookie'
 
 const onResponseSuccess = response => {
   return response
@@ -8,7 +9,9 @@ const onResponseSuccess = response => {
 const onResponseError = err => {
   const status = err.status || err.response.status
   if (status === 500 || status === 401) {
-    // not logged in
+    // not logged in, remove login token
+    console.error('[axios-global]invalid token')
+    Cookies.remove('satoken')
     router.push('/login')
   }
 
