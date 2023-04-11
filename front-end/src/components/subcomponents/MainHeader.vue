@@ -39,18 +39,19 @@
     <el-col :span="4">
         <div class="personal-info">
             <el-popover placement="bottom" trigger="hover" width="60">
-                <div class="pop-out" style="margin-left: 20px">
+                <div class="pop-out" style="margin-left: 10px">
                     <icon-button icon="el-icon-user" class="popover-button">
-                        <h5 class="popver-word">个人中心</h5>
+                        <h5 class="popover-word">个人中心</h5>
                         <i class="el-icon-arrow-right"></i>
                     </icon-button>
                     <icon-button icon="el-icon-lock" class="popover-button">
-                        <h5 class="popver-word">修改密码</h5>
+                        <h5 class="popover-word">修改密码</h5>
                         <i class="el-icon-arrow-right"></i>
                     </icon-button>
                     <icon-button icon="el-icon-switch-button"
                                  class="popover-button" @click="logout">
-                        <h5 class="popver-word">登出</h5>
+                        <h5 class="popover-word">登出</h5>
+                        <i style="width: 10px"></i>
                     </icon-button>
                 </div>
                 <div slot="reference">
@@ -172,7 +173,7 @@ export default {
 
 }
 
-.popver-word {
+.popover-word {
     width: 80px;
     margin-left: 10px;
 }
