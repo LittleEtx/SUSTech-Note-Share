@@ -72,8 +72,9 @@
 
 <script>
 import IconButton from './IconButton.vue'
-import axios from 'axios'
 import router from '../../router'
+import {apiGetUserID, apiGetUserInfo} from '../../scripts/API_User'
+import {apiLogout} from '../../scripts/API_Auth'
 
 export default {
   name: 'main-header',
@@ -91,11 +92,9 @@ export default {
     }
   },
   beforeMount () {
-    axios.get('/api/user/get-id').then((res) => {
+    apiGetUserID().then((res) => {
       this.userID = res.data
-      axios.get('/api/user/get-info', {
-        params: { userID: this.userID }
-      }).then((res) => {
+      apiGetUserInfo(this.userID).then((res) => {
         // this.avatar = res.data.avatar
         this.userName = res.data.userName
       })
@@ -103,7 +102,7 @@ export default {
   },
   methods: {
     logout () {
-      axios.post('/api/auth/logout').then((res) => {
+      apiLogout().then((res) => {
         if (res.data === 1) {
           router.push('/login')
         } else {

@@ -3,15 +3,21 @@
   <div class="header">
     <main-header></main-header>
   </div>
+  <div  style="height: 100%; width: 100%">
+    <notebook style="position: absolute; margin: 0 auto"></notebook>
+  </div>
+
 </div>
 </template>
 
 <script>
 import MainHeader from './subcomponents/MainHeader.vue'
+import Notebook from './subcomponents/Notebook.vue'
 
 export default {
   name: 'HomePage',
   components: {
+    Notebook,
     MainHeader
   }
 }
@@ -19,7 +25,6 @@ export default {
 
 <style scoped>
 .header {
-    position: fixed;
     top: 0;
     width: 100%;
     height: 60px;
