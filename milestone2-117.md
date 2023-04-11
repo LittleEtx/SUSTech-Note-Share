@@ -10,7 +10,7 @@ Project Member: 陈孙兵，黄宇海，杨子德，李田，徐立达
 
 ### 1.1 Use Case Diagram
 
-![User Case Diagram.png](markdown-resources/milestone2/User Case Diagram.png)
+![User Case Diagram.png](markdown-resources/milestone2/User_Case_Diagram.png)
 
 The core user case is that user can create notes and edit them.
 After that, they can choose to public their notes or share their notes to a certain group.
@@ -25,7 +25,7 @@ and they can like, star and comment on the notes.
 
 ### 1.2 Swimlane Diagram (for viewing notes within Group)
 
-![Swimlane Diagram for Group.jpg](markdown-resources/milestone2/Swimlane Diagram for Group.jpg)
+![Swimlane Diagram for Group.jpg](markdown-resources/milestone2/Swimlane_Diagram_for_Group.jpg)
 
 This diagram specifies the interaction between the user and 
 the system when the user want to use group function. 
@@ -67,7 +67,7 @@ as well as the exploring history of the user.
 
 ### 1.4 Diagrams for Logical View
 
-![Logical View.png](markdown-resources/milestone2/Logic Diagram.png)
+![Logical View.png](markdown-resources/milestone2/Logic_Diagram.png)
 
 This logic diagram specifies then classes involved in the note system.
 Basically, a user owns multiple notebooks. In each notebook, users can 
@@ -80,7 +80,7 @@ to use their custom tags.
 
 ### 1.5 Data Design
 
-![Data Design.png](markdown-resources/milestone2/Data Design.png)
+![Data Design.png](markdown-resources/milestone2/Data_Design.png)
 
 Since we use MySQL as back-end database, a database schema is provided.
 Besides identity tables (which are identical to the class diagram in 1.4), 
@@ -143,13 +143,13 @@ specifics of the tables:
 
 #### Login Page
 
-![Login Page.png](markdown-resources/milestone2/UI Design Login Page.png)
+![Login Page.png](markdown-resources/milestone2/UI_Design_Login_Page.png)
 
 This page is specially designed since we want to specify the login and register process.
 
 #### Main Page
 
-![Main Page.png](markdown-resources/milestone2/UI Design Main Page.png)
+![Main Page.png](markdown-resources/milestone2/UI_Design_Main_Page.png)
 
 Main page is the first page that users will see after logging in.
 This page provides entries to other pages, such as personal center and history.
@@ -157,14 +157,14 @@ User can also found recommend notes here.
 
 #### Personal Center
 
-![Personal Center.png](markdown-resources/milestone2/UI Design Personal Center.png)
+![Personal Center.png](markdown-resources/milestone2/UI_Design_Personal_Center.png)
 
 Personal center is where users can find all information about themselves,
 including their own notes, stared notes and groups they joined.
 
 #### Notebook Page
 
-![Notebook Page.png](markdown-resources/milestone2/UI Design Notebook.png)
+![Notebook Page.png](markdown-resources/milestone2/UI_Design_Notebook.png)
 
 Notebook page is where users edit notes.
 For public notes, likes, stars and comments are also displayed.
@@ -188,7 +188,7 @@ and regular project structure, which should not be count as part of the contribu
 
 ### 2.2 commit history
 
-![Commit History.png](markdown-resources/milestone2/Commit Graph.png)
+![Commit History.png](markdown-resources/milestone2/Commit_Graph.png)
 
 ## 3. Deliverables
 
@@ -200,19 +200,19 @@ So far we have finished the following deliverables:
 
 ### 3.2 Documentation
 
-![Documentation.png](markdown-resources/milestone2/API Snapshot.png)
+![Documentation.png](markdown-resources/milestone2/API_Snapshot.png)
 
 As a web application, we use _Eolink Apikit_ to manage our API documentation.
 The page is accessible via [this link](https://www.eolink.com/share/index?shareCode=IVHSky)
 
 ### 3.3 Codes
 
-<img src="markdown-resources/milestone2/Directory Structure Back-end.png" alt="" width="50%">
+<img src="markdown-resources/milestone2/Directory_Structure_Back-end.png" alt="" width="50%">
 
 Back-end is powered by SpringBoot using java. Major source codes
 are in `back-end/src/main/java`
 
-<img src="markdown-resources/milestone2/Directory Structure Front-end.png" alt="" width="50%">
+<img src="markdown-resources/milestone2/Directory_Structure_Front-end.png" alt="" width="50%">
 
 Front-end is powered by Vue 2. Major source codes
 are in `front-end/src`
