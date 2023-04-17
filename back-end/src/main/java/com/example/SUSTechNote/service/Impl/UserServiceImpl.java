@@ -95,4 +95,9 @@ public class UserServiceImpl implements UserService {
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
+
+    @Override
+    public void updateAvatar(String avatar, int userID) {
+        userRepository.updateAvatar(avatar, userID);
+    }
 }
