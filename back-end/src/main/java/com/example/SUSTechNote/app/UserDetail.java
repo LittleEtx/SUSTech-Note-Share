@@ -33,13 +33,14 @@ public class UserDetail {
         return userService.updateUser(user);
     }
     @PostMapping("/upload-avatar")
-    public int uploadAvatar(@RequestParam("avatar") MultipartFile[] files) {
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile[] files) {
         System.out.println("The number of files received: " + files.length);
+        String url = "http://localhost:8088/api/static/";
         for (MultipartFile file : files) {
             String fileType = file.getContentType();
             System.out.println(fileType);
             if (!(fileType.equals("image/jpeg") || fileType.equals("image/png"))) {
-                return 406;
+                return "file not support";
             }
             String fileName = file.getOriginalFilename();
             System.out.println("Saving " + fileName);
@@ -50,14 +51,15 @@ public class UserDetail {
             }
             try {
                 file.transferTo(new File(folder, fileName));
-                String filePath = savingPath + "\\" + fileName;
-                System.out.println(filePath);
+                url += fileName;
+                userService.updateAvatar(url, 12112628);
             } catch (Exception e) {
                 e.printStackTrace();
-                return 500;
+                return "unknown error";
             }
         }
-        return 200;
+        System.out.println(url);
+        return url;
     }
     @SaCheckRole("admin")
     @PostMapping("/deleteUser")

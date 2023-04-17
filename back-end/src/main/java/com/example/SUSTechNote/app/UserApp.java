@@ -162,9 +162,14 @@ public class UserApp {
         return userService.logout();
     }
 
-    @GetMapping("/test")
+    @GetMapping("/redis_test")
     public void test() {
         redisService.put("a", "1", 5);
+    }
+
+    @GetMapping("/project_test")
+    public int projectTest() {
+        return 200;
     }
 
     public String generateCode() {

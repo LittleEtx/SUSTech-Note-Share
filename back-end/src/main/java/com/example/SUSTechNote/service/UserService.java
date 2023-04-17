@@ -26,4 +26,6 @@ public interface UserService {
     public User findUserById(int userID);
 
     public User findUserByEmail(String email);
+
+    public void updateAvatar(String avatar, int userID);
 }
