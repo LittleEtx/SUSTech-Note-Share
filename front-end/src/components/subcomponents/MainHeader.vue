@@ -94,7 +94,7 @@ export default {
   async beforeMount () {
     this.userID = await apiGetUserID()
     const userData = await apiGetUserInfo(this.userID)
-    // this.avatar = userData.avatar
+    this.avatar = userData.avatar
     this.userName = userData.userName
   },
   methods: {

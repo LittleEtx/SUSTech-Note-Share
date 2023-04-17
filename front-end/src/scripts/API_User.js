@@ -6,12 +6,14 @@ import axios from 'axios'
  */
 export async function apiGetUserID () {
   const { data } = await axios.get('/api/user/get-id')
+  // store to local storage
+  localStorage.setItem('userID', data)
   return data
 }
 
 /**
  * @typedef {Object} UserInfo
- * @property {int} uid 用户ID
+ * @property {int} userID 用户ID
  * @property {string} userName 用户名
  * @property {string} email 用户邮箱
  * @property {string} avatar 用户头像URL

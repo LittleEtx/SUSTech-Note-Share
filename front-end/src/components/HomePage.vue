@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="icon-header">
+  <div class="header">
     <main-header></main-header>
   </div>
   <div  style="height: 100%; width: 100%">

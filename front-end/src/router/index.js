@@ -21,8 +21,7 @@ export default new Router({
       component: () => import('../components/HomePage')
     },
     {
-      path: '/center/:id',
-      name: 'center',
+      path: '/user/:userId',
       component: () => import('../components/PersonalCenterPage')
     }
   ]
