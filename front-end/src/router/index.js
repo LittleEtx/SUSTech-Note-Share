@@ -13,7 +13,7 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../components/logOn')
+      component: () => import('../components/LoginPage.vue')
     },
     {
       path: '/home',

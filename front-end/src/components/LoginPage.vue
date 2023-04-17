@@ -12,8 +12,8 @@
           <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px">
         </div>
         <div class="login-box">
-          <Log v-show="!isPush" :isPush="isPush" @choseItem="choseItem"></Log>
-          <re-pwd v-show="isPush"></re-pwd>
+          <login v-show="!isPush" :isPush="isPush" @choseItem="choseItem"></login>
+          <reset-password v-show="isPush"></reset-password>
           <icon-button v-show="isPush" icon="el-icon-back" size="30px"
                      @click="isPush = !isPush" class="return-button"></icon-button>
         </div>
@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import Log from './Log'
-import rePwd from './rePwd'
+import Login from './subcomponents/Login.vue'
+import ResetPassword from './subcomponents/ResetPassword.vue'
 import router from '../router'
 import Cookies from 'js-cookie'
 import IconButton from './subcomponents/IconButton.vue'
@@ -59,7 +59,7 @@ export default {
       a.dispatchEvent(event) // 触发a的单击事件
     }
   },
-  components: {IconButton, Log, rePwd},
+  components: {IconButton, Login, ResetPassword},
   computed: {
     backgroundUrl: function () {
       const date = new Date()
@@ -72,6 +72,7 @@ export default {
   beforeMount () {
     // check whether the user has logged in
     if (Cookies.get('satoken')) {
+      // if token not acceptable, will jump back to this page
       router.push('/home')
     }
   }
