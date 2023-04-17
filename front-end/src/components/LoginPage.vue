@@ -8,8 +8,8 @@
     <!--  main container for login  -->
     <transition name="basic-fade">
       <div v-show="isShowBox" class="login-container">
-        <div class="header">
-          <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px">
+        <div class="icon-header">
+          <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
         </div>
         <div class="login-box">
           <login v-show="!isPush" :isPush="isPush" @choseItem="choseItem"></login>
@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import Login from './subcomponents/Login.vue'
-import ResetPassword from './subcomponents/ResetPassword.vue'
+import Login from './login_page/Login.vue'
+import ResetPassword from './login_page/ResetPassword.vue'
 import router from '../router'
 import Cookies from 'js-cookie'
 import IconButton from './subcomponents/IconButton.vue'
@@ -124,7 +124,7 @@ export default {
   opacity: 0;
 }
 
-.header{
+.icon-header{
   scale: 125%;
   margin-bottom: 10px;
 }
