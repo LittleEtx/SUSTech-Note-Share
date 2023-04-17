@@ -91,14 +91,11 @@ export default {
       userID: ''
     }
   },
-  beforeMount () {
-    apiGetUserID().then((res) => {
-      this.userID = res.data
-      apiGetUserInfo(this.userID).then((res) => {
-        // this.avatar = res.data.avatar
-        this.userName = res.data.userName
-      })
-    })
+  async beforeMount () {
+    this.userID = await apiGetUserID()
+    const userData = await apiGetUserInfo(this.userID)
+    // this.avatar = userData.avatar
+    this.userName = userData.userName
   },
   methods: {
     logout () {

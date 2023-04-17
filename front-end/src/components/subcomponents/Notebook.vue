@@ -74,11 +74,8 @@ export default {
       authorName: ''
     }
   },
-  beforeMount () {
-    apiGetUserInfo(this.notebook.authorID).then((res) => {
-      // this.avatar = res.data.avatar
-      this.authorName = res.data.userName
-    })
+  async beforeMount () {
+    this.authorName = (await apiGetUserInfo(this.notebook.authorID)).userName
   }
 }
 </script>

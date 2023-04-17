@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="header">
+  <div class="icon-header">
     <main-header></main-header>
   </div>
   <div  style="height: 100%; width: 100%">
@@ -24,10 +24,5 @@ export default {
 </script>
 
 <style scoped>
-.header {
-    top: 0;
-    width: 100%;
-    height: 60px;
-    border-bottom: 2px solid #e0e0e0;
-}
+
 </style>
