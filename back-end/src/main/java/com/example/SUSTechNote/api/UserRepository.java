@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Query(value = "update users set avatar = ?1 where userid = ?2", nativeQuery = true)
     public void updateAvatar(String avatar, int userID);
+
+
+
 }

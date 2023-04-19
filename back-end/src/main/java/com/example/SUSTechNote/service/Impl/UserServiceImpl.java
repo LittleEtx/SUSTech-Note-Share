@@ -100,4 +100,5 @@ public class UserServiceImpl implements UserService {
     public void updateAvatar(String avatar, int userID) {
         userRepository.updateAvatar(avatar, userID);
     }
+
 }
