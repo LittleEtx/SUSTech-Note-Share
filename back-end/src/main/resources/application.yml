@@ -18,7 +18,11 @@ spring:
         #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
         debug: true
   mvc:
-    static-path-pattern: /static/**
+    static-path-pattern: /**
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/public/,classpath:/static/,file:./static/
+
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:

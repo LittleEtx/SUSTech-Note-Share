@@ -8,19 +8,12 @@ import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
 import java.util.*;
@@ -28,6 +21,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/user")
 public class UserDetail {
+
     @Autowired
     UserService userService;
     @Autowired
@@ -57,7 +51,7 @@ public class UserDetail {
         try {
             System.out.println("Saving " + newFileName);
             String path = new ApplicationHome(this.getClass()).getDir().getParentFile().getParentFile()
-                    .getAbsolutePath() + "/static/";
+                    .getAbsolutePath() + "/static/UserAvatar";
             System.out.println(path);
             File folder = new File(path);
             if (!folder.isDirectory() || !folder.exists()) {

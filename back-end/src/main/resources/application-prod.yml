@@ -8,10 +8,6 @@ spring:
     url: jdbc:mysql://120.24.234.8:3306/SUSTechNote?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: cs304
     password: cs304
-  web:
-    resources:
-      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/public/,classpath:/static/,file:static/
-
 
   data:
     redis:
