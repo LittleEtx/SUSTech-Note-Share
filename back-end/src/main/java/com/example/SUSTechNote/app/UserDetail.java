@@ -23,8 +23,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -100,8 +99,17 @@ public class UserDetail {
 //        return userService.findUserById(userID);
 //    }
     @GetMapping("/get-info")
-    public User getInfo(int userID){
-        return userService.findUserById(userID);
+    public Map<String,Object> getInfo(int userID){
+        User user = userService.findUserById(userID);
+        Map<String,Object> map = new HashMap<>();
+        map.put("userID",user.getUserID());
+        map.put("userName",user.getUserName());
+        map.put("email",user.getEmail());
+        map.put("avatar",user.getAvatar());
+        map.put("description",user.getDescription());
+        map.put("gender",user.getGender());
+        map.put("birth",user.getBirth());
+        return map;
     }
 
     @PostMapping("/update-info")
