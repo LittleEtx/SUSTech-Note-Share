@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,11 +18,14 @@ spring:
         #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
         debug: true
   mvc:
-    static-path-pattern: /**
-  web:
-    resources:
-      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/public/,classpath:/static/,file:./static/
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      max-file-size: 10MB  # 上传文件大小为 10MB 10*1024*1024
 
+server:
+  servlet:
+    context-path: /api
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:

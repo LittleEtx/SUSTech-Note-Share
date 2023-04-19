@@ -6,26 +6,31 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.system.ApplicationHome;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.StringUtils;
+import com.example.SUSTechNote.util.StaticPathHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import java.util.*;
 
 @RestController
 @RequestMapping("/user")
-public class UserDetail {
+public class UserDetailApp {
+    private final Logger logger = LoggerFactory.getLogger(UserDetailApp.class);
+    private final UserService userService;
+    private final StaticPathHelper staticPathHelper;
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    ResourceLoader resourceLoader;
+    //构造函数自动注入，无需标注Autowire
+    public UserDetailApp(UserService userService, StaticPathHelper staticPathHelper) {
+        this.userService = userService;
+        this.staticPathHelper = staticPathHelper;
+    }
 
     @PostMapping("/updateUser")
     public int update(@RequestBody JSONObject jsonObject) {
@@ -38,36 +43,37 @@ public class UserDetail {
         user.setAvatar(jsonObject.getString("avatar"));
         return userService.updateUser(user);
     }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")  //so that mkdir() method will not report warning
     @PostMapping("/upload-avatar")
-    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @RequestParam("userID") String userID) {
-        String url = "/api/static/";
+    public ResponseEntity<?> uploadAvatar(@RequestParam("avatar") MultipartFile file) throws IOException {
+        //int id = StpUtil.getLoginIdAsInt();
+        int id = 12112628;
+        logger.debug("user "+ id + " upload avatar");
         String fileType = file.getContentType();
-        System.out.println(fileType);
-        if (!(fileType.equals("image/jpeg") || fileType.equals("image/png"))) {
-            return "file not support";
+        if (!"image/jpeg".equals(fileType) && !"image/png".equals(fileType)) {
+            return ResponseEntity.badRequest().body("file not support");
         }
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String newFileName = UUID.randomUUID() + fileName.substring(fileName.lastIndexOf("."));
-        try {
-            System.out.println("Saving " + newFileName);
-            String path = new ApplicationHome(this.getClass()).getDir().getParentFile().getParentFile()
-                    .getAbsolutePath() + "/static/UserAvatar";
-            System.out.println(path);
-            File folder = new File(path);
-            if (!folder.isDirectory() || !folder.exists()) {
-                folder.mkdirs();
-                System.out.println("create folder");
-            }
-            file.transferTo(new File(folder, newFileName));
-            url += newFileName;
-            userService.updateAvatar(url, Integer.parseInt(userID));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "unknown error";
+        //使用随机UUID作为文件名
+        String fileName = UUID.randomUUID().toString().replaceAll("-", "") +
+                ("image/jpeg".equals(fileType) ? ".jpg" : ".png");
+
+        String basePath = staticPathHelper.getStaticPath();
+        String savingPath = "/user_avatar";
+        File folder = new File(basePath, savingPath);
+        String url = "/api/static" + savingPath + "/";
+        if (!folder.exists()) {
+            logger.debug("create dir for saving avatars at " + folder.getAbsolutePath());
+            folder.mkdirs();
         }
-        System.out.println(url);
-        return url;
+
+        file.transferTo(new File(folder, fileName));
+        url += fileName;
+        userService.updateAvatar(url, id);
+        logger.info("user " + id + " update avatar url to: " + url);
+        return ResponseEntity.ok().body(url);
     }
+
     @SaCheckRole("admin")
     @PostMapping("/deleteUser")
     public int deleteUser(@RequestBody JSONObject jsonObject) {
@@ -87,11 +93,7 @@ public class UserDetail {
         System.out.println(StpUtil.getTokenInfo());
         return StpUtil.getLoginIdAsInt();
     }
-//    @GetMapping("/get-info")
-//    public User getInfo(@RequestBody JSONObject jsonObject){
-//        int userID = jsonObject.getInteger("userID");
-//        return userService.findUserById(userID);
-//    }
+
     @GetMapping("/get-info")
     public Map<String,Object> getInfo(int userID){
         User user = userService.findUserById(userID);
