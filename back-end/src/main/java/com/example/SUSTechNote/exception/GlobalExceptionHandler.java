@@ -1,9 +1,12 @@
 package com.example.SUSTechNote.exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
@@ -18,16 +21,17 @@ public class GlobalExceptionHandler {
      * 捕获 Sa-token 的 NotLoginException 异常，返回 401 状态码（Not Login）
      */
     @ExceptionHandler(NotLoginException.class)
-    public String notLoginException(NotLoginException e) {
-        return ResponseEntity.status(401).body(e.getMessage()).toString();
+    public ResponseEntity<?> notLoginException(NotLoginException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     /**
      * 捕获 IOException 异常，返回 500 状态码（Internal Server Error）
      */
     @ExceptionHandler(IOException.class)
-    public String ioException(IOException e) {
-        return ResponseEntity.internalServerError().body(e.getMessage()).toString();
+    public ResponseEntity<?> ioException(IOException e) {
+        return ResponseEntity.internalServerError()
+                .body("An error happens in the server" + e.getMessage());
     }
 
 }

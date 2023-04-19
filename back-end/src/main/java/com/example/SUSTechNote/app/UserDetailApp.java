@@ -47,8 +47,8 @@ public class UserDetailApp {
     @SuppressWarnings("ResultOfMethodCallIgnored")  //so that mkdir() method will not report warning
     @PostMapping("/upload-avatar")
     public ResponseEntity<?> uploadAvatar(@RequestParam("avatar") MultipartFile file) throws IOException {
-        //int id = StpUtil.getLoginIdAsInt();
-        int id = 12112628;
+        //获取目前登录用户的id
+        int id = StpUtil.getLoginIdAsInt();
         logger.debug("user "+ id + " upload avatar");
         String fileType = file.getContentType();
         if (!"image/jpeg".equals(fileType) && !"image/png".equals(fileType)) {
@@ -61,14 +61,13 @@ public class UserDetailApp {
         String basePath = staticPathHelper.getStaticPath();
         String savingPath = "/user_avatar";
         File folder = new File(basePath, savingPath);
-        String url = "/api/static" + savingPath + "/";
         if (!folder.exists()) {
             logger.debug("create dir for saving avatars at " + folder.getAbsolutePath());
             folder.mkdirs();
         }
 
         file.transferTo(new File(folder, fileName));
-        url += fileName;
+        String url = "/api/static" + savingPath + "/" + fileName;
         userService.updateAvatar(url, id);
         logger.info("user " + id + " update avatar url to: " + url);
         return ResponseEntity.ok().body(url);
