@@ -10,7 +10,7 @@ spring:
     password: cs304
   web:
     resources:
-      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/public/,classpath:/static/,file:${E:\SoftwareEngineering\UserAvatar}
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/public/,classpath:/static/,file:static/
 
 
   data:

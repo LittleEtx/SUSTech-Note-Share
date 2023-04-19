@@ -7,19 +7,32 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
 public class UserDetail {
     @Autowired
     UserService userService;
+    @Autowired
+    ResourceLoader resourceLoader;
 
     @PostMapping("/updateUser")
     public int update(@RequestBody JSONObject jsonObject) {
@@ -33,30 +46,31 @@ public class UserDetail {
         return userService.updateUser(user);
     }
     @PostMapping("/upload-avatar")
-    public String uploadAvatar(@RequestParam("avatar") MultipartFile[] files) {
-        System.out.println("The number of files received: " + files.length);
-        String url = "http://localhost:8088/api/static/";
-        for (MultipartFile file : files) {
-            String fileType = file.getContentType();
-            System.out.println(fileType);
-            if (!(fileType.equals("image/jpeg") || fileType.equals("image/png"))) {
-                return "file not support";
-            }
-            String fileName = file.getOriginalFilename();
-            System.out.println("Saving " + fileName);
-            String savingPath = "E:\\SoftwareEngineering\\UserAvatar";
-            File folder = new File(savingPath);
-            if (!folder.isDirectory()) {
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @RequestParam("userID") String userID) {
+        String url = "/api/static/";
+        String fileType = file.getContentType();
+        System.out.println(fileType);
+        if (!(fileType.equals("image/jpeg") || fileType.equals("image/png"))) {
+            return "file not support";
+        }
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String newFileName = UUID.randomUUID() + fileName.substring(fileName.lastIndexOf("."));
+        try {
+            System.out.println("Saving " + newFileName);
+            String path = new ApplicationHome(this.getClass()).getDir().getParentFile().getParentFile()
+                    .getAbsolutePath() + "/static/";
+            System.out.println(path);
+            File folder = new File(path);
+            if (!folder.isDirectory() || !folder.exists()) {
                 folder.mkdirs();
+                System.out.println("create folder");
             }
-            try {
-                file.transferTo(new File(folder, fileName));
-                url += fileName;
-                userService.updateAvatar(url, 12112628);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "unknown error";
-            }
+            file.transferTo(new File(folder, newFileName));
+            url += newFileName;
+            userService.updateAvatar(url, Integer.parseInt(userID));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "unknown error";
         }
         System.out.println(url);
         return url;
