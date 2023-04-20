@@ -11,16 +11,20 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    public List<User> findUsersByUserIDAndPassword(int userID, String password);
-    public List<User> findUsersByUserID(int userID);
-    public User findUserByUserID(int userID);
-    public User findUserByEmail(String email);
+    List<User> findUsersByUserIDAndPassword(int userID, String password);
+    boolean existsByEmailAndPassword(String email, String password);
+    boolean existsByEmail(String email);
+    boolean existsByUserID(Integer userID);
+
+    User findUserByUserID(int userID);
+
+    User findUserByEmail(String email);
 
     @Modifying
     @Transactional
     @Query(value = "update users set avatar = ?1 where userid = ?2", nativeQuery = true)
-    public void updateAvatar(String avatar, int userID);
+    void updateAvatar(String avatar, int userID);
 
-
-
+    @Query(value = "select max(userid) from users", nativeQuery = true)
+    int getMaxID();
 }

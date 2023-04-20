@@ -6,34 +6,32 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.UserService;
-import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
 public class UserDetailApp {
     private final Logger logger = LoggerFactory.getLogger(UserDetailApp.class);
     private final UserService userService;
-    private final StaticPathHelper staticPathHelper;
 
     //构造函数自动注入，无需标注Autowire
-    public UserDetailApp(UserService userService, StaticPathHelper staticPathHelper) {
+    public UserDetailApp(UserService userService) {
         this.userService = userService;
-        this.staticPathHelper = staticPathHelper;
     }
 
     @PostMapping("/updateUser")
-    public int update(@RequestBody JSONObject jsonObject) {
+    public ResponseEntity<?> update(@RequestBody JSONObject jsonObject) {
         User user = new User();
         user.setUserID(Integer.parseInt(jsonObject.getString("userID")));
         user.setUserName(jsonObject.getString("userName"));
@@ -41,43 +39,33 @@ public class UserDetailApp {
         user.setEmail(jsonObject.getString("email"));
         user.setSchedule(jsonObject.getString("schedule"));
         user.setAvatar(jsonObject.getString("avatar"));
-        return userService.updateUser(user);
+        userService.updateUser(user);
+        return ResponseEntity.ok().body("update success");
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")  //so that mkdir() method will not report warning
+    //so that mkdir() method will not report warning
     @PostMapping("/upload-avatar")
-    public ResponseEntity<?> uploadAvatar(@RequestParam("avatar") MultipartFile file) throws IOException {
-        //获取目前登录用户的id
-        int id = StpUtil.getLoginIdAsInt();
-        logger.debug("user "+ id + " upload avatar");
-        String fileType = file.getContentType();
+    public ResponseEntity<?> uploadAvatar(@RequestParam("avatar") MultipartFile avatar) throws IOException {
+        int id = StpUtil.getLoginIdAsInt(); //获取用户ID
+        String fileType = avatar.getContentType();
         if (!"image/jpeg".equals(fileType) && !"image/png".equals(fileType)) {
+            logger.debug("User avatar upload type not match");
             return ResponseEntity.badRequest().body("file not support");
         }
-        //使用随机UUID作为文件名
-        String fileName = UUID.randomUUID().toString().replaceAll("-", "") +
-                ("image/jpeg".equals(fileType) ? ".jpg" : ".png");
 
-        String basePath = staticPathHelper.getStaticPath();
-        String savingPath = "/user_avatar";
-        File folder = new File(basePath, savingPath);
-        if (!folder.exists()) {
-            logger.debug("create dir for saving avatars at " + folder.getAbsolutePath());
-            folder.mkdirs();
-        }
-
-        file.transferTo(new File(folder, fileName));
-        String url = "/api/static" + savingPath + "/" + fileName;
-        userService.updateAvatar(url, id);
-        logger.info("user " + id + " update avatar url to: " + url);
-        return ResponseEntity.ok().body(url);
+        String url = userService.updateAvatar(id, avatar);
+        return ResponseEntity.ok(url);
     }
 
     @SaCheckRole("admin")
     @PostMapping("/deleteUser")
-    public int deleteUser(@RequestBody JSONObject jsonObject) {
+    public ResponseEntity<?> deleteUser(@RequestBody JSONObject jsonObject) {
         int userID = Integer.parseInt(jsonObject.getString("userID"));
-        return userService.deleteUser(userID);
+        if (userService.deleteUser(userID)) {
+            return ResponseEntity.ok().body("delete user " + userID + " success");
+        } else {
+            return ResponseEntity.badRequest().body("user " + userID + " not exist!");
+        }
     }
 
     @GetMapping("/findAllUser")
@@ -88,14 +76,15 @@ public class UserDetailApp {
     @SaCheckLogin
     @GetMapping("/get-id")
     public int getID(){
-        System.out.println("15");
-        System.out.println(StpUtil.getTokenInfo());
         return StpUtil.getLoginIdAsInt();
     }
 
     @GetMapping("/get-info")
-    public Map<String,Object> getInfo(int userID){
+    public ResponseEntity<?> getInfo(Integer userID){
         User user = userService.findUserById(userID);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("user not exist!");
+        }
         Map<String,Object> map = new HashMap<>();
         map.put("userID",user.getUserID());
         map.put("userName",user.getUserName());
@@ -104,23 +93,26 @@ public class UserDetailApp {
         map.put("description",user.getDescription());
         map.put("gender",user.getGender());
         map.put("birth",user.getBirth());
-        return map;
+        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/update-info")
-    public int updateInfo(@RequestBody JSONObject jsonObject) {
-        User user = userService.findUserById(jsonObject.getInteger("userID"));
+    public ResponseEntity<?> updateInfo(@RequestBody JSONObject jsonObject) {
+        User user = userService.findUserById(StpUtil.getLoginIdAsInt());
         LocalDateTime lastUpdateTime = user.getUpdateTime();
         LocalDateTime now = LocalDateTime.now();
-        if (lastUpdateTime == null || lastUpdateTime.plusWeeks(1).isBefore(now)) {
-            user.setUserName(jsonObject.getString("userName"));
-            user.setDescription(jsonObject.getString("description"));
-            user.setGender(jsonObject.getInteger("gender"));
-            user.setBirth(jsonObject.getSqlDate("date"));
-            user.setUpdateTime(now);
-            return userService.updateUser(user);
-        } else {
-            return 403;
+        String newName = jsonObject.getString("userName");
+        // 每周只能改一次用户名
+        if (!Objects.equals(newName, user.getUserName()) &&
+                now.minusWeeks(1).isAfter(lastUpdateTime)) {
+            return ResponseEntity.badRequest().body("username can only be changed once a week");
         }
+        user.setUserName(newName);
+        user.setDescription(jsonObject.getString("description"));
+        user.setGender(jsonObject.getInteger("gender"));
+        user.setBirth(jsonObject.getSqlDate("date"));
+        user.setUpdateTime(now);
+        userService.updateUser(user);
+        return ResponseEntity.ok().body("update success");
     }
 }
