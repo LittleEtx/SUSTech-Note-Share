@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IOException.class)
     public ResponseEntity<?> ioException(IOException e) {
         return ResponseEntity.internalServerError()
-                .body("An error happens in the server" + e.getMessage());
+                .body("An error happens in the server: " + e.getMessage());
     }
 
 }
