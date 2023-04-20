@@ -1,9 +1,9 @@
 package com.example.SUSTechNote.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "notebooks")
@@ -12,11 +12,10 @@ public class Notebook {
     private String notebookID;
     private String notebookName;
     private String tag;
+    private String directory;
+    private String savePath;
 
-
-
-
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
     private String cover;
     private String description;
@@ -123,34 +122,19 @@ public class Notebook {
         this.authorID = authorID;
     }
 
-//    public String getNotebookID() {
-//        return notebookID;
-//    }
-//
-//    public void setNotebookID(String notebookID) {
-//        this.notebookID = notebookID;
-//    }
-//
-//    public String getNotebookName() {
-//        return notebookName;
-//    }
-//
-//    public void setNotebookName(String notebookName) {
-//        this.notebookName = notebookName;
-//    }
-//    public Integer getUser() {
-//        return authorID;
-//    }
-//
-//    public void setUser(Integer authorID) {
-//        this.authorID = authorID;
-//    }
-//
-//    public Integer getIsPublic() {
-//        return isPublic;
-//    }
-//
-//    public void setIsPublic(Integer isPublic) {
-//        this.isPublic = isPublic;
-//    }
+    public String getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
+    public String getSavePath() {
+        return savePath;
+    }
+
+    public void setSavePath(String savePath) {
+        this.savePath = savePath;
+    }
 }

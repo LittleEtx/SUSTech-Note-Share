@@ -9,13 +9,15 @@ import java.util.List;
 @Service
 public interface NoteService {
 
-    public int addNote(String noteID,Integer isPublic );
+    void addNote(String noteID, int userID, String noteBookID, String realPath, String title, int isPublic);
 
-    public int updateNote(Note note);
+    int updateNote(Note note);
 
-    public int checkNote(String noteID);
+    int checkNote(String noteID);
 
-    public int deleteNote(String noteID);
+    int deleteNote(String noteID);
 
-    public List<Note> findAllNote();
+    List<Note> findAllNote();
+
+    int findNotesCountByNotebookID(String notebookID);
 }

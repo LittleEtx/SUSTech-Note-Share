@@ -3,30 +3,37 @@ package com.example.SUSTechNote.service.Impl;
 import com.example.SUSTechNote.api.NoteRepository;
 import com.example.SUSTechNote.entity.Note;
 import com.example.SUSTechNote.service.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class NoteServiceImpl implements NoteService {
-    @Autowired
-    NoteRepository NoteRepository;
+
+    private final Logger logger = LoggerFactory.getLogger(NoteServiceImpl.class);
+    private final NoteRepository NoteRepository;
+    public NoteServiceImpl(NoteRepository NoteRepository) {
+        this.NoteRepository = NoteRepository;
+    }
 
     @Override
-    public int addNote(String noteID,Integer isPublic){
-        if (checkNote(noteID) == 0 ){
+    public void addNote(String noteID, int userID, String noteBookID, String realPath, String title, int isPublic){
+        try {
             Note note = new Note();
             note.setNoteID(noteID);
+            note.setAuthorID(userID);
+            note.setNotebookID(noteBookID);
+            note.setSavingPath(realPath);
+            note.setNoteName(title);
             note.setIsPublic(isPublic);
+            note.setStatus(0);
             NoteRepository.save(note);
-            return 1;
+        } catch (Exception e) {
+            logger.error("addNote error: " + e.getMessage());
         }
-        if (checkNote(noteID) == 400){
-            return 400;
-        }
-        return 0;
-    };
+    }
 
     @Override
     public int updateNote(Note Note){
@@ -38,7 +45,7 @@ public class NoteServiceImpl implements NoteService {
             return 400;
         }
         return 0;
-    };
+    }
 
     @Override
     public int checkNote(String NoteID){
@@ -50,7 +57,7 @@ public class NoteServiceImpl implements NoteService {
         } else {
             return 0;
         }
-    };
+    }
 
     @Override
     public int deleteNote(String NoteID){
@@ -59,10 +66,15 @@ public class NoteServiceImpl implements NoteService {
             return 1;
         }
         return 0;
-    };
+    }
 
     @Override
     public List<Note> findAllNote(){
         return NoteRepository.findAll();
-    };
+    }
+
+    @Override
+    public int findNotesCountByNotebookID(String notebookID) {
+        return NoteRepository.findNotesByNotebookID(notebookID);
+    }
 }

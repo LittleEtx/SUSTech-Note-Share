@@ -1,6 +1,5 @@
 package com.example.SUSTechNote.service;
 
-import com.example.SUSTechNote.entity.Course;
 import com.example.SUSTechNote.entity.Notebook;
 import org.springframework.stereotype.Service;
 
@@ -8,17 +7,19 @@ import java.util.List;
 
 @Service
 public interface NotebookService {
-    public int addNotebook(String notebookID,String notebookName,Integer isPublic );
+    void addNotebook(String noteBookID, int userID, String directory, String savingPath, String title, String tag, String description, int isPublic);
 
-    public int updateNotebook(Notebook notebook);
+    void updateNotebook(Notebook notebook);
 
-    public int checkNotebook(String notebookID);
+    Boolean checkNotebook(String notebookID);
 
-    public int deleteNotebook(String notebookID);
+    void deleteNotebook(Integer status, String notebookID);
 
-    public Notebook getNotebookBasic(String notebookID);
+    Notebook getNotebookBasic(String notebookID);
 
-    public List<Notebook> findAllNotebook();
+    List<Notebook> findAllNotebook();
 
-    public Notebook findNotebookByID(String notebookID);
+    Notebook findNotebookByID(String notebookID);
+
+    int findNotebookCountByUserID(int userID);
 }

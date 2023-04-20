@@ -11,6 +11,7 @@ public class Note {
     private String noteID;
     private String noteName;
     private Integer authorID;
+    private String savingPath;
     private Integer isPublic;
     private Integer status;
     private LocalDateTime removeTime;
@@ -74,5 +75,13 @@ public class Note {
 
     public void setNotebookID(String notebookID) {
         this.notebookID = notebookID;
+    }
+
+    public String getSavingPath() {
+        return savingPath;
+    }
+
+    public void setSavingPath(String savingPath) {
+        this.savingPath = savingPath;
     }
 }
