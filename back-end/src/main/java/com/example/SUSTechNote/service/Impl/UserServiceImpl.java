@@ -161,8 +161,22 @@ public class UserServiceImpl implements UserService {
             logger.debug("create dir for saving avatars at " + folder.getAbsolutePath());
             folder.mkdirs();
         }
-
+        //add new avatar to file
         avatar.transferTo(new File(folder, fileName));
+        //delete original avatar
+        String originalAvatar = userRepository
+                .findUserByUserID(userID)
+                .getAvatar();
+        if (originalAvatar != null && !originalAvatar.equals("")) {
+            String[] split = originalAvatar.split("/");
+            String originalFileName = split[split.length - 1];
+            File originalFile = new File(folder + originalFileName);
+            if (originalFile.exists()) {
+                logger.debug("delete original avatar at " + originalFile.getAbsolutePath());
+                originalFile.delete();
+            }
+        }
+
         String url = "/api/static" + savingPath + "/" + fileName;
         logger.info("user " + userID + " update avatar url to: " + url);
         userRepository.updateAvatar(url, userID);

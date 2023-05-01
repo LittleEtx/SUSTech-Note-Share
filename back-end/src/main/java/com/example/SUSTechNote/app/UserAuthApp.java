@@ -86,8 +86,9 @@ public class UserAuthApp {
     public ResponseEntity<?>  sendEmailCode(@RequestBody JSONObject jsonObject) {
         String userEmail = jsonObject.getString("email");
         if (userEmail == null ||
-                !(userEmail.endsWith("@mail.sustech.edu.cn")
-                        || userEmail.endsWith("@sustech.edu.cn"))) {
+                !(userEmail.toLowerCase().endsWith("@mail.sustech.edu.cn")
+                        || userEmail.toLowerCase().endsWith("@sustech.edu.cn"))) {
+            logger.debug("The mailbox format is incorrect: " + userEmail);
             return ResponseEntity.badRequest().body("The mailbox format is incorrect");
         }
         // TODO：对发送的频次进行限制以防止DDoS攻击
@@ -118,7 +119,7 @@ public class UserAuthApp {
         }
     }
 
-    @PostMapping("reset-password/confirm-email")
+    @PostMapping("reset-password/verify-email")
     public ResponseEntity<?> confirmEmail(@RequestBody JSONObject jsonObject) {
         String email = jsonObject.getString("email");
         if (userService.findUserByEmail(email) == null) {
@@ -128,7 +129,7 @@ public class UserAuthApp {
         }
     }
 
-    @PostMapping("reset-password/verify-email")
+    @PostMapping("reset-password/confirm-email")
     public ResponseEntity<?> verifyEmail(@RequestBody JSONObject jsonObject) {
         String email = jsonObject.getString("email");
         String verificationCode = jsonObject.getString("verificationCode");
