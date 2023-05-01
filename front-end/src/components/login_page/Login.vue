@@ -48,7 +48,7 @@
       </el-tab-pane>
       <!--   验证码登录选框     -->
       <el-tab-pane class="pane-style" label="验证码登录" name="second">
-        <el-form ref="emailLogForm" :model="emailForm" :rules="emailRules"
+        <el-form ref="emailForm" :model="emailForm" :rules="emailRules"
                  label-position="right" label-width="80px">
           <!-- 邮箱 -->
           <el-row >
