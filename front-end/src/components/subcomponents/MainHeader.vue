@@ -99,15 +99,13 @@ export default {
   },
   methods: {
     logout () {
-      apiLogout().then((res) => {
-        if (res.data === 1) {
-          router.push('/login')
-        } else {
-          this.$message({
-            message: '登出失败',
-            type: 'error'
-          })
-        }
+      apiLogout().then(() => {
+        router.push('/login')
+      }).catch(() => {
+        this.$message({
+          message: '登出失败',
+          type: 'error'
+        })
       })
     }
   }

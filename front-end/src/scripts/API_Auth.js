@@ -16,11 +16,9 @@ export function apiSendEmailCode () {
  */
 export function apiLoginViaCode (email, code, rememberMe) {
   return axios.post('/api/auth/login/email-code-login', {
-    params: {
-      email: email,
-      verificationCode: code,
-      rememberMe: rememberMe
-    }
+    email: email,
+    verificationCode: code,
+    rememberMe: rememberMe
   })
 }
 
@@ -32,11 +30,9 @@ export function apiLoginViaCode (email, code, rememberMe) {
  */
 export function apiLoginViaPassword (email, password, rememberMe) {
   return axios.post('/api/auth/login/password-login', {
-    params: {
-      email: email,
-      password: password,
-      rememberMe: rememberMe
-    }
+    email: email,
+    password: password,
+    rememberMe: rememberMe
   })
 }
 
@@ -45,9 +41,7 @@ export function apiLoginViaPassword (email, password, rememberMe) {
  * @param email 邮箱
  */
 export function apiResetPwdConfirmEmail (email) {
-  return axios.post('/api/auth/reset-password/confirm-email', {
-    params: { email: email }
-  })
+  return axios.post('/api/auth/reset-password/confirm-email', { email: email })
 }
 
 /**
@@ -57,7 +51,8 @@ export function apiResetPwdConfirmEmail (email) {
  */
 export function apiResetPwdVerify (email, verificationCode) {
   return axios.post('/api/auth/reset-password/verify-email', {
-    params: { email: email, verificationCode: verificationCode }
+    email: email,
+    verificationCode: verificationCode
   })
 }
 
@@ -68,6 +63,7 @@ export function apiResetPwdVerify (email, verificationCode) {
  */
 export function apiResetPwd (token, password) {
   return axios.post('/api/auth/reset-password/reset', {
-    params: { token: token, password: password }
+    token: token,
+    password: password
   })
 }
