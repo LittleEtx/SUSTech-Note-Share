@@ -1,87 +1,90 @@
 <template>
   <div>
-  <h4 style="text-align: center">登录</h4>
-  <el-tabs v-model="activeName" @tab-click="handleClick" :stretch="true" style="margin-top: -20px" type="card">
-    <el-tab-pane label="密码登录" name="first">
-      <el-form :model="pwdLogForm" :rules="pwdRules" ref="pwdLogForm" label-width="100px" class="demo-ruleForm">
-        <el-row >
-          <el-col :span="12">
-            <el-form-item label="学校邮箱" style="font-weight: bold" label-width="100px" label-position="right" prop="ID">
-              <el-input v-model="pwdLogForm.ID" placeholder="学号"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="1">
-            <p style="margin-top: 10px; margin-left: 10px">@</p>
-          </el-col>
-          <el-col :span="10">
-            <el-form-item prop="region" style="margin-left: -80px">
-              <el-select v-model="pwdLogForm.region" placeholder="请选择邮箱后缀">
-                <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
-                <el-option label="SUSTech.edu.cn" value="sustech.edu.cn"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="18">
-            <el-form-item label="密码" style="font-weight: bold" prop="pwd" class="item">
-              <el-input type="password" show-password v-model="pwdLogForm.pwd" placeholder="密码"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-link @click="choseItem" style="color: cornflowerblue; margin-left: 60px; margin-top: 20px">忘记密码?</el-link>
-          </el-col>
-        </el-row>
-        <el-checkbox v-model="checked" style="margin-bottom: 15px">记住我</el-checkbox>
-        <el-form-item >
-          <el-button type="primary" style="margin-left: -100px" @click="submitForm('pwdLogForm')">登录</el-button>
-          <el-button type="primary" @click="temp">注册</el-button>
-        </el-form-item>
-      </el-form>
-    </el-tab-pane>
-    <el-tab-pane label="邮箱登录" name="second">
-      <el-form :model="emailLogForm" :rules="emailRules" ref="emailLogForm" label-width="100px">
-        <!-- 邮箱 -->
-        <el-row >
-          <el-col :span="12">
-            <el-form-item label="学校邮箱" style="font-weight: bold" label-width="100px" label-position="right" prop="ID">
-              <el-input v-model="emailLogForm.ID" placeholder="学号"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="1">
-            <p style="margin-top: 10px; margin-left: 10px">@</p>
-          </el-col>
-          <el-col :span="10">
-            <el-form-item prop="region" style="margin-left: -80px">
-              <el-select v-model="emailLogForm.region" placeholder="请选择邮箱后缀">
-                <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
-                <el-option label="SUSTech.edu.cn" value="SUSTech.edu.cn"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- 邮箱验证码 -->
-        <el-form-item label="验证码" style="font-weight: bold" prop="emailCode">
-          <el-input placeholder="验证码" prefix-icon="el-icon-key" v-model="emailLogForm.emailCode">
-            <template #append>
-              <el-button :disabled="disabled" @click="getEmailValidateCode">{{buttonText}}
-              </el-button>
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-checkbox v-model="checked1" style="margin-bottom: 15px">记住我</el-checkbox>
-        <el-form-item >
-          <el-button type="primary" style="margin-left: -100px" @click="submitForm1('emailLogForm')">登录/注册</el-button>
-        </el-form-item>
-      </el-form>
-    </el-tab-pane>
-  </el-tabs>
+    <h4 class="main-blue-color" style="text-align: center">登录</h4>
+    <el-tabs v-model="activeName" :stretch="true" type="card" @tab-click="handleClick">
+      <el-tab-pane class="pane-style" label="密码登录" name="first">
+        <el-form ref="pwdLogForm" :model="pwdLogForm" :rules="pwdRules"
+                label-position="right" label-width="80px">
+          <el-row >
+            <el-col :span="14">
+              <el-form-item label="学校邮箱" prop="ID" style="font-weight: bold">
+                <el-input v-model="pwdLogForm.ID" placeholder="学号"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <p style="margin-top: 10px">@</p>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label-width="0" prop="region" style="width: 100%">
+                <el-select v-model="pwdLogForm.region" placeholder="请选择邮箱后缀">
+                 <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
+                 <el-option label="SUSTech.edu.cn" value="sustech.edu.cn"></el-option>
+               </el-select>
+             </el-form-item>
+           </el-col>
+          </el-row>
+          <el-row align="bottom">
+            <el-col :span="18">
+              <el-form-item label="密码" prop="pwd" style="font-weight: bold">
+                <el-input v-model="pwdLogForm.pwd" placeholder="密码" show-password type="password"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" style="height: 40px;
+            display: flex; flex-direction: row-reverse; align-items: flex-end">
+              <el-link style="color: #0babeab8" @click="choseItem">忘记密码?</el-link>
+            </el-col>
+          </el-row>
+          <el-checkbox v-model="rememberMe">记住我</el-checkbox>
+          <p>
+            <el-button class="button-size" type="primary" @click="loginViaPassword('pwdLogForm')">登录</el-button>
+            <el-button class="button-size" @click="register">注册</el-button>
+          </p>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane class="pane-style" label="验证码登录" name="second">
+        <el-form ref="emailLogForm" :model="emailLogForm" :rules="emailRules"
+        label-position="right" label-width="80px">
+          <!-- 邮箱 -->
+          <el-row >
+            <el-col :span="14">
+              <el-form-item label="学校邮箱" prop="ID" style="font-weight: bold">
+                <el-input v-model="emailLogForm.ID" placeholder="学号"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <p style="margin-top: 10px">@</p>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label-width="0" prop="region">
+                <el-select v-model="emailLogForm.region" placeholder="请选择邮箱后缀">
+                  <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
+                  <el-option label="SUSTech.edu.cn" value="SUSTech.edu.cn"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            </el-row>
+          <!-- 邮箱验证码 -->
+          <el-form-item label="验证码" prop="emailCode" style="font-weight: bold">
+            <el-input v-model="emailLogForm.emailCode" placeholder="验证码" prefix-icon="el-icon-key">
+              <template #append>
+                <el-button :disabled="disabled" @click="getEmailValidateCode">{{buttonText}}
+                </el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-checkbox v-model="rememberMe">记住我</el-checkbox>
+          <p>
+            <el-button class="button-size" type="primary" @click="loginViaCode('emailLogForm')">登录/注册</el-button>
+          </p>
+        </el-form>
+     </el-tab-pane>
+   </el-tabs>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import router from '../../router'
+import {apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode} from '../../scripts/API_Auth'
 
 export default {
   name: 'Login',
@@ -91,12 +94,10 @@ export default {
   data () {
     return {
       activeName: 'first',
-      checked: false,
-      checked1: false,
       disabled: false,
       token: '',
       buttonText: '获取验证码',
-      rememberMe: 0,
+      rememberMe: false,
       pwdLogForm: {
         ID: '',
         region: '',
@@ -138,54 +139,35 @@ export default {
       console.log(tab, event)
     },
     // submit by pwd
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+    loginViaPassword () {
+      this.$refs['emailRules'].validate((valid) => {
         if (valid) {
-          const url = '/api/auth/login/password-login'
-          if (this.checked) {
-            this.rememberMe = 1
-          } else {
-            this.rememberMe = 0
-          }
-          axios.post(url, {email: this.pwdLogForm.ID + '@' + this.pwdLogForm.region,
-            password: this.pwdLogForm.pwd,
-            rememberMe: this.rememberMe
-          }).then((res) => {
-            if (res.data === 1) {
-              router.push({path: '/home'})
-            } else {
-              alert('登录失败，请重新登录！')
-              this.pwdLogForm.pwd = ''
-            }
-          }).catch((err) => {
-            alert(err)
+          apiLoginViaPassword(
+            this.pwdLogForm.ID + '@' + this.pwdLogForm.region,
+            this.pwdLogForm.pwd,
+            this.rememberMe
+          ).then(() => {
+            router.push({path: '/home'})
+          }).catch(() => {
+            alert('登录失败，请重新登录！')
+            this.pwdLogForm.pwd = ''
           })
         }
       })
     },
     // submit by emailCode
-    submitForm1 (formName) {
+    loginViaCode (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const url = '/api/auth/login/email-code-login'
-          if (this.checked1) {
-            this.rememberMe = 1
-          } else {
-            this.rememberMe = 0
-          }
-          axios.post(url, {
-            email: this.emailLogForm.ID + '@' + this.emailLogForm.region,
-            verificationCode: this.emailLogForm.emailCode,
-            rememberMe: this.rememberMe
-          }).then((res) => {
-            if (res.data === 1) {
-              router.push({path: '/home'})
-            } else {
-              alert('登录失败，请重新登录')
-              this.emailLogForm.emailCode = ''
-            }
-          }).catch((err) => {
-            alert(err)
+          apiLoginViaCode(
+            this.emailLogForm.ID + '@' + this.emailLogForm.region,
+            this.emailLogForm.emailCode,
+            this.rememberMe
+          ).then(() => {
+            router.push({path: '/home'})
+          }).catch(() => {
+            alert('登录失败，请重新登录')
+            this.emailLogForm.emailCode = ''
           })
         }
       })
@@ -208,15 +190,15 @@ export default {
       this.$emit('choseItem')
     },
     getEmailValidateCode () {
-      this.tackBtn()
-      const url = '/api/auth/sendEmailCode'
-      axios.post(url, {
-        email: this.emailLogForm.ID + '@' + this.emailLogForm.region
-      }).then((res) => {
-        console.log(res.data)
+      apiSendEmailCode(
+        this.emailLogForm.ID + '@' + this.emailLogForm.region
+      ).then(() => {
+        this.tackBtn()
+      }).catch((err) => {
+        alert('Fail to send email code !' + err.data)
       })
     },
-    temp () {
+    register () {
       this.activeName = 'second'
     }
   }
@@ -224,25 +206,13 @@ export default {
 </script>
 
 <style scoped>
-.el-tabs >>> .el-tabs__header {
-  padding: 5% 10% 0 10%;
+
+.pane-style {
+  padding: 10px 60px 10px 60px;
 }
 
-.el-tabs >>> .el-tabs__item:hover {
-  color: cadetblue;
-  cursor: pointer;
+.button-size {
+  width: 40%;
 }
 
-.el-tabs >>> .el-tabs__item.is-active {
-  color: red;
-}
-h4 {
-  color: #0babeab8;
-  font-size: 17px;
-}
-
-hr {
-  background-color: #444;
-  margin: 0;
-}
 </style>

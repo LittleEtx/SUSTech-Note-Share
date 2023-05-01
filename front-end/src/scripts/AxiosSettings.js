@@ -15,7 +15,7 @@ const onResponseError = err => {
     router.push('/login')
   }
 
-  if (status >= 500 || status === 400) {
+  if (status >= 500) {
     console.error('[axios-global]invalid request')
   }
   return Promise.reject(err)
