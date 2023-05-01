@@ -1,7 +1,8 @@
 <template>
   <div>
     <h4 class="main-blue-color" style="text-align: center">登录</h4>
-    <el-tabs v-model="activeName" :stretch="true" type="card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" :stretch="true" type="card">
+      <!--   密码登录选框     -->
       <el-tab-pane class="pane-style" label="密码登录" name="first">
         <el-form ref="emailForm" :model="emailForm" :rules="emailRules"
                  label-position="right" label-width="80px">
@@ -15,6 +16,7 @@
               <p style="margin-top: 10px">@</p>
             </el-col>
             <el-col :span="9">
+              <!--   因为这里是form item，将label-width设为0以覆盖父节点的80px宽度     -->
               <el-form-item label-width="0" prop="region" style="width: 100%">
                 <el-select v-model="emailForm.region" placeholder="请选择邮箱后缀">
                  <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
@@ -44,14 +46,15 @@
           <el-button class="button-size" @click="register">注册</el-button>
         </p>
       </el-tab-pane>
+      <!--   验证码登录选框     -->
       <el-tab-pane class="pane-style" label="验证码登录" name="second">
-        <el-form ref="emailLogForm" :model="codeLoginForm" :rules="codeRules"
+        <el-form ref="emailLogForm" :model="emailForm" :rules="emailRules"
                  label-position="right" label-width="80px">
           <!-- 邮箱 -->
           <el-row >
             <el-col :span="13">
               <el-form-item label="学校邮箱" prop="ID" style="font-weight: bold">
-                <el-input v-model="codeLoginForm.ID" placeholder="邮箱前缀"></el-input>
+                <el-input v-model="emailForm.ID" placeholder="邮箱前缀"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="2">
@@ -59,13 +62,16 @@
             </el-col>
             <el-col :span="9">
               <el-form-item label-width="0" prop="region">
-                <el-select v-model="codeLoginForm.region" placeholder="请选择邮箱后缀">
+                <el-select v-model="emailForm.region" placeholder="请选择邮箱后缀">
                   <el-option label="mail.SUSTech.edu.cn" value="mail.sustech.edu.cn"></el-option>
                   <el-option label="SUSTech.edu.cn" value="SUSTech.edu.cn"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
+        </el-form>
+        <el-form ref="codeLoginForm" :model="codeLoginForm" :rules="codeRules"
+             label-position="right" label-width="80px">
           <!-- 邮箱验证码 -->
           <el-form-item label="验证码" prop="emailCode" style="font-weight: bold">
             <el-input v-model="codeLoginForm.emailCode" placeholder="验证码" prefix-icon="el-icon-key">
@@ -75,11 +81,11 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-checkbox v-model="rememberMe">记住我</el-checkbox>
-          <p>
-            <el-button class="button-size" type="primary" @click="loginViaCode('emailLogForm')">登录/注册</el-button>
-          </p>
         </el-form>
+        <el-checkbox v-model="rememberMe">记住我</el-checkbox>
+        <p>
+          <el-button class="button-size" type="primary" @click="loginViaCode('emailLogForm')">登录/注册</el-button>
+        </p>
      </el-tab-pane>
    </el-tabs>
   </div>
@@ -95,7 +101,21 @@ export default {
     isPush: Boolean
   },
   data () {
+    const validateStudentEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入邮箱前缀'))
+      } else if (
+        // 当选择了学校邮箱后缀时，验证学号是否为8位数字
+        this.emailForm.region === this.studentEmailPostfix &&
+        !/^[0-9]{8}$/.test(value)
+      ) {
+        callback(new Error('学号格式错误'))
+      } else {
+        callback()
+      }
+    }
     return {
+      studentEmailPostfix: 'mail.sustech.edu.cn',
       activeName: 'first',
       disabled: false,
       token: '',
@@ -124,7 +144,8 @@ export default {
       },
       emailRules: {
         ID: [
-          { required: true, message: '请输入邮箱前缀', trigger: 'blur' }
+          { required: true, message: '请输入邮箱前缀', trigger: 'blur' },
+          { validator: validateStudentEmail, trigger: 'blur' }
         ],
         region: [
           { required: true, message: '请选择邮箱后缀', trigger: 'change' }
@@ -133,16 +154,12 @@ export default {
     }
   },
   methods: {
-    handleClick (tab, event) {
-      console.log(tab, event)
-    },
     // submit by pwd
     async loginViaPassword () {
       try {
         await this.$refs['emailForm'].validate()
         await this.$refs['pwdLoginForm'].validate()
       } catch (e) {
-        console.log(e)
         return
       }
       try {
@@ -154,26 +171,30 @@ export default {
         )
         router.push('home')
       } catch (e) {
-        alert('登录失败，请重新登录！')
+        alert('邮箱或密码错误，请重新登录！')
         this.pwdLoginForm.pwd = ''
       }
     },
     // submit by emailCode
-    loginViaCode (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          apiLoginViaCode(
-            this.codeLoginForm.ID + '@' + this.codeLoginForm.region,
-            this.codeLoginForm.emailCode,
-            this.rememberMe
-          ).then(() => {
-            router.push({path: '/home'})
-          }).catch(() => {
-            alert('登录失败，请重新登录')
-            this.codeLoginForm.emailCode = ''
-          })
-        }
-      })
+    async loginViaCode () {
+      try {
+        await this.$refs['emailForm'].validate()
+        await this.$refs['codeLoginForm'].validate()
+      } catch (e) {
+        return
+      }
+      try {
+        console.log(this.emailForm.ID + '@' + this.emailForm.region)
+        await apiLoginViaCode(
+          this.emailForm.ID + '@' + this.emailForm.region,
+          this.codeLoginForm.emailCode,
+          this.rememberMe
+        )
+        router.push('home')
+      } catch (e) {
+        alert('验证码错误，请重新登录！')
+        this.codeLoginForm.emailCode = ''
+      }
     },
     tackBtn () { // 验证码倒数60秒
       let time = 60
@@ -192,14 +213,21 @@ export default {
     choseItem () {
       this.$emit('choseItem')
     },
-    getEmailValidateCode () {
-      apiSendEmailCode(
-        this.codeLoginForm.ID + '@' + this.codeLoginForm.region
-      ).then(() => {
-        this.tackBtn()
-      }).catch((err) => {
-        alert('Fail to send email code !' + err.data)
-      })
+    async getEmailValidateCode () {
+      try {
+        await this.$refs['emailForm'].validate()
+      } catch (e) {
+        return
+      }
+      try {
+        this.disabled = true
+        await apiSendEmailCode(this.emailForm.ID + '@' + this.emailForm.region)
+      } catch (err) {
+        this.disabled = false
+        alert('Fail to send email code !' + err)
+        return
+      }
+      this.tackBtn()
     },
     register () {
       this.activeName = 'second'

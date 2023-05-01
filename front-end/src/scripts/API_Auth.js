@@ -7,8 +7,8 @@ export function apiLogout () {
   return axios.post('/api/auth/logout')
 }
 
-export function apiSendEmailCode () {
-  return axios.post('api/auth/send-email-code')
+export function apiSendEmailCode (email) {
+  return axios.post('api/auth/send-email-code', { email: email })
 }
 
 /**
