@@ -12,10 +12,7 @@
           <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
         </div>
         <div class="login-box">
-          <login v-show="!isPush" :isPush="isPush" @choseItem="choseItem"></login>
-          <reset-password v-show="isPush"></reset-password>
-          <icon-button v-show="isPush" icon="el-icon-back" size="30px"
-                     @click="isPush = !isPush" class="return-button"></icon-button>
+          <login></login>
         </div>
       </div>
     </transition>
@@ -32,7 +29,7 @@
 
 <script>
 import Login from './login_page/Login.vue'
-import ResetPassword from './login_page/ResetPassword.vue'
+import ResetPassword from './ResetPasswordPage.vue'
 import router from '../router'
 import Cookies from 'js-cookie'
 import IconButton from './subcomponents/IconButton.vue'
@@ -40,14 +37,10 @@ export default {
   name: 'logOn',
   data () {
     return {
-      isPush: false,
       isShowBox: true
     }
   },
   methods: {
-    choseItem () {
-      this.isPush = true
-    },
     changeShow () {
       this.isShowBox = !this.isShowBox
     },
@@ -136,11 +129,6 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   z-index: 100;
   position: relative;
-}
-.return-button {
-  position: absolute;
-  top: 15px;
-  left: 15px;
 }
 
 </style>

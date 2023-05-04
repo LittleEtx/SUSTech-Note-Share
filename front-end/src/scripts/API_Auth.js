@@ -3,11 +3,14 @@ import axios from 'axios'
 /**
  * 使得当前用户登出
  */
-export async function apiLogout () {
+export function apiLogout () {
   return axios.post('/api/auth/logout')
 }
 
-export async function apiSendEmailCode (email) {
+/**
+ * 向该邮箱发送一个验证码（邮箱可以未登录）
+ */
+export function apiSendEmailCode (email) {
   return axios.post('api/auth/send-email-code', { email: email })
 }
 
@@ -28,7 +31,7 @@ export async function apiLoginViaCode (email, code, rememberMe) {
  * @param password 密码
  * @param rememberMe 记住我
  */
-export async function apiLoginViaPassword (email, password, rememberMe) {
+export function apiLoginViaPassword (email, password, rememberMe) {
   return axios.post('/api/auth/login/password-login', {
     email: email,
     password: password,
@@ -40,7 +43,7 @@ export async function apiLoginViaPassword (email, password, rememberMe) {
  * 向该邮箱发送一个重置密码用的验证码
  * @param email 邮箱
  */
-export async function apiResetPwdConfirmEmail (email) {
+export function apiResetPwdConfirmEmail (email) {
   return axios.post('/api/auth/reset-password/confirm-email', { email: email })
 }
 
@@ -63,7 +66,7 @@ export async function apiResetPwdVerify (email, verificationCode) {
  * @param token 上述接口得到的token
  * @param password
  */
-export async function apiResetPwd (token, password) {
+export function apiResetPwd (token, password) {
   return axios.post('/api/auth/reset-password/reset', {
     token: token,
     password: password

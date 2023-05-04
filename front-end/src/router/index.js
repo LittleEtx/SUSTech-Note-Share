@@ -16,6 +16,11 @@ export default new Router({
       component: () => import('../components/LoginPage.vue')
     },
     {
+      path: '/reset_password',
+      name: 'reset_password',
+      component: () => import('../components/ResetPasswordPage.vue')
+    },
+    {
       path: '/home',
       name: 'home',
       component: () => import('../components/HomePage')
