@@ -94,6 +94,7 @@
 <script>
 import router from '../../router'
 import {apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode} from '../../scripts/API_Auth'
+import {validateEmailRule} from '../../scripts/LoginRules'
 
 export default {
   name: 'Login',
@@ -102,20 +103,9 @@ export default {
   },
   data () {
     const validateStudentEmail = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入邮箱前缀'))
-      } else if (
-        // 当选择了学校邮箱后缀时，验证学号是否为8位数字
-        this.emailForm.region === this.studentEmailPostfix &&
-        !/^[0-9]{8}$/.test(value)
-      ) {
-        callback(new Error('学号格式错误'))
-      } else {
-        callback()
-      }
+      validateEmailRule(this.emailForm.region, rule, value, callback)
     }
     return {
-      studentEmailPostfix: 'mail.sustech.edu.cn',
       activeName: 'first',
       disabled: false,
       token: '',
@@ -171,8 +161,12 @@ export default {
         )
         router.push('home')
       } catch (e) {
-        alert('邮箱或密码错误，请重新登录！')
-        this.pwdLoginForm.pwd = ''
+        if (e.response.status === 400) {
+          alert('邮箱或密码错误，请重新登录！')
+          this.pwdLoginForm.pwd = ''
+        } else {
+          console.log(e)
+        }
       }
     },
     // submit by emailCode
@@ -192,8 +186,12 @@ export default {
         )
         router.push('home')
       } catch (e) {
-        alert('验证码错误，请重新登录！')
-        this.codeLoginForm.emailCode = ''
+        if (e.response.status === 400) {
+          alert('验证码错误，请重新登录！')
+          this.codeLoginForm.emailCode = ''
+        } else {
+          console.log(e)
+        }
       }
     },
     tackBtn () { // 验证码倒数60秒
@@ -224,7 +222,7 @@ export default {
         await apiSendEmailCode(this.emailForm.ID + '@' + this.emailForm.region)
       } catch (err) {
         this.disabled = false
-        alert('Fail to send email code !' + err)
+        console.log('Fail to send email code !' + err)
         return
       }
       this.tackBtn()

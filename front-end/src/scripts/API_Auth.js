@@ -3,18 +3,18 @@ import axios from 'axios'
 /**
  * 使得当前用户登出
  */
-export function apiLogout () {
+export async function apiLogout () {
   return axios.post('/api/auth/logout')
 }
 
-export function apiSendEmailCode (email) {
+export async function apiSendEmailCode (email) {
   return axios.post('api/auth/send-email-code', { email: email })
 }
 
 /**
  * 邮箱验证码登录
  */
-export function apiLoginViaCode (email, code, rememberMe) {
+export async function apiLoginViaCode (email, code, rememberMe) {
   return axios.post('/api/auth/login/email-code-login', {
     email: email,
     verificationCode: code,
@@ -28,7 +28,7 @@ export function apiLoginViaCode (email, code, rememberMe) {
  * @param password 密码
  * @param rememberMe 记住我
  */
-export function apiLoginViaPassword (email, password, rememberMe) {
+export async function apiLoginViaPassword (email, password, rememberMe) {
   return axios.post('/api/auth/login/password-login', {
     email: email,
     password: password,
@@ -40,7 +40,7 @@ export function apiLoginViaPassword (email, password, rememberMe) {
  * 向该邮箱发送一个重置密码用的验证码
  * @param email 邮箱
  */
-export function apiResetPwdConfirmEmail (email) {
+export async function apiResetPwdConfirmEmail (email) {
   return axios.post('/api/auth/reset-password/confirm-email', { email: email })
 }
 
@@ -48,12 +48,14 @@ export function apiResetPwdConfirmEmail (email) {
  * 验证邮箱，返回一个token用以重置密码
  * @param email 邮箱
  * @param verificationCode 验证码
+ * @returns {Promise<string>} token
  */
-export function apiResetPwdVerify (email, verificationCode) {
-  return axios.post('/api/auth/reset-password/verify-email', {
+export async function apiResetPwdVerify (email, verificationCode) {
+  const { data } = await axios.post('/api/auth/reset-password/verify-email', {
     email: email,
     verificationCode: verificationCode
   })
+  return data
 }
 
 /**
@@ -61,7 +63,7 @@ export function apiResetPwdVerify (email, verificationCode) {
  * @param token 上述接口得到的token
  * @param password
  */
-export function apiResetPwd (token, password) {
+export async function apiResetPwd (token, password) {
   return axios.post('/api/auth/reset-password/reset', {
     token: token,
     password: password
