@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
             int id = Integer.parseInt(subStr);
             // id should be the prefix of email for email type
             // xxxxxxxx@mail.sustech.edu.cn
-            if (!hasUser(id)) {
+            if (hasUser(id)) {
                 logger.warn("ID " + id + " for new email " + email + " already exist!");
                 return Math.max(30000000, userRepository.getMaxID() + 1);
             }

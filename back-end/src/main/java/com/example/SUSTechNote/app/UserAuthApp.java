@@ -120,7 +120,7 @@ public class UserAuthApp {
     }
 
     @PostMapping("reset-password/verify-email")
-    public ResponseEntity<?> confirmEmail(@RequestBody JSONObject jsonObject) {
+    public ResponseEntity<?> verifyEmail(@RequestBody JSONObject jsonObject) {
         String email = jsonObject.getString("email");
         if (userService.findUserByEmail(email) == null) {
             return ResponseEntity.badRequest().body("Email not registered");
@@ -129,14 +129,16 @@ public class UserAuthApp {
         }
     }
 
-    @PostMapping("reset-password/confirm-email")
-    public ResponseEntity<?> verifyEmail(@RequestBody JSONObject jsonObject) {
+    @PostMapping("reset-password/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestBody JSONObject jsonObject) {
         String email = jsonObject.getString("email");
         String verificationCode = jsonObject.getString("verificationCode");
         if (Objects.equals(verificationCode, redisService.getString(email))) {
+            logger.info("Verification code " + verificationCode + " has been successfully verified");
             //token 的有效期为15分钟
             return ResponseEntity.ok(SaTempUtil.createToken(email,900));
         } else {
+            logger.debug("verification code " + verificationCode + " does not match " + redisService.getString(email));
             return ResponseEntity.badRequest().body("Wrong email or verification code");
         }
     }
