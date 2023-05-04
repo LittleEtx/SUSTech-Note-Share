@@ -17,7 +17,7 @@
 <script>
 
 export default {
-  name: 'LoginCode',
+  name: 'CodeForm',
   computed: {
     code () { return this.codeForm.emailCode }
   },

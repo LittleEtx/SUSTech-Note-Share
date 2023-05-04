@@ -5,7 +5,7 @@
     <el-row>
       <el-col :span="13">
         <el-form-item label="学校邮箱" prop="ID" style="font-weight: bold">
-          <el-input v-model="emailForm.ID" placeholder="邮箱前缀"></el-input>
+          <el-input v-model="emailForm.ID" placeholder="邮箱前缀" :disabled="disabled"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="2">
@@ -14,7 +14,7 @@
       <el-col :span="9">
         <!--   因为这里是form item，将label-width设为0以覆盖父节点的宽度     -->
         <el-form-item label-width="0" prop="region" style="width: 100%">
-          <el-select v-model="emailForm.region" placeholder="请选择邮箱后缀">
+          <el-select v-model="emailForm.region" placeholder="请选择邮箱后缀" :disabled="disabled">
             <el-option v-for="(postfix, index) in validPostfixes" :label="postfix" :value="postfix" :key="index"></el-option>
          </el-select>
        </el-form-item>
@@ -27,14 +27,24 @@
 import {studentEmailPostfix, validEmailPostfixes} from '../../scripts/LoginRules'
 
 export default {
-  name: 'LoginEmail',
+  name: 'EmailForm',
   expose: ['validate', 'email'],
   computed: {
     validPostfixes () { return validEmailPostfixes },
     email () { return this.emailForm.ID + '@' + this.emailForm.region }
   },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   methods: {
-    validate () { return this.$refs.form.validate() }
+    validate () { return this.$refs.form.validate() },
+    clear () {
+      this.emailForm.ID = ''
+      this.emailForm.region = ''
+    }
   },
   data () {
     const validateStudentEmail = (rule, value, callback) => {

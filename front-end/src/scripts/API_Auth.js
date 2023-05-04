@@ -40,11 +40,11 @@ export function apiLoginViaPassword (email, password, rememberMe) {
 }
 
 /**
- * 向该邮箱发送一个重置密码用的验证码
+ * 向该邮箱发送一个重置密码用的验证码，若邮箱未注册返回400
  * @param email 邮箱
  */
-export function apiResetPwdConfirmEmail (email) {
-  return axios.post('/api/auth/reset-password/confirm-email', { email: email })
+export function apiResetPassVerifyEmail (email) {
+  return axios.post('/api/auth/reset-password/verify-email', { email: email })
 }
 
 /**
@@ -53,8 +53,8 @@ export function apiResetPwdConfirmEmail (email) {
  * @param verificationCode 验证码
  * @returns {Promise<string>} token
  */
-export async function apiResetPwdVerify (email, verificationCode) {
-  const { data } = await axios.post('/api/auth/reset-password/verify-email', {
+export async function apiResetPassVerifyCode (email, verificationCode) {
+  const { data } = await axios.post('/api/auth/reset-password/verify-code', {
     email: email,
     verificationCode: verificationCode
   })
@@ -66,7 +66,7 @@ export async function apiResetPwdVerify (email, verificationCode) {
  * @param token 上述接口得到的token
  * @param password
  */
-export function apiResetPwd (token, password) {
+export function apiResetPassword (token, password) {
   return axios.post('/api/auth/reset-password/reset', {
     token: token,
     password: password

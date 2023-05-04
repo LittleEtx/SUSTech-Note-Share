@@ -8,8 +8,8 @@
     <div class="pane-style">
       <template v-if="activeName === 'password'">
           <!--   密码登录选框     -->
-        <login-email ref="emailForm" ></login-email>
-        <login-password ref="passwordForm"></login-password>
+        <email-form ref="emailForm" ></email-form>
+        <password-form ref="passwordForm"></password-form>
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
         <p>
           <el-button class="button-size" type="primary" @click="loginViaPassword">登录</el-button>
@@ -18,9 +18,9 @@
       </template>
       <template v-else>
         <!--   验证码登录选框     -->
-        <login-email ref="emailForm" ></login-email>
-        <login-code ref="codeForm" @send-code="getEmailValidateCode"
-        ></login-code>
+        <email-form ref="emailForm" ></email-form>
+        <code-form ref="codeForm" @send-code="getEmailValidateCode"
+        ></code-form>
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
         <p>
           <el-button class="button-size" type="primary" @click="loginViaCode('emailLogForm')">登录/注册</el-button>
@@ -33,13 +33,13 @@
 <script>
 import router from '../../router'
 import {apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode} from '../../scripts/API_Auth'
-import LoginPassword from './LoginPassword.vue'
-import LoginEmail from './LoginEmail.vue'
-import LoginCode from './LoginCode.vue'
+import PasswordForm from './PasswordForm.vue'
+import EmailForm from './EmailForm.vue'
+import CodeForm from './CodeForm.vue'
 
 export default {
   name: 'Login',
-  components: { LoginCode, LoginPassword, LoginEmail },
+  components: { CodeForm, PasswordForm, EmailForm },
   data () {
     return {
       loading: false,
@@ -108,9 +108,8 @@ export default {
         return
       }
       try {
-        await apiSendEmailCode(this.$refs.emailForm.ID + '@' + this.$refs.emailForm.region)
-        // success
         this.$refs.codeForm.wait()
+        await apiSendEmailCode(this.$refs.emailForm.ID + '@' + this.$refs.emailForm.region)
       } catch (err) {
         console.log('Fail to send email code !' + err)
       }
