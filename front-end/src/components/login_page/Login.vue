@@ -2,8 +2,12 @@
   <div v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.3)">
     <h4 class="main-blue-color" style="text-align: center">登录</h4>
     <el-tabs v-model="activeName" :stretch="true" type="card">
-      <!--   密码登录选框     -->
-      <el-tab-pane class="pane-style" label="密码登录" name="first" :lazy="true">
+      <el-tab-pane label="密码登录" name="password"></el-tab-pane>
+      <el-tab-pane label="验证码登录" name="code"></el-tab-pane>
+    </el-tabs>
+    <div class="pane-style">
+      <template v-if="activeName === 'password'">
+          <!--   密码登录选框     -->
         <login-email ref="emailForm" ></login-email>
         <login-password ref="passwordForm"></login-password>
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
@@ -11,9 +15,9 @@
           <el-button class="button-size" type="primary" @click="loginViaPassword">登录</el-button>
           <el-button class="button-size" @click="register">注册</el-button>
         </p>
-      </el-tab-pane>
-      <!--   验证码登录选框     -->
-      <el-tab-pane class="pane-style" label="验证码登录" name="second" :lazy="true">
+      </template>
+      <template v-else>
+        <!--   验证码登录选框     -->
         <login-email ref="emailForm" ></login-email>
         <login-code ref="codeForm" @send-code="getEmailValidateCode"
         ></login-code>
@@ -21,8 +25,8 @@
         <p>
           <el-button class="button-size" type="primary" @click="loginViaCode('emailLogForm')">登录/注册</el-button>
         </p>
-     </el-tab-pane>
-   </el-tabs>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -39,10 +43,7 @@ export default {
   data () {
     return {
       loading: false,
-      activeName: 'first',
-      disabled: false,
-      token: '',
-      buttonText: '获取验证码',
+      activeName: 'password',
       rememberMe: false
     }
   },
