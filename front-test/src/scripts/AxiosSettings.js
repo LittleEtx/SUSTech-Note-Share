@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import {router} from "@/router"
+import { router } from '@/router'
 
 const onResponseSuccess = response => {
   return response

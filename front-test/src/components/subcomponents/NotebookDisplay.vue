@@ -12,30 +12,26 @@
       </div>
     </div>
     <!--  title & info  -->
-    <IconButton>
+    <el-link>
         <h5 class="notebook-title" :class="isBig ? 'notebook-title-big' : 'notebook-title-small'"> {{ notebook.title }}</h5>
-    </IconButton>
-    <IconButton> <div class="notebook-info"> {{ notebook.tag }}</div> </IconButton>
+    </el-link>
+    <el-link> <div class="notebook-info"> {{ notebook.tag }}</div> </el-link>
     <div class="notebook-info">
         <div class="el-icon-time"></div>
         {{ (isBig ? '上次更新于：' : '') + notebook.updateTime }}
     </div>
     <!--  up  -->
-    <IconButton class="notebook-info">
+    <el-link class="notebook-info">
         <img src="../../assets/notebook/up.svg" style="width: 20px" alt="">
         <div> {{ authorName }}</div>
-    </IconButton>
+    </el-link>
   </div>
 </template>
 
 <script>
-
-import IconButton from './IconButton.vue'
 import { apiGetUserInfo } from '@/scripts/API_User'
 
 export default {
-  name: 'Notebook',
-  components: {IconButton},
   computed: {
     isBig () {
       return this.size === 'big'

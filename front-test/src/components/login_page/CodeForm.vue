@@ -19,10 +19,10 @@
 
 <script>
 
-import {ChatLineSquare} from "@element-plus/icons-vue"
+import { ChatLineSquare } from '@element-plus/icons-vue'
 
 export default {
-  components: {ChatLineSquare},
+  components: { ChatLineSquare },
   expose: ['validate', 'code', 'wait', 'clear'],
   computed: {
     code () { return this.codeForm.emailCode }
@@ -36,7 +36,7 @@ export default {
       },
       codeRules: {
         emailCode: [
-          {required: true, message: '请输入验证码', trigger: 'blur'}
+          { required: true, message: '请输入验证码', trigger: 'blur' }
         ]
       }
     }
@@ -50,7 +50,7 @@ export default {
     },
     wait () { // 验证码倒数60秒
       let time = 60
-      let timer = setInterval(() => {
+      const timer = setInterval(() => {
         if (time === 0) {
           clearInterval(timer)
           this.buttonText = '获取验证码'

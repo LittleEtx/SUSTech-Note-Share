@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import {studentEmailPostfix, validEmailPostfixes} from '@/scripts/LoginRules'
-import {User} from "@element-plus/icons-vue"
+import { studentEmailPostfix, validEmailPostfixes } from '@/scripts/LoginRules'
+import { User } from '@element-plus/icons-vue'
 
 export default {
   name: 'EmailForm',
-  components: {User},
+  components: { User },
   expose: ['validate', 'email'],
   computed: {
     validPostfixes () { return validEmailPostfixes },

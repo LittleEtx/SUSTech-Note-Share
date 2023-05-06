@@ -34,15 +34,14 @@
 </template>
 
 <script>
-import {apiResetPassVerifyEmail, apiResetPassVerifyCode, apiResetPassword} from '@/scripts/API_Auth'
+import { apiResetPassVerifyEmail, apiResetPassVerifyCode, apiResetPassword } from '@/scripts/API_Auth'
 import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
-import PasswordForm from './PasswordForm.vue'
 import RenewPasswordForm from './RenewPasswordForm.vue'
-import {router} from "@/router"
+import { router } from '@/router'
 
 export default {
-  components: {RenewPasswordForm, PasswordForm, CodeForm, EmailForm},
+  components: { RenewPasswordForm, CodeForm, EmailForm },
   data () {
     return {
       active: 0,
@@ -92,7 +91,7 @@ export default {
         this.active++
       } catch (e) {
         if (e.response.status === 400) {
-          await this.$alert('验证失败，请重新输入验证码！', '', {confirmButtonText: '确定'})
+          await this.$alert('验证失败，请重新输入验证码！', '', { confirmButtonText: '确定' })
           this.$refs.codeForm.clear()
         } else {
           console.log(e)
@@ -113,7 +112,7 @@ export default {
         this.active++
       } catch (e) {
         if (e.response.status === 400) {
-          await this.$alert('密码重置失败：' + e.response.data, '', {confirmButtonText: '确定'})
+          await this.$alert('密码重置失败：' + e.response.data, '', { confirmButtonText: '确定' })
           this.$refs.passwordForm.clear()
         } else {
           console.log(e)

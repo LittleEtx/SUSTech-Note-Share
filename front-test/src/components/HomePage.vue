@@ -8,16 +8,24 @@
     <div style=" margin-left: 30px"></div>
     <el-tabs style="width: 100%">
       <el-tab-pane name="note">
-        <span slot="label"><i class="el-icon-collection"></i> <b>笔记</b> </span>
+        <template #label>
+          <span><el-icon><Collection /></el-icon> <b>笔记</b> </span>
+        </template>
       </el-tab-pane>
       <el-tab-pane name="star">
-        <span slot="label"><i class="el-icon-star-off"></i> <b>收藏</b> </span>
+        <template #label>
+          <span><el-icon><Star /></el-icon> <b>收藏</b> </span>
+        </template>
       </el-tab-pane>
       <el-tab-pane name="share">
-        <span slot="label"><i class="el-icon-share"></i> <b>收藏</b> </span>
+        <template #label>
+          <span><el-icon><Share /></el-icon> <b>分享</b> </span>
+        </template>
       </el-tab-pane>
       <el-tab-pane name="group">
-        <span slot="label"><i class="el-icon-menu"></i> <b>群组</b> </span>
+        <template #label>
+          <span><el-icon><MenuIcon /></el-icon> <b>群组</b> </span>
+        </template>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -26,14 +34,17 @@
 
 <script>
 import MainHeader from './subcomponents/MainHeader.vue'
-import Notebook from './subcomponents/Notebook.vue'
 import UserDisplay from './personal_center/UserDisplay.vue'
+import { Collection, Share, Star, Menu as MenuIcon } from '@element-plus/icons-vue'
 
 export default {
   name: 'HomePage',
   components: {
+    Share,
+    Star,
+    Collection,
+    MenuIcon,
     UserDisplay,
-    Notebook,
     MainHeader
   },
   data () {

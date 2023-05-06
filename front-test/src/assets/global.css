@@ -30,3 +30,8 @@ html,body{
 .el-steps {
   background-color: #fff;
 }
+
+/* 使icon总是垂直居中 */
+.el-icon {
+  vertical-align: middle;
+}

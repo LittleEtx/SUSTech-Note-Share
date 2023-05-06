@@ -52,27 +52,26 @@
 </template>
 
 <script>
-import IconButton from './IconButton.vue'
-import {apiGetUserInfo} from '@/scripts/API_User'
-import {apiLogout} from '@/scripts/API_Auth'
-import {router} from '@/router'
+import { apiGetUserInfo } from '@/scripts/API_User'
+import { apiLogout } from '@/scripts/API_Auth'
+import { router } from '@/router'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
-import {ArrowRight, Lock, Search, SwitchButton, User} from "@element-plus/icons-vue"
+import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 
 export default {
   name: 'main-header',
-    computed: {
-        SwitchButton() {
-            return SwitchButton
-        },
-        Lock() {
-            return Lock
-        },
-        User() {
-            return User
-        }
+  computed: {
+    SwitchButton () {
+      return SwitchButton
     },
-  components: {ArrowRight, Search, IconButton},
+    Lock () {
+      return Lock
+    },
+    User () {
+      return User
+    }
+  },
+  components: { ArrowRight, Search },
   data () {
     return {
       avatar: DefaultAvatar,

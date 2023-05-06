@@ -1,5 +1,5 @@
-import {createStore} from 'vuex'
-import {apiGetUserID} from './API_User'
+import { createStore } from 'vuex'
+import { apiGetUserID } from './API_User'
 
 export const store = createStore({
   state: {

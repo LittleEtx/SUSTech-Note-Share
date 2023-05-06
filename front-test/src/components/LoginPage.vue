@@ -12,7 +12,7 @@
           <img src="@/assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
         </div>
         <div class="login-box">
-          <login></login>
+          <login-pane></login-pane>
         </div>
       </div>
     </transition>
@@ -29,17 +29,17 @@
 </template>
 
 <script>
-import Login from './login_page/Login.vue'
 import Cookies from 'js-cookie'
-import {HomeFilled, Download} from "@element-plus/icons-vue"
+import { HomeFilled, Download } from '@element-plus/icons-vue'
+import LoginPane from '@/components/login/LoginPane.vue'
 
 export default {
-  name: 'logOn',
   data () {
     return {
       isShowBox: true
     }
   },
+  components: { LoginPane },
   methods: {
     changeShow () {
       this.isShowBox = !this.isShowBox
@@ -52,7 +52,6 @@ export default {
       a.dispatchEvent(event) // 触发a的单击事件
     }
   },
-  components: {Login},
   computed: {
     Download () {
       return Download
@@ -72,7 +71,7 @@ export default {
     // check whether the user has logged in
     if (Cookies.get('satoken')) {
       // if token not acceptable, will jump back to this page
-      //router.push('/home')
+      // router.push('/home')
     }
   }
 }

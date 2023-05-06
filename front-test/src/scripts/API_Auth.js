@@ -11,7 +11,7 @@ export function apiLogout () {
  * 向该邮箱发送一个验证码（邮箱可以未登录）
  */
 export function apiSendEmailCode (email) {
-  return axios.post('api/auth/send-email-code', { email: email })
+  return axios.post('api/auth/send-email-code', { email })
 }
 
 /**
@@ -19,9 +19,9 @@ export function apiSendEmailCode (email) {
  */
 export async function apiLoginViaCode (email, code, rememberMe) {
   return axios.post('/api/auth/login/email-code-login', {
-    email: email,
+    email,
     verificationCode: code,
-    rememberMe: rememberMe
+    rememberMe
   })
 }
 
@@ -33,9 +33,9 @@ export async function apiLoginViaCode (email, code, rememberMe) {
  */
 export function apiLoginViaPassword (email, password, rememberMe) {
   return axios.post('/api/auth/login/password-login', {
-    email: email,
-    password: password,
-    rememberMe: rememberMe
+    email,
+    password,
+    rememberMe
   })
 }
 
@@ -44,7 +44,7 @@ export function apiLoginViaPassword (email, password, rememberMe) {
  * @param email 邮箱
  */
 export function apiResetPassVerifyEmail (email) {
-  return axios.post('/api/auth/reset-password/verify-email', { email: email })
+  return axios.post('/api/auth/reset-password/verify-email', { email })
 }
 
 /**
@@ -55,8 +55,8 @@ export function apiResetPassVerifyEmail (email) {
  */
 export async function apiResetPassVerifyCode (email, verificationCode) {
   const { data } = await axios.post('/api/auth/reset-password/verify-code', {
-    email: email,
-    verificationCode: verificationCode
+    email,
+    verificationCode
   })
   return data
 }
@@ -68,7 +68,7 @@ export async function apiResetPassVerifyCode (email, verificationCode) {
  */
 export function apiResetPassword (token, password) {
   return axios.post('/api/auth/reset-password/reset', {
-    token: token,
-    password: password
+    token,
+    password
   })
 }
