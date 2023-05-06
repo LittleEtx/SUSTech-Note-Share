@@ -9,23 +9,23 @@
     <div class="input-container" v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.3)">
       <template v-if="active === 0">
         <email-form ref="emailForm"></email-form>
-        <el-button type="primary" class="next-button" @click="verifyEmail">下一步</el-button>
+        <el-button type="primary" class="button-width" @click="verifyEmail">下一步</el-button>
       </template>
       <template v-else-if="active === 1">
         <email-form ref="emailForm" :disabled="true"></email-form>
         <code-form ref="codeForm" @send-code="getEmailValidateCode"></code-form>
         <p>
-          <el-button class="next-button" @click="previous">上一步</el-button>
-          <el-button type="primary" class="next-button" @click="verifyCode">下一步</el-button>
+          <el-button class="button-width" @click="previous">上一步</el-button>
+          <el-button type="primary" class="button-width" @click="verifyCode">下一步</el-button>
         </p>
       </template>
       <template v-else-if="active === 2">
         <renew-password-form ref="passwordForm"> </renew-password-form>
-        <el-button type="primary" class="next-button" @click="resetPassword">下一步</el-button>
+        <el-button type="primary" class="button-width" @click="resetPassword">下一步</el-button>
       </template>
       <template v-else>
         <p style="margin-top: 50px">(*^_^*)新登录密码重置成功，请重新登录！</p>
-        <el-button type="primary" @click="logOn">重新登录</el-button>
+        <el-button type="primary" @click="logOn" class="button-width">重新登录</el-button>
       </template>
     </div>
   </div>
@@ -136,7 +136,7 @@ h4 {
   font-size: 17px;
 }
 
-.next-button {
+.button-width {
   width: 30%;
 }
 

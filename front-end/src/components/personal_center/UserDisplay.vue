@@ -49,11 +49,14 @@ export default {
       userInfo: {}
     }
   },
-  async beforeMount () {
-    this.userInfo = await apiGetUserInfo(this.id)
-    // print all data in userInfo object
-    for (let key in this.userInfo) {
-      console.log(key + ': ' + this.userInfo[key])
+  watch: {
+    id: {
+      handler: async function (newVal, oldVal) {
+        console.log('id changed')
+        if (newVal === '') return
+        this.userInfo = await apiGetUserInfo(newVal)
+      },
+      immediate: true
     }
   }
 }

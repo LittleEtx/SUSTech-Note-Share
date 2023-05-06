@@ -18,7 +18,8 @@
     "element-ui": "^2.15.13",
     "js-cookie": "^3.0.1",
     "vue": "^2.7.13",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

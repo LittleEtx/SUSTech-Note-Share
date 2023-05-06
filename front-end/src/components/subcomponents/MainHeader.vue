@@ -44,7 +44,7 @@
                         <h5 class="popover-word">个人中心</h5>
                         <i class="el-icon-arrow-right"></i>
                     </icon-button>
-                    <icon-button icon="el-icon-lock" class="popover-button">
+                    <icon-button icon="el-icon-lock" class="popover-button" @click="resetPassword">
                         <h5 class="popover-word">修改密码</h5>
                         <i class="el-icon-arrow-right"></i>
                     </icon-button>
@@ -73,7 +73,7 @@
 <script>
 import IconButton from './IconButton.vue'
 import router from '../../router'
-import {apiGetUserID, apiGetUserInfo} from '../../scripts/API_User'
+import {apiGetUserInfo} from '../../scripts/API_User'
 import {apiLogout} from '../../scripts/API_Auth'
 
 export default {
@@ -92,21 +92,25 @@ export default {
     }
   },
   async beforeMount () {
-    this.userID = await apiGetUserID()
+    this.userID = await this.$store.getters.userID
     const userData = await apiGetUserInfo(this.userID)
     this.avatar = userData.avatar
     this.userName = userData.userName
   },
   methods: {
-    logout () {
-      apiLogout().then(() => {
+    async logout () {
+      try {
+        await apiLogout()
         router.push('/login')
-      }).catch(() => {
+      } catch (e) {
         this.$message({
           message: '登出失败',
           type: 'error'
         })
-      })
+      }
+    },
+    resetPassword () {
+      router.push('reset_password')
     }
   }
 }

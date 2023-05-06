@@ -8,6 +8,7 @@ import router from './router'
 import './assets/globle.css'
 import axios from 'axios'
 import './scripts/AxiosSettings.js'
+import {store} from './scripts/GlobalStorage.js'
 
 Vue.prototype.$http = axios
 Vue.prototype.$axios = axios
@@ -19,6 +20,7 @@ Vue.use(ElementUI)
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

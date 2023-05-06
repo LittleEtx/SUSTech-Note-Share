@@ -53,3 +53,7 @@ html,body{
     background-color: #0babeab8;
     border-color: #0086B9B8;
 }
+
+.el-steps {
+  background-color: #fff;
+}

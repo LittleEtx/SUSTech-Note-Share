@@ -6,9 +6,7 @@ import axios from 'axios'
  */
 export async function apiGetUserID () {
   const { data } = await axios.get('/api/user/get-id')
-  // store to local storage
-  localStorage.setItem('userID', data)
-  return data
+  return data.toString()
 }
 
 /**
@@ -27,7 +25,6 @@ export async function apiGetUserID () {
  * @returns {Promise<UserInfo>} 用户信息
  */
 export async function apiGetUserInfo (id) {
-  const { data } = await axios.get('/api/user/get-info', { params: { userID: id }
-  })
+  const { data } = await axios.get('/api/user/get-info', { params: { userID: id } })
   return data
 }
