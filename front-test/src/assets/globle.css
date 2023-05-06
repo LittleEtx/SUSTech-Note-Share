@@ -19,39 +19,11 @@ html,body{
   color: #0babeab8;
 }
 
-/* 按钮的默认样式 */
-.el-button--primary {
-  background-color: #0babeab8;
-}
-
-.el-button--primary:hover {
-  background-color: #47C9FFB7;
-}
-
-.el-button--default:hover {
-  color: #0babeab8;
-}
 
 /* 分页导航栏的默认样式 */
 .el-tabs__item:hover {
   color: #1ABEFFB8;
   cursor: pointer;
-}
-
-.el-tabs__item.is-active {
-  color: #0babeab8;
-}
-
-
-/* 单选框样式 */
-.el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #0babeab8;
-}
-
-.el-checkbox__input.is-checked .el-checkbox__inner,
-.el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    background-color: #0babeab8;
-    border-color: #0086B9B8;
 }
 
 /* 步骤样式 */
