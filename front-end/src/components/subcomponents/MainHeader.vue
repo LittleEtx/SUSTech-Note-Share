@@ -101,6 +101,7 @@ export default {
     async logout () {
       try {
         await apiLogout()
+        this.$store.commit('logout')
         router.push('/login')
       } catch (e) {
         this.$message({

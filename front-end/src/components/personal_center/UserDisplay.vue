@@ -2,19 +2,58 @@
 <div class="head-container">
   <div><img :src="userInfo.avatar" class="avatar" alt=""></div>
   <div class="info-display">
-    <!--    user name and gender    -->
-    <div style="display: flex; flex-direction: row">
-      <i v-show="getGenderIcon != null" :class="getGenderIcon"></i>
-      <h4 style="margin: 0; font-size: 20px">{{ userInfo.userName }}</h4>
-    </div>
-    <!--   email   -->
-    <p style="margin: 0; font-size: 10px"> {{ userInfo.email }}</p>
-    <div v-show="userInfo.birth != null" style="margin-top: 10px;
-    display: flex; flex-direction: row">
-        <i class="el-icon-date"></i>
-        <p style="margin-left: 10px; margin-top: 0; font-size: 15px">{{ userInfo.birth }}</p>
-    </div>
-    <p style="margin: 0; font-size: 10px"> {{ userInfo.description }}</p>
+<!--   用户信息显示   -->
+    <template v-if="!editing">
+      <!--    user name and gender    -->
+      <p style="margin-top: 10px; margin-bottom: 0; font-size: 20px">
+        <b> {{ userInfo.userName }} </b>
+          <i v-show="getGenderIcon != null" :class="getGenderIcon"></i>
+      </p>
+      <!--   email   -->
+      <p style="margin: 0; font-size: 10px"> {{ userInfo.email }}</p>
+      <p style="margin-top: 10px; margin-bottom: 0; font-size: 15px" v-show="userInfo.birth !== null">
+          <i class="el-icon-date"></i>
+          {{ userInfo.birth }}
+      </p>
+      <p style="margin-top: 10px; font-size: 10px"> {{ userInfo.description }}</p>
+      <el-button v-show="editable" style="width: 100%" plain @click="editing = true"> 修改个人信息 </el-button>
+    </template>
+<!--   修改用户信息   -->
+    <template v-else>
+      <el-form label-position="top" label-width="10px">
+        <el-form-item label="用户名">
+          <el-input v-model="userInfo.userName"></el-input>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-radio-group v-model="userInfo.gender" size="mini">
+            <el-radio border :label="1">男</el-radio>
+            <el-radio border :label="0">女</el-radio>
+            <el-radio border :label="null">保密</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="生日">
+          <el-date-picker
+            v-model="userInfo.birth" type="date"
+            placeholder="选择日期"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd">
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="个性签名">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 3 }"
+            placeholder="个性签名"
+            v-model="userInfo.description"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div style="margin-top: 20px"></div>
+      <p>
+        <el-button v-show="editable" type="info" style="width: 40%" plain @click="editing = false"> 取消 </el-button>
+        <el-button v-show="editable" type="primary" style="width: 40%" @click="editing = false"> 确定 </el-button>
+      </p>
+    </template>
   </div>
 </div>
 </template>
@@ -31,10 +70,14 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      userInfo: {},
+      editable: false,
+      editing: false
+    }
+  },
   computed: {
-    editable () {
-      return this.id === localStorage.getItem('userID')
-    },
     getGenderIcon () {
       if (this.userInfo.gender === 0) {
         return 'el-icon-female'
@@ -44,20 +87,17 @@ export default {
       return null
     }
   },
-  data () {
-    return {
-      userInfo: {}
-    }
-  },
   watch: {
     id: {
-      handler: async function (newVal, oldVal) {
-        console.log('id changed')
+      'handler': async function (newVal) {
         if (newVal === '') return
+        this.editable = newVal === await this.$store.getters.userID
         this.userInfo = await apiGetUserInfo(newVal)
       },
       immediate: true
     }
+  },
+  methods: {
   }
 }
 </script>
@@ -66,20 +106,34 @@ export default {
 .head-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 200px;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-width: 240px;
+  width: 240px;
 }
 .avatar {
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
 }
 
 .info-display {
-  max-width: 100%;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
+  width: 100%;
+  text-align: left;
 }
+
+.el-form-item {
+  margin: 0;
+}
+
+.el-form-item >>> .el-form-item__label {
+  font-size: 5px;
+  padding: 0;
+  margin-bottom: -5px;
+}
+
+.el-radio-group >>> .el-radio {
+  margin: 0;
+}
+
 </style>

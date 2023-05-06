@@ -16,7 +16,7 @@ export async function apiGetUserID () {
  * @property {string} email 用户邮箱
  * @property {string} avatar 用户头像URL
  * @property {string} description 签名
- * @property {boolean} gender 性别, true为女性
+ * @property {boolean} gender 性别, 1为男性，0为女性
  * @property {string} birth 生日，格式为YYYY-MM-DD
  */
 /**
