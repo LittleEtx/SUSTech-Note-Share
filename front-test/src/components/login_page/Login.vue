@@ -8,7 +8,7 @@
     <div class="pane-style">
       <template v-if="activeName === 'password'">
           <!--   密码登录选框     -->
-        <email-form ref="emailForm" ></email-form>
+        <email-form ref="passEmailForm"></email-form>
         <password-form ref="passwordForm"></password-form>
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
         <p>
@@ -18,7 +18,7 @@
       </template>
       <template v-else>
         <!--   验证码登录选框     -->
-        <email-form ref="emailForm" ></email-form>
+        <email-form ref="codeEmailForm"></email-form>
         <code-form ref="codeForm" @send-code="getEmailValidateCode"
         ></code-form>
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
@@ -50,7 +50,7 @@ export default {
     // submit by pwd
     async loginViaPassword () {
       try {
-        await this.$refs.emailForm.validate()
+        await this.$refs.passEmailForm.validate()
         await this.$refs.passwordForm.validate()
       } catch (e) {
         return
@@ -58,16 +58,16 @@ export default {
       try {
         this.loading = true
         await apiLoginViaPassword(
-          this.$refs.emailForm.email,
+          this.$refs.passEmailForm.email,
           this.$refs.passwordForm.password,
           this.rememberMe
         )
         // login success
-        router.push('home')
+        await router.push('home')
       } catch (e) {
         if (e.response.status === 400) {
-          alert('邮箱或密码错误，请重新登录！')
           this.$refs.passwordForm.clear()
+          await this.$alert('邮箱或密码错误，请重新登录！')
         } else {
           console.log(e)
         }
@@ -77,7 +77,7 @@ export default {
     // submit by emailCode
     async loginViaCode () {
       try {
-        await this.$refs.emailForm.validate()
+        await this.$refs.codeEmailForm.validate()
         await this.$refs.codeForm.validate()
       } catch (e) {
         return
@@ -85,15 +85,15 @@ export default {
       try {
         this.loading = true
         await apiLoginViaCode(
-          this.$refs.emailForm.email,
+          this.$refs.codeEmailForm.email,
           this.$refs.codeForm.code,
           this.rememberMe
         )
-        router.push('home') // on success
+        await router.push('home') // on success
       } catch (e) {
         if (e.response.status === 400) {
-          alert('验证码错误，请重新登录！')
           this.$refs.codeForm.emailCode = ''
+          await this.$alert('验证码错误，请重新登录！')
         } else {
           console.log(e)
         }
@@ -102,13 +102,13 @@ export default {
     },
     async getEmailValidateCode () {
       try {
-        await this.$refs.emailForm.validate()
+        await this.$refs.codeEmailForm.validate()
       } catch (e) {
         return
       }
       try {
         this.$refs.codeForm.wait()
-        await apiSendEmailCode(this.$refs.emailForm.ID + '@' + this.$refs.emailForm.region)
+        await apiSendEmailCode(this.$refs.codeEmailForm.email)
       } catch (err) {
         console.log('Fail to send email code !' + err)
       }

@@ -2,32 +2,32 @@
 <template>
   <el-form :model="emailForm" :rules="emailRules" ref="form"
                label-position="right" label-width="80px">
-    <el-row>
-      <el-col :span="13">
-        <el-form-item label="学校邮箱" prop="ID" style="font-weight: bold">
-          <el-input v-model="emailForm.ID" placeholder="邮箱前缀" :disabled="disabled"></el-input>
-        </el-form-item>
-      </el-col>
-      <el-col :span="2">
-        <p style="margin-top: 10px">@</p>
-      </el-col>
-      <el-col :span="9">
-        <!--   因为这里是form item，将label-width设为0以覆盖父节点的宽度     -->
-        <el-form-item label-width="0" prop="region" style="width: 100%">
-          <el-select v-model="emailForm.region" placeholder="请选择邮箱后缀" :disabled="disabled">
-            <el-option v-for="(postfix, index) in validPostfixes" :label="postfix" :value="postfix" :key="index"></el-option>
-         </el-select>
-       </el-form-item>
-     </el-col>
-    </el-row>
+    <el-form-item label="学校邮箱" prop="ID" style="font-weight: bold">
+      <el-input v-model="emailForm.ID" placeholder="邮箱前缀" :disabled="disabled">
+        <template #prefix>
+          <el-icon><User /></el-icon>
+        </template>
+        <template #append>
+          <el-form-item prop="region">
+             <el-select v-model="emailForm.region" placeholder="请选择邮箱后缀" :disabled="disabled">
+                <el-option v-for="(postfix, index) in validPostfixes"
+                           :label="'@ ' + postfix" :value="postfix" :key="index"
+                ></el-option>
+             </el-select>
+          </el-form-item>
+        </template>
+      </el-input>
+      </el-form-item>
   </el-form>
 </template>
 
 <script>
 import {studentEmailPostfix, validEmailPostfixes} from '@/scripts/LoginRules'
+import {User} from "@element-plus/icons-vue"
 
 export default {
   name: 'EmailForm',
+  components: {User},
   expose: ['validate', 'email'],
   computed: {
     validPostfixes () { return validEmailPostfixes },

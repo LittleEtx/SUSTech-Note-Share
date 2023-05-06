@@ -5,11 +5,14 @@
     <el-row>
       <el-col :span="18">
         <el-form-item label="密码" prop="pwd" style="font-weight: bold">
-          <el-input v-model="pwdLoginForm.pwd" placeholder="密码" show-password type="password"></el-input>
+          <el-input v-model="pwdLoginForm.pwd" placeholder="密码" show-password type="password">
+            <template #prefix>
+              <el-icon><Lock /></el-icon>
+            </template>
+          </el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="6" style="height: 35px;
-      display: flex; flex-direction: row-reverse; align-items: flex-end">
+      <el-col :span="6" style="text-align: right; margin-top: 10px">
         <el-link style="color: #0babeab8" @click="$router.push('reset_password')">忘记密码?</el-link>
       </el-col>
     </el-row>
@@ -18,8 +21,11 @@
 
 <script>
 
+import {Lock} from "@element-plus/icons-vue"
+
 export default {
-  name: 'PasswordForm',
+  components: {Lock},
+  expose: ['validate', 'password', 'clear'],
   computed: {
     password () { return this.pwdLoginForm.pwd }
   },

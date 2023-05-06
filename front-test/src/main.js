@@ -8,6 +8,7 @@ import '@/assets/globle.css'
 import '@/scripts/AxiosSettings.js'
 import {router} from "@/router"
 import {store} from "@/scripts/GlobalStorage"
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 /* eslint-disable no-new */
 const app = createApp(App)
@@ -16,5 +17,10 @@ app.config.productionTip = false
 app.use(ElementPlus)
 app.use(router)
 app.use(store)
+
+// 全局导入所有的 ElementPlus 图标
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 
 app.mount('#app')

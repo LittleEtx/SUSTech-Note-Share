@@ -19,9 +19,10 @@
     <!--  buttons for download and return  -->
     <transition name="basic-fade">
       <div class="buttons" v-show="!isShowBox">
-        <el-button style="margin-right: 10px" type="info" icon="el-icon-s-home" circle
-                   @click="isShowBox = !isShowBox"></el-button>
-        <el-button style type="primary" icon="el-icon-download" circle @click="downloadBackground"></el-button>
+        <el-button style="margin-right: 10px" type="info" :icon="HomeFilled" circle
+                   @click="isShowBox = !isShowBox"
+        ></el-button>
+        <el-button style type="primary" :icon="Download" circle @click="downloadBackground"></el-button>
       </div>
     </transition>
   </div>
@@ -30,7 +31,8 @@
 <script>
 import Login from './login_page/Login.vue'
 import Cookies from 'js-cookie'
-import {router} from "@/router"
+import {HomeFilled, Download} from "@element-plus/icons-vue"
+
 export default {
   name: 'logOn',
   data () {
@@ -52,6 +54,12 @@ export default {
   },
   components: {Login},
   computed: {
+    Download () {
+      return Download
+    },
+    HomeFilled () {
+      return HomeFilled
+    },
     backgroundUrl: function () {
       const date = new Date()
       const year = date.getFullYear() //  返回的是年份
@@ -85,13 +93,6 @@ export default {
   position: absolute;
   backdrop-filter: blur(3px);
 }
-.mask-fade-enter-active, .mask-fade-leave-active {
-  transition: backdrop-filter .5s;
-}
-
-.mask-fade-enter, .mask-fade-leave-to {
-  backdrop-filter: blur(0px);
-}
 
 .buttons {
   position: absolute;
@@ -108,10 +109,19 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
+.mask-fade-enter-active, .mask-fade-leave-active {
+  transition: backdrop-filter .5s;
+}
+
+.mask-fade-enter-from, .mask-fade-leave-to {
+  backdrop-filter: blur(0px);
+}
+
 .basic-fade-enter-active, .basic-fade-leave-active {
   transition: opacity .3s;
 }
-.basic-fade-enter, .basic-fade-leave-to {
+.basic-fade-enter-from, .basic-fade-leave-to {
   opacity: 0;
 }
 

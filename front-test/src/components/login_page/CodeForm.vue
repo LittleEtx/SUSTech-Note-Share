@@ -3,7 +3,10 @@
          label-position="right" label-width="80px">
   <!-- 邮箱验证码 -->
   <el-form-item label="验证码" prop="emailCode" style="font-weight: bold">
-    <el-input v-model="codeForm.emailCode" placeholder="验证码" prefix-icon="el-icon-key">
+    <el-input v-model="codeForm.emailCode" placeholder="验证码">
+      <template #prefix>
+        <el-icon><ChatLineSquare /></el-icon>
+      </template>
       <template #append>
         <el-button :disabled="disabled" @click="$emit('send-code')">
             {{buttonText}}
@@ -16,8 +19,11 @@
 
 <script>
 
+import {ChatLineSquare} from "@element-plus/icons-vue"
+
 export default {
-  name: 'CodeForm',
+  components: {ChatLineSquare},
+  expose: ['validate', 'code', 'wait', 'clear'],
   computed: {
     code () { return this.codeForm.emailCode }
   },
