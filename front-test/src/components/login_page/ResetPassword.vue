@@ -12,7 +12,9 @@
         <el-button type="primary" class="button-width" @click="verifyEmail">下一步</el-button>
       </template>
       <template v-else-if="active === 1">
-        <email-form ref="emailForm" :disabled="true"></email-form>
+        <p> 你即将重置密码的邮箱： </p>
+        <p><b> {{email}} </b></p>
+        <p> 验证码已发送至邮箱 </p>
         <code-form ref="codeForm" @send-code="getEmailValidateCode"></code-form>
         <p>
           <el-button class="button-width" @click="previous">上一步</el-button>
@@ -37,18 +39,18 @@ import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
 import PasswordForm from './PasswordForm.vue'
 import RenewPasswordForm from './RenewPasswordForm.vue'
+import {router} from "@/router"
 
 export default {
-  name: 'ResetPassword',
   components: {RenewPasswordForm, PasswordForm, CodeForm, EmailForm},
   data () {
     return {
       active: 0,
       token: '',
+      email: '',
       loading: false
     }
   },
-
   methods: {
     previous () {
       this.active--
@@ -62,12 +64,13 @@ export default {
       this.loading = true
       try {
         await apiResetPassVerifyEmail(this.$refs.emailForm.email)
+        this.email = this.$refs.emailForm.email
         this.active++
         await this.$nextTick()
         this.$refs.codeForm.wait() // already sent email, start waiting
       } catch (e) {
         if (e.response.status === 400) {
-          this.$alert('该邮箱未注册！')
+          await this.$alert('该邮箱未注册！')
         } else {
           console.log(e)
         }
@@ -83,13 +86,13 @@ export default {
       this.loading = true
       try {
         this.token = await apiResetPassVerifyCode(
-          this.$refs.emailForm.email,
+          this.email,
           this.$refs.codeForm.code
         )
         this.active++
       } catch (e) {
         if (e.response.status === 400) {
-          this.$alert('验证失败，请重新输入验证码！', '', {confirmButtonText: '确定'})
+          await this.$alert('验证失败，请重新输入验证码！', '', {confirmButtonText: '确定'})
           this.$refs.codeForm.clear()
         } else {
           console.log(e)
@@ -104,14 +107,13 @@ export default {
         console.log(e)
         return
       }
-      console.log('1')
       this.loading = true
       try {
         await apiResetPassword(this.token, this.$refs.passwordForm.password)
         this.active++
       } catch (e) {
         if (e.response.status === 400) {
-          this.$alert('密码重置失败：' + e.response.data, '', {confirmButtonText: '确定'})
+          await this.$alert('密码重置失败：' + e.response.data, '', {confirmButtonText: '确定'})
           this.$refs.passwordForm.clear()
         } else {
           console.log(e)
@@ -124,7 +126,7 @@ export default {
       await apiResetPassVerifyEmail(this.$refs.emailForm.email)
     },
     logOn () {
-      this.$router.push('login')
+      router.push('login')
     }
   }
 }
