@@ -2,7 +2,7 @@
 <el-row type="flex" justify="center" align="middle" style="height: 100%">
     <el-col :span="5">
         <img src="../../assets/icon/icon_with_word.svg" class="icon"
-             @click="router.go(0)" alt="">
+             @click="this.$router.push('home')" alt="">
     </el-col>
     <el-col :span="4">
         <icon-button icon="el-icon-menu" class="section">
@@ -72,17 +72,12 @@
 
 <script>
 import IconButton from './IconButton.vue'
-import router from '../../router'
-import {apiGetUserInfo} from '../../scripts/API_User'
-import {apiLogout} from '../../scripts/API_Auth'
+import {apiGetUserInfo} from '@/scripts/API_User'
+import {apiLogout} from '@/scripts/API_Auth'
+import {router} from "@/router"
 
 export default {
   name: 'main-header',
-  computed: {
-    router () {
-      return router
-    }
-  },
   components: {IconButton},
   data () {
     return {
@@ -102,7 +97,7 @@ export default {
       try {
         await apiLogout()
         this.$store.commit('logout')
-        router.push('/login')
+        await router.push('/login')
       } catch (e) {
         this.$message({
           message: '登出失败',

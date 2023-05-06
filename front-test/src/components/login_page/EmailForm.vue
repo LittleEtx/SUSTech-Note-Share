@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import {studentEmailPostfix, validEmailPostfixes} from '../../scripts/LoginRules'
+import {studentEmailPostfix, validEmailPostfixes} from '@/scripts/LoginRules'
 
 export default {
   name: 'EmailForm',

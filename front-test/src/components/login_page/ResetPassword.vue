@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import {apiResetPassVerifyEmail, apiResetPassVerifyCode, apiResetPassword} from '../../scripts/API_Auth'
+import {apiResetPassVerifyEmail, apiResetPassVerifyCode, apiResetPassword} from '@/scripts/API_Auth'
 import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
 import PasswordForm from './PasswordForm.vue'

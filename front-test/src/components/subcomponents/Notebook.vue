@@ -31,7 +31,7 @@
 <script>
 
 import IconButton from './IconButton.vue'
-import { apiGetUserInfo } from '../../scripts/API_User'
+import { apiGetUserInfo } from '@/scripts/API_User'
 
 export default {
   name: 'Notebook',

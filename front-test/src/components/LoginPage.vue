@@ -9,7 +9,7 @@
     <transition name="basic-fade">
       <div v-show="isShowBox" class="login-container">
         <div class="icon-header">
-          <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
+          <img src="@/assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
         </div>
         <div class="login-box">
           <login></login>
@@ -29,10 +29,8 @@
 
 <script>
 import Login from './login_page/Login.vue'
-import ResetPassword from './ResetPasswordPage.vue'
-import router from '../router'
 import Cookies from 'js-cookie'
-import IconButton from './subcomponents/IconButton.vue'
+import {router} from "@/router"
 export default {
   name: 'logOn',
   data () {
@@ -52,21 +50,21 @@ export default {
       a.dispatchEvent(event) // 触发a的单击事件
     }
   },
-  components: {IconButton, Login, ResetPassword},
+  components: {Login},
   computed: {
     backgroundUrl: function () {
       const date = new Date()
       const year = date.getFullYear() //  返回的是年份
       let month = date.getMonth() + 1 //  返回的月份上个月的月份，记得+1才是当月
       if (month < 10) { month = '0' + month } // 格式化
-      return require('../assets/login-page/background-img/' + year + '.' + month + '.png')
+      return new URL('../assets/login-page/background-img/' + year + '.' + month + '.png', import.meta.url).href
     }
   },
   beforeMount () {
     // check whether the user has logged in
     if (Cookies.get('satoken')) {
       // if token not acceptable, will jump back to this page
-      router.push('/home')
+      //router.push('/home')
     }
   }
 }

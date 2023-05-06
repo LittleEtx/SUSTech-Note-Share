@@ -31,14 +31,13 @@
 </template>
 
 <script>
-import router from '../../router'
-import {apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode} from '../../scripts/API_Auth'
+import {router} from '@/router'
+import {apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode} from '@/scripts/API_Auth'
 import PasswordForm from './PasswordForm.vue'
 import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
 
 export default {
-  name: 'Login',
   components: { CodeForm, PasswordForm, EmailForm },
   data () {
     return {
