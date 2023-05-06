@@ -1,10 +1,7 @@
-import Vuex from 'vuex'
-import Vue from 'vue'
-import {apiGetUserID} from './API_User'
+import { createStore } from 'vuex'
+import { apiGetUserID } from './API_User'
 
-Vue.use(Vuex)
-
-export const store = new Vuex.Store({
+export const store = createStore({
   state: {
     userID: ''
   },

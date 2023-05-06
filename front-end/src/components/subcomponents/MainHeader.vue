@@ -1,92 +1,81 @@
 <template>
-<el-row type="flex" justify="center" align="middle" style="height: 100%">
-    <el-col :span="5">
-        <img src="../../assets/icon/icon_with_word.svg" class="icon"
-             @click="router.go(0)" alt="">
-    </el-col>
-    <el-col :span="4">
-        <icon-button icon="el-icon-menu" class="section">
-            <h4>全部分区</h4>
-        </icon-button>
+<div style="height: 60px; margin-left: 20px; margin-right: 20px">
+  <el-row type="flex" justify="center" align="middle" style="height: 100%">
+    <el-col :span="9">
+      <img src="../../assets/icon/icon_with_word.svg" class="icon"
+           @click="this.$router.push('home')" alt="">
     </el-col>
     <el-col :span="6">
-        <el-input placeholder="搜索笔记" class="search-bar" suffix-icon="el-icon-search"></el-input>
+      <el-input placeholder="搜索笔记">
+        <template #prefix>
+          <el-icon><Search /></el-icon>
+        </template>
+      </el-input>
     </el-col>
-    <el-col :span="5">
-        <div class="fast-entry">
-        <div>
-            <icon-button icon="el-icon-date" attach-position="down">
-                <h5 style="margin: 0">课程</h5>
-            </icon-button>
-        </div>
-        <div>
-            <icon-button icon="el-icon-collection" attach-position="down">
-                <h5 style="margin: 0">笔记</h5>
-            </icon-button>
-        </div>
-        <div>
-            <icon-button icon="el-icon-star-off" attach-position="down">
-                <h5 style="margin: 0">收藏</h5>
-            </icon-button>
-        </div>
-        <div>
-            <icon-button icon="el-icon-time" attach-position="down">
-                <h5 style="margin: 0">历史</h5>
-            </icon-button>
-        </div>
-    </div>
+    <el-col :span="6"></el-col>
+    <el-col :span="3">
+      <el-popover placement="bottom-start" trigger="hover" width="200px">
+        <template #reference>
+          <img :src="avatar" class="avatar" alt="">
+        </template>
+        <template #default>
+          <div class="pop-out">
+            <!-- 个人信息展示  -->
+            <div style="display: flex; justify-content: right; margin-bottom: 10px">
+              <img :src="avatar" class="avatar" alt="">
+              <div style="margin-left: 10px; display: flex; flex-direction: column;
+              justify-content: center; align-items: start">
+                <p style="margin: 0; font-size: 15px"><b>{{userName}}</b> </p>
+                <p style="margin: 0; font-size: 10px"> {{userID}}</p>
+              </div>
+            </div>
+            <!-- 快捷入口 -->
+            <el-divider />
+            <el-link :underline="false" :icon="User" class="popover-button" @click="$router.push('home')">
+              <h5 class="popover-word">个人中心</h5>
+              <el-icon><ArrowRight /></el-icon>
+            </el-link>
+            <el-link :underline="false" :icon="Lock" class="popover-button" @click="resetPassword">
+              <h5 class="popover-word">修改密码</h5>
+              <el-icon><ArrowRight /></el-icon>
+            </el-link>
+            <el-divider />
+            <el-link :underline="false" :icon="SwitchButton" class="popover-button" @click="logout">
+              <h5 class="popover-word">登出</h5>
+            </el-link>
+          </div>
+        </template>
+      </el-popover>
     </el-col>
-    <el-col :span="4">
-        <div class="personal-info">
-            <el-popover placement="bottom" trigger="hover" width="60">
-                <div class="pop-out" style="margin-left: 10px">
-                    <icon-button icon="el-icon-user" class="popover-button">
-                        <h5 class="popover-word">个人中心</h5>
-                        <i class="el-icon-arrow-right"></i>
-                    </icon-button>
-                    <icon-button icon="el-icon-lock" class="popover-button" @click="resetPassword">
-                        <h5 class="popover-word">修改密码</h5>
-                        <i class="el-icon-arrow-right"></i>
-                    </icon-button>
-                    <icon-button icon="el-icon-switch-button"
-                                 class="popover-button" @click="logout">
-                        <h5 class="popover-word">登出</h5>
-                        <i style="width: 10px"></i>
-                    </icon-button>
-                </div>
-                <div slot="reference">
-                    <icon-button>
-                        <div><img :src="avatar" class="avatar" alt=""></div>
-                        <div style="display: flex; flex-direction: column;
-                        justify-content: center; align-items: flex-start">
-                            <h4 style="margin: 0">{{userName}}</h4>
-                            <p style="margin: 0; font-size: 10px"> {{userID}}</p>
-                        </div>
-                    </icon-button>
-                </div>
-            </el-popover>
-        </div>
-    </el-col>
-</el-row>
+  </el-row>
+</div>
 </template>
 
 <script>
-import IconButton from './IconButton.vue'
-import router from '../../router'
-import {apiGetUserInfo} from '../../scripts/API_User'
-import {apiLogout} from '../../scripts/API_Auth'
+import { apiGetUserInfo } from '@/scripts/API_User'
+import { apiLogout } from '@/scripts/API_Auth'
+import { router } from '@/router'
+import DefaultAvatar from '@/assets/default-file/default-avatar.png'
+import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 
 export default {
   name: 'main-header',
   computed: {
-    router () {
-      return router
+    SwitchButton () {
+      return SwitchButton
+    },
+    Lock () {
+      return Lock
+    },
+    User () {
+      return User
     }
   },
-  components: {IconButton},
+  components: { ArrowRight, Search },
   data () {
     return {
-      avatar: require('../../assets/default-file/default-avatar.png'),
+      avatar: DefaultAvatar,
+      showFullName: false,
       userName: '未登录',
       userID: ''
     }
@@ -102,7 +91,7 @@ export default {
       try {
         await apiLogout()
         this.$store.commit('logout')
-        router.push('/login')
+        await router.push('/login')
       } catch (e) {
         this.$message({
           message: '登出失败',
@@ -119,61 +108,39 @@ export default {
 
 <style scoped>
 .icon {
-    height: 50px;
-    float: left;
-    cursor: pointer;
-    margin-left: 20px;
-}
-
-.section {
-    float: right;
-    margin-right: 20px;
-}
-
-.search-bar {
-    height: 50px;
-    margin-top: 10px;
-}
-
-.search-bar >>> .el-input__inner {
-    background: #f0f0f0;
-}
-
-.fast-entry {
-    margin-left: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.personal-info {
-    margin-right: 20px;
-    display: flex;
-    justify-content: right;
+  height: 50px;
+  float: left;
+  cursor: pointer;
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
+  height: 50px;
+  border-radius: 50%;
+  float: right;
+  cursor: pointer;
 }
 
 .pop-out {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-left: 20px;
 }
 
 .popover-button {
-    width: 130px;
-
+  display: flex;
+  justify-content: start;
 }
 
 .popover-word {
-    width: 80px;
-    margin-left: 10px;
+  width: 100px;
+  margin-left: 10px;
 }
+
+.el-divider {
+  margin: 0;
+}
+
 </style>

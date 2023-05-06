@@ -3,7 +3,10 @@
          label-position="right" label-width="80px">
   <!-- 邮箱验证码 -->
   <el-form-item label="验证码" prop="emailCode" style="font-weight: bold">
-    <el-input v-model="codeForm.emailCode" placeholder="验证码" prefix-icon="el-icon-key">
+    <el-input v-model="codeForm.emailCode" placeholder="验证码">
+      <template #prefix>
+        <el-icon><ChatLineSquare /></el-icon>
+      </template>
       <template #append>
         <el-button :disabled="disabled" @click="$emit('send-code')">
             {{buttonText}}
@@ -16,8 +19,11 @@
 
 <script>
 
+import { ChatLineSquare } from '@element-plus/icons-vue'
+
 export default {
-  name: 'CodeForm',
+  components: { ChatLineSquare },
+  expose: ['validate', 'code', 'wait', 'clear'],
   computed: {
     code () { return this.codeForm.emailCode }
   },
@@ -30,7 +36,7 @@ export default {
       },
       codeRules: {
         emailCode: [
-          {required: true, message: '请输入验证码', trigger: 'blur'}
+          { required: true, message: '请输入验证码', trigger: 'blur' }
         ]
       }
     }
@@ -44,7 +50,7 @@ export default {
     },
     wait () { // 验证码倒数60秒
       let time = 60
-      let timer = setInterval(() => {
+      const timer = setInterval(() => {
         if (time === 0) {
           clearInterval(timer)
           this.buttonText = '获取验证码'

@@ -1,10 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import LoginPage from '@/components/LoginPage.vue'
+import ResetPasswordPage from '@/components/ResetPasswordPage.vue'
+import HomePage from '@/components/HomePage.vue'
+import PersonalCenterPage from '@/components/PersonalCenterPage.vue'
 
-Vue.use(Router)
-
-export default new Router({
-  mode: 'history',
+export const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -13,21 +14,21 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../components/LoginPage.vue')
+      component: LoginPage
     },
     {
       path: '/reset_password',
       name: 'reset_password',
-      component: () => import('../components/ResetPasswordPage.vue')
+      component: ResetPasswordPage
     },
     {
       path: '/home',
       name: 'home',
-      component: () => import('../components/HomePage')
+      component: HomePage
     },
     {
       path: '/user/:userId',
-      component: () => import('../components/PersonalCenterPage')
+      component: PersonalCenterPage
     }
   ]
 })

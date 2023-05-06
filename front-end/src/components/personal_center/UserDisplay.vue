@@ -4,15 +4,17 @@
   <div class="info-display">
 <!--   用户信息显示   -->
     <template v-if="!editing">
+      <div style="margin-top: 20px"></div>
       <!--    user name and gender    -->
-      <p style="margin-top: 10px; margin-bottom: 0; font-size: 20px">
+      <span style="font-size: 20px">
         <b> {{ userInfo.userName }} </b>
-          <i v-show="getGenderIcon != null" :class="getGenderIcon"></i>
-      </p>
+        <el-icon v-if="userInfo.gender === 1" size="15px"><Male /></el-icon>
+        <el-icon v-if="userInfo.gender === 0" size="15px"><Female /></el-icon>
+      </span>
       <!--   email   -->
       <p style="margin: 0; font-size: 10px"> {{ userInfo.email }}</p>
       <p style="margin-top: 10px; margin-bottom: 0; font-size: 15px" v-show="userInfo.birth !== null">
-          <i class="el-icon-date"></i>
+          <el-icon><Calendar /></el-icon>
           {{ userInfo.birth }}
       </p>
       <p style="margin-top: 10px; font-size: 10px"> {{ userInfo.description }}</p>
@@ -25,7 +27,7 @@
           <el-input v-model="userInfo.userName"></el-input>
         </el-form-item>
         <el-form-item label="性别">
-          <el-radio-group v-model="userInfo.gender" size="mini">
+          <el-radio-group v-model="userInfo.gender" size="small">
             <el-radio border :label="1">男</el-radio>
             <el-radio border :label="0">女</el-radio>
             <el-radio border :label="null">保密</el-radio>
@@ -60,10 +62,11 @@
 
 <script>
 
-import {apiGetUserInfo} from '../../scripts/API_User'
+import { apiGetUserInfo } from '@/scripts/API_User'
+import { Calendar, Female, Male } from '@element-plus/icons-vue'
 
 export default {
-  name: 'UserDisplay',
+  components: { Female, Male, Calendar },
   props: {
     id: {
       type: String,
@@ -77,19 +80,9 @@ export default {
       editing: false
     }
   },
-  computed: {
-    getGenderIcon () {
-      if (this.userInfo.gender === 0) {
-        return 'el-icon-female'
-      } else if (this.userInfo.gender === 1) {
-        return 'el-icon-male'
-      }
-      return null
-    }
-  },
   watch: {
     id: {
-      'handler': async function (newVal) {
+      handler: async function (newVal) {
         if (newVal === '') return
         this.editable = newVal === await this.$store.getters.userID
         this.userInfo = await apiGetUserInfo(newVal)
@@ -126,13 +119,13 @@ export default {
   margin: 0;
 }
 
-.el-form-item >>> .el-form-item__label {
+.el-form-item :deep(.el-form-item__label)  {
   font-size: 5px;
   padding: 0;
   margin-bottom: -5px;
 }
 
-.el-radio-group >>> .el-radio {
+.el-radio-group :deep(.el-radio)  {
   margin: 0;
 }
 

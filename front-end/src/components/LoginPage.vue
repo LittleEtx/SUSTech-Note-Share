@@ -9,37 +9,37 @@
     <transition name="basic-fade">
       <div v-show="isShowBox" class="login-container">
         <div class="icon-header">
-          <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
+          <img src="@/assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
         </div>
         <div class="login-box">
-          <login></login>
+          <login-pane></login-pane>
         </div>
       </div>
     </transition>
     <!--  buttons for download and return  -->
     <transition name="basic-fade">
       <div class="buttons" v-show="!isShowBox">
-        <el-button style="margin-right: 10px" type="info" icon="el-icon-s-home" circle
-                   @click="isShowBox = !isShowBox"></el-button>
-        <el-button style type="primary" icon="el-icon-download" circle @click="downloadBackground"></el-button>
+        <el-button style="margin-right: 10px" type="info" :icon="HomeFilled" circle
+                   @click="isShowBox = !isShowBox"
+        ></el-button>
+        <el-button style type="primary" :icon="Download" circle @click="downloadBackground"></el-button>
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import Login from './login_page/Login.vue'
-import ResetPassword from './ResetPasswordPage.vue'
-import router from '../router'
 import Cookies from 'js-cookie'
-import IconButton from './subcomponents/IconButton.vue'
+import { HomeFilled, Download } from '@element-plus/icons-vue'
+import LoginPane from '@/components/login_page/LoginPane.vue'
+
 export default {
-  name: 'logOn',
   data () {
     return {
       isShowBox: true
     }
   },
+  components: { LoginPane },
   methods: {
     changeShow () {
       this.isShowBox = !this.isShowBox
@@ -52,21 +52,26 @@ export default {
       a.dispatchEvent(event) // 触发a的单击事件
     }
   },
-  components: {IconButton, Login, ResetPassword},
   computed: {
+    Download () {
+      return Download
+    },
+    HomeFilled () {
+      return HomeFilled
+    },
     backgroundUrl: function () {
       const date = new Date()
       const year = date.getFullYear() //  返回的是年份
       let month = date.getMonth() + 1 //  返回的月份上个月的月份，记得+1才是当月
       if (month < 10) { month = '0' + month } // 格式化
-      return require('../assets/login-page/background-img/' + year + '.' + month + '.png')
+      return new URL('../assets/login-page/background-img/' + year + '.' + month + '.png', import.meta.url).href
     }
   },
   beforeMount () {
     // check whether the user has logged in
     if (Cookies.get('satoken')) {
       // if token not acceptable, will jump back to this page
-      router.push('/home')
+      // router.push('/home')
     }
   }
 }
@@ -87,13 +92,6 @@ export default {
   position: absolute;
   backdrop-filter: blur(3px);
 }
-.mask-fade-enter-active, .mask-fade-leave-active {
-  transition: backdrop-filter .5s;
-}
-
-.mask-fade-enter, .mask-fade-leave-to {
-  backdrop-filter: blur(0px);
-}
 
 .buttons {
   position: absolute;
@@ -110,10 +108,19 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
+.mask-fade-enter-active, .mask-fade-leave-active {
+  transition: backdrop-filter .5s;
+}
+
+.mask-fade-enter-from, .mask-fade-leave-to {
+  backdrop-filter: blur(0px);
+}
+
 .basic-fade-enter-active, .basic-fade-leave-active {
   transition: opacity .3s;
 }
-.basic-fade-enter, .basic-fade-leave-to {
+.basic-fade-enter-from, .basic-fade-leave-to {
   opacity: 0;
 }
 
