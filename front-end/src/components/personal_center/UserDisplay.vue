@@ -117,6 +117,7 @@ export default {
     }
   },
   async beforeMount () {
+    console.log(store.state.userInfo)
     if (!this.id || this.id === store.state.userInfo.userID) {
       this.editable = true
     } else {

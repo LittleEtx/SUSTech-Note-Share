@@ -9,7 +9,7 @@
     <transition name="basic-fade">
       <div v-show="isShowBox" class="login-container">
         <div class="icon-header">
-          <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
+          <img :src="SUSTechNoteIcon" style="height: 100px" alt="">
         </div>
         <div class="login-box">
           <login-pane></login-pane>
@@ -35,6 +35,7 @@ import Cookies from 'js-cookie'
 import { HomeFilled, Download } from '@element-plus/icons-vue'
 import LoginPane from '@/components/login_page/LoginPane.vue'
 import {router} from "@/router"
+import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
 
 export default {
   data () {
@@ -61,6 +62,9 @@ export default {
     },
     HomeFilled () {
       return HomeFilled
+    },
+    SUSTechNoteIcon () {
+      return SUSTechNoteIcon
     },
     backgroundUrl: function () {
       const date = new Date()

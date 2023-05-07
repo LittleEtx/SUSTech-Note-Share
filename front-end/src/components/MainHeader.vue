@@ -3,7 +3,7 @@
 <div style="height: 60px; margin-left: 20px; margin-right: 20px">
   <el-row type="flex" justify="center" align="middle" style="height: 100%">
     <el-col :span="9">
-      <img src="../assets/icon/icon_with_word.svg" class="icon"
+      <img :src="SUSTechNoteIcon" class="icon"
            @click="router.push('home')" alt="">
     </el-col>
     <el-col :span="6">
@@ -17,13 +17,13 @@
     <el-col :span="3">
       <el-popover placement="bottom-start" trigger="hover" width="200px">
         <template #reference>
-          <img :src="avatar" class="avatar" :alt="DefaultAvatar">
+          <img :src="avatar" class="avatar" alt="">
         </template>
         <template #default>
           <div class="pop-out">
             <!-- 个人信息展示  -->
             <div style="display: flex; justify-content: right; margin-bottom: 10px">
-              <img :src="avatar" class="avatar" :alt="DefaultAvatar">
+              <img :src="avatar" class="avatar" alt="">
               <div style="margin-left: 10px; display: flex; flex-direction: column;
               justify-content: center; align-items: start">
                 <p style="margin: 0; font-size: 15px"><b>{{userName}}</b> </p>
@@ -57,6 +57,7 @@ import { apiLogout } from '@/scripts/API_Auth'
 import { router } from '@/router'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
+import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
 
 export default {
   computed: {
@@ -74,6 +75,9 @@ export default {
     },
     DefaultAvatar () {
       return DefaultAvatar
+    },
+    SUSTechNoteIcon () {
+      return SUSTechNoteIcon
     },
     avatar () {
       return this.$store.state.userInfo.avatar

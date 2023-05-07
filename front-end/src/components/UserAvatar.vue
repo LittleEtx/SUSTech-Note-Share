@@ -4,7 +4,7 @@ interface Props {
   url?: string
 }
 const props: Props = withDefaults(defineProps<Props>(), {
-  url: this.$store.state.
+  url: this.$store.state.userInfo.avatar
 })
 const showDefault = ref(false)
 
