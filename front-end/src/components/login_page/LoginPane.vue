@@ -36,7 +36,7 @@ import { apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode } from '@/script
 import PasswordForm from './PasswordForm.vue'
 import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
-import {store} from "@/scripts/GlobalStorage"
+import {store} from "@/store/store"
 
 async function onSuccessLogin () {
   await store.dispatch('updateInfo')

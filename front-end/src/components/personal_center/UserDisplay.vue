@@ -1,7 +1,7 @@
 <template>
 <div class="head-container">
   <div>
-    <img :src="userInfo.avatar"  class="avatar" alt="">
+    <el-avatar :src="userInfo.avatar"  class="avatar" :alt="DefaultAvatar"> </el-avatar>
     <!--suppress JSValidateTypes -->
     <el-button :icon="Switch" circle size="large"
                style="position: absolute; margin-left: -40px; margin-top: 170px"
@@ -84,13 +84,17 @@
 import {apiGetUserInfo, apiUpdateInfo} from '@/scripts/API_User'
 import {Calendar, Female, Male, Switch} from '@element-plus/icons-vue'
 import UploadAvatar from "@/components/personal_center/UploadAvatar.vue"
-import {store} from "@/scripts/GlobalStorage"
+import DefaultAvatar from '@/assets/default-file/default-avatar.png'
+import {store} from "@/store/store"
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   computed: {
     Switch () {
       return Switch
+    },
+    DefaultAvatar () {
+      return DefaultAvatar
     },
     userInfo () {
       return this.editable ? store.state.userInfo : this.tempInfo
@@ -160,9 +164,8 @@ export default {
   width: 240px;
 }
 .avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
+  width: 240px;
+  height: 240px;
 }
 
 .info-display {

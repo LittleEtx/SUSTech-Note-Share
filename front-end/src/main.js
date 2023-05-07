@@ -7,7 +7,7 @@ import '@/assets/element-variables.scss'
 import '@/assets/global.css'
 import '@/scripts/AxiosSettings.js'
 import { router } from '@/router'
-import { store } from '@/scripts/GlobalStorage'
+import { store } from '@/store/store'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 /* eslint-disable no-new */

@@ -17,13 +17,13 @@
     <el-col :span="3">
       <el-popover placement="bottom-start" trigger="hover" width="200px">
         <template #reference>
-          <img :src="avatar" class="avatar" alt="">
+          <img :src="avatar" class="avatar" :alt="DefaultAvatar">
         </template>
         <template #default>
           <div class="pop-out">
             <!-- 个人信息展示  -->
             <div style="display: flex; justify-content: right; margin-bottom: 10px">
-              <img :src="avatar" class="avatar" alt="">
+              <img :src="avatar" class="avatar" :alt="DefaultAvatar">
               <div style="margin-left: 10px; display: flex; flex-direction: column;
               justify-content: center; align-items: start">
                 <p style="margin: 0; font-size: 15px"><b>{{userName}}</b> </p>
@@ -56,6 +56,7 @@
 import { apiLogout } from '@/scripts/API_Auth'
 import { router } from '@/router'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
+import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 
 export default {
   computed: {
@@ -70,6 +71,9 @@ export default {
     },
     router () {
       return router
+    },
+    DefaultAvatar () {
+      return DefaultAvatar
     },
     avatar () {
       return this.$store.state.userInfo.avatar
