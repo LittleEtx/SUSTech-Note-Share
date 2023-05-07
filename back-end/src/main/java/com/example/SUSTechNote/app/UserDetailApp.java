@@ -48,7 +48,8 @@ public class UserDetailApp {
     public ResponseEntity<?> uploadAvatar(@RequestParam("avatar") MultipartFile avatar) throws IOException {
         int id = StpUtil.getLoginIdAsInt(); //获取用户ID
         String fileType = avatar.getContentType();
-        if (!"image/jpeg".equals(fileType) && !"image/png".equals(fileType)) {
+        if (!"image/jpg".equals(fileType) && !"image/jpeg".equals(fileType)
+                && !"image/png".equals(fileType)) {
             logger.debug("User avatar upload type not match");
             return ResponseEntity.badRequest().body("file not support");
         }
@@ -107,13 +108,13 @@ public class UserDetailApp {
         String newName = jsonObject.getString("userName");
         // 每周只能改一次用户名
         if (!Objects.equals(newName, user.getUserName()) &&
-                now.minusWeeks(1).isAfter(lastUpdateTime)) {
-            return ResponseEntity.badRequest().body("username can only be changed once a week");
+                now.minusDays(1).isBefore(lastUpdateTime)) {
+            return ResponseEntity.badRequest().body("username can only be changed once per day");
         }
         user.setUserName(newName);
         user.setDescription(jsonObject.getString("description"));
         user.setGender(jsonObject.getInteger("gender"));
-        user.setBirth(jsonObject.getSqlDate("date"));
+        user.setBirth(jsonObject.getSqlDate("birth"));
         user.setUpdateTime(now);
         userService.updateUser(user);
         return ResponseEntity.ok().body("update success");

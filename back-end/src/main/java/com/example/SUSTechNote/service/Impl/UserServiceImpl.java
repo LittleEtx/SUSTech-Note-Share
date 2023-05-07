@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
     public String updateAvatar(int userID, MultipartFile avatar) throws IOException {
         //使用随机UUID作为文件名
         String fileName = UUID.randomUUID().toString().replaceAll("-", "") +
-                ("image/jpeg".equals(avatar.getContentType()) ? ".jpg" : ".png");
+                ("image/png".equals(avatar.getContentType()) ? ".png" : ".jpg");
 
         String basePath = staticPathHelper.getStaticPath();
         String savingPath = "/user_avatar";
