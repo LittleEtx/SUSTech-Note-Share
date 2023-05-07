@@ -5,7 +5,7 @@
     <el-row>
       <el-col :span="18">
         <el-form-item label="密码" prop="pwd" style="font-weight: bold">
-          <el-input v-model="pwdLoginForm.pwd" placeholder="密码" show-password type="password">
+          <el-input v-model="pwdLoginForm.pwd" placeholder="密码" show-password>
             <template #prefix>
               <el-icon><Lock /></el-icon>
             </template>

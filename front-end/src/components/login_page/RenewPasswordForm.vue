@@ -2,11 +2,11 @@
 <template>
   <el-form :model="passwordForm" :rules="pwdRules" ref="form" label-width="80px" style="font-weight: bold">
     <el-form-item label="新密码" prop="pwd">
-      <el-input type="password" placeholder="新密码" v-model="passwordForm.pwd">
+      <el-input show-password placeholder="新密码" v-model="passwordForm.pwd">
       </el-input>
     </el-form-item>
     <el-form-item label="确认密码" prop="pwd2">
-      <el-input type="password" placeholder="重复新密码" v-model="passwordForm.pwd2">
+      <el-input show-password placeholder="重复新密码" v-model="passwordForm.pwd2">
       </el-input>
     </el-form-item>
   </el-form>

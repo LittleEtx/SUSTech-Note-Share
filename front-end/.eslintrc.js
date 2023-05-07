@@ -1,3 +1,5 @@
+require('@rushstack/eslint-patch/modern-module-resolution')
+
 module.exports = {
   env: {
     browser: true,
@@ -6,17 +8,10 @@ module.exports = {
   },
   extends: [
     'plugin:vue/vue3-essential',
-    'standard-with-typescript'
-  ],
-  overrides: [
+    'eslint:recommended',
+    '@vue/eslint-config-typescript',
   ],
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module'
-  },
-  plugins: [
-    'vue'
-  ],
-  rules: {
   }
 }

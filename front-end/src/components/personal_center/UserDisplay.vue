@@ -1,10 +1,10 @@
 <template>
 <div class="head-container">
   <div><img :src="userInfo.avatar" class="avatar" alt=""></div>
+  <div style="margin-top: 20px"></div>
   <div class="info-display">
 <!--   用户信息显示   -->
     <template v-if="!editing">
-      <div style="margin-top: 20px"></div>
       <!--    user name and gender    -->
       <span style="font-size: 20px">
         <b> {{ userInfo.userName }} </b>
@@ -22,47 +22,48 @@
     </template>
 <!--   修改用户信息   -->
     <template v-else>
-      <el-form label-position="top" label-width="10px">
-        <el-form-item label="用户名">
-          <el-input v-model="userInfo.userName"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="userInfo.gender" size="small">
-            <el-radio border :label="1">男</el-radio>
-            <el-radio border :label="0">女</el-radio>
-            <el-radio border :label="null">保密</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker
-            v-model="userInfo.birth" type="date"
-            placeholder="选择日期"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd">
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="个性签名">
-          <el-input
-            type="textarea"
-            :autosize="{ minRows: 3 }"
-            placeholder="个性签名"
-            v-model="userInfo.description"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div style="margin-top: 20px"></div>
-      <p>
-        <el-button v-show="editable" type="info" style="width: 40%" plain @click="editing = false"> 取消 </el-button>
-        <el-button v-show="editable" type="primary" style="width: 40%" @click="editing = false"> 确定 </el-button>
-      </p>
+      <div v-loading="submittingNewInfo" element-loading-background="rgba(255, 255, 255, 0.3)">
+        <el-form label-position="top" label-width="10px" class="modify-info-form" size="small">
+          <el-form-item label="用户名（24小时内只能修改一次）">
+            <el-input v-model="userInfo.userName"></el-input>
+          </el-form-item>
+          <el-form-item label="性别">
+            <el-radio-group v-model="userInfo.gender" size="small">
+              <el-radio border :label="1">男</el-radio>
+              <el-radio border :label="0">女</el-radio>
+              <el-radio border :label="null">保密</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="生日">
+            <el-date-picker
+              v-model="userInfo.birth" type="date"
+              placeholder="选择日期"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="个性签名">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 3 }"
+              placeholder="个性签名"
+              v-model="userInfo.description"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <div style="margin-top: 20px"></div>
+        <p style="display: flex; justify-content: space-between">
+          <el-button v-show="editable" type="info" style="width: 45%" plain @click="cancelEdit"> 取消 </el-button>
+          <el-button v-show="editable" type="primary" style="width: 45%" @click="submitEdit"> 确定 </el-button>
+        </p>
+      </div>
     </template>
   </div>
 </div>
 </template>
 
 <script>
-
-import { apiGetUserInfo } from '@/scripts/API_User'
+import {apiGetUserInfo, apiUpdateInfo} from '@/scripts/API_User'
 import { Calendar, Female, Male } from '@element-plus/icons-vue'
 
 export default {
@@ -77,7 +78,8 @@ export default {
     return {
       userInfo: {},
       editable: false,
-      editing: false
+      editing: false,
+      submittingNewInfo: false
     }
   },
   watch: {
@@ -91,6 +93,27 @@ export default {
     }
   },
   methods: {
+    async cancelEdit () {
+      this.userInfo = await apiGetUserInfo(this.id)
+      this.editing = false
+    },
+    async submitEdit () {
+      this.submittingNewInfo = true
+      try {
+        // 提交信息
+        await apiUpdateInfo(
+          this.userInfo.userName,
+          this.userInfo.description,
+          this.userInfo.gender,
+          this.userInfo.birth
+        )
+        this.editing = false
+      } catch (e) {
+        await this.$alert('修改失败: ' + e.response.data)
+      }
+      this.submittingNewInfo = false
+      this.userInfo = await apiGetUserInfo(this.id)
+    }
   }
 }
 </script>
@@ -115,18 +138,11 @@ export default {
   text-align: left;
 }
 
-.el-form-item {
-  margin: 0;
-}
-
-.el-form-item :deep(.el-form-item__label)  {
-  font-size: 5px;
-  padding: 0;
-  margin-bottom: -5px;
+.modify-info-form :deep(.el-form-item) {
+  margin: 0 0 8px 0;
 }
 
 .el-radio-group :deep(.el-radio)  {
-  margin: 0;
+  margin: 0 6px 0 0;
 }
-
 </style>

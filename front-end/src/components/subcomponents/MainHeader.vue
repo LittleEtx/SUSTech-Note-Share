@@ -1,12 +1,13 @@
+<!--suppress JSValidateTypes -->
 <template>
 <div style="height: 60px; margin-left: 20px; margin-right: 20px">
   <el-row type="flex" justify="center" align="middle" style="height: 100%">
     <el-col :span="9">
       <img src="../../assets/icon/icon_with_word.svg" class="icon"
-           @click="this.$router.push('home')" alt="">
+           @click="router.push('home')" alt="">
     </el-col>
     <el-col :span="6">
-      <el-input placeholder="搜索笔记">
+      <el-input placeholder="搜索笔记" class="search-input">
         <template #prefix>
           <el-icon><Search /></el-icon>
         </template>
@@ -30,8 +31,8 @@
               </div>
             </div>
             <!-- 快捷入口 -->
-            <el-divider />
-            <el-link :underline="false" :icon="User" class="popover-button" @click="$router.push('home')">
+            <el-divider class="pop-divider" />
+            <el-link :underline="false" :icon="User" class="popover-button" @click="router.push('home')">
               <h5 class="popover-word">个人中心</h5>
               <el-icon><ArrowRight /></el-icon>
             </el-link>
@@ -39,7 +40,7 @@
               <h5 class="popover-word">修改密码</h5>
               <el-icon><ArrowRight /></el-icon>
             </el-link>
-            <el-divider />
+            <el-divider class="pop-divider" />
             <el-link :underline="false" :icon="SwitchButton" class="popover-button" @click="logout">
               <h5 class="popover-word">登出</h5>
             </el-link>
@@ -59,7 +60,6 @@ import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 
 export default {
-  name: 'main-header',
   computed: {
     SwitchButton () {
       return SwitchButton
@@ -69,6 +69,9 @@ export default {
     },
     User () {
       return User
+    },
+    router () {
+      return router
     }
   },
   components: { ArrowRight, Search },
@@ -139,8 +142,7 @@ export default {
   margin-left: 10px;
 }
 
-.el-divider {
+.pop-divider {
   margin: 0;
 }
-
 </style>
