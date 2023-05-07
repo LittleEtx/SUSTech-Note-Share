@@ -53,10 +53,8 @@
 </template>
 
 <script>
-import { apiGetUserInfo } from '@/scripts/API_User'
 import { apiLogout } from '@/scripts/API_Auth'
 import { router } from '@/router'
-import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 
 export default {
@@ -72,23 +70,18 @@ export default {
     },
     router () {
       return router
+    },
+    avatar () {
+      return this.$store.state.userInfo.avatar
+    },
+    userName () {
+      return this.$store.state.userInfo.userName
+    },
+    userID () {
+      return this.$store.state.userInfo.userID
     }
   },
   components: { ArrowRight, Search },
-  data () {
-    return {
-      avatar: DefaultAvatar,
-      showFullName: false,
-      userName: '未登录',
-      userID: ''
-    }
-  },
-  async beforeMount () {
-    this.userID = await this.$store.getters.userID
-    const userData = await apiGetUserInfo(this.userID)
-    this.avatar = userData.avatar
-    this.userName = userData.userName
-  },
   methods: {
     async logout () {
       try {

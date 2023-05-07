@@ -1,19 +1,28 @@
 import { createStore } from 'vuex'
-import { apiGetUserID } from './API_User'
+import {apiGetUserID, apiGetUserInfo} from './API_User'
 
 export const store = createStore({
   state: {
-    userID: ''
-  },
-  getters: {
-    userID: async state => {
-      state.userID = await apiGetUserID()
-      return state.userID
-    }
+    userInfo: {}
   },
   mutations: {
     logout (state) {
-      state.userID = ''
+      state.userInfo = {}
+    },
+    setUserInfo (state, info) {
+      state.userInfo = info
     }
+  },
+  actions: {
+    async updateInfo (context) {
+      try {
+        const id = await apiGetUserID()
+        const info = await apiGetUserInfo(id)
+        context.commit('setUserInfo', info)
+      } catch (e) {
+        //didn't login
+        context.commit('logout')
+      }
+    },
   }
 })

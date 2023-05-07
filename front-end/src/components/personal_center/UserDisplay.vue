@@ -84,47 +84,49 @@
 import {apiGetUserInfo, apiUpdateInfo} from '@/scripts/API_User'
 import {Calendar, Female, Male, Switch} from '@element-plus/icons-vue'
 import UploadAvatar from "@/components/personal_center/UploadAvatar.vue"
+import {store} from "@/scripts/GlobalStorage"
 
 // noinspection JSUnusedGlobalSymbols
 export default {
   computed: {
     Switch () {
       return Switch
+    },
+    userInfo () {
+      return this.editable ? store.state.userInfo : this.tempInfo
     }
   },
   components: {UploadAvatar, Female, Male, Calendar },
   props: {
     id: {
-      type: String,
-      required: true
+      type: Number,
+      required: false
     }
   },
   data () {
     return {
-      userInfo: {},
+      tempInfo: {},
       editable: false,
       editing: false,
       showUploadAvatar: false,
       submittingNewInfo: false
     }
   },
-  watch: {
-    id: {
-      handler: async function (newVal) {
-        if (newVal === '') return
-        this.editable = newVal === await this.$store.getters.userID
-        this.userInfo = await apiGetUserInfo(newVal)
-      },
-      immediate: true
+  async beforeMount () {
+    if (!this.id || this.id === store.state.userInfo.userID) {
+      this.editable = true
+    } else {
+      this.editable = false
+      this.tempInfo = await apiGetUserInfo(this.id)
     }
   },
   methods: {
     async submitAvatar () {
+      await store.dispatch('updateInfo')
       this.showUploadAvatar = false
-      this.userInfo = await apiGetUserInfo(this.id)
     },
     async cancelEdit () {
-      this.userInfo = await apiGetUserInfo(this.id)
+      await store.dispatch('updateInfo')
       this.editing = false
     },
     async submitEdit () {
@@ -141,8 +143,8 @@ export default {
       } catch (e) {
         await this.$alert('修改失败: ' + e.response.data)
       }
+      await store.dispatch('updateInfo')
       this.submittingNewInfo = false
-      this.userInfo = await apiGetUserInfo(this.id)
     }
   }
 }

@@ -49,11 +49,11 @@ export default {
   },
   data () {
     return {
-      userID: ''
+      userID: -1
     }
   },
   async beforeMount () {
-    this.userID = await this.$store.getters.userID
+    this.userID = this.$store.state.userInfo.userID
   }
 }
 </script>

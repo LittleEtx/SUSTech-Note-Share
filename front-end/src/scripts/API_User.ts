@@ -4,9 +4,9 @@ import axios from 'axios'
  * 返回用户ID
  * @returns {Promise<string>} 用户ID
  */
-export async function apiGetUserID (): Promise<string> {
+export async function apiGetUserID (): Promise<number> {
   const { data } = await axios.get('/api/user/get-id')
-  return data.toString()
+  return data
 }
 
 interface UserInfo {
@@ -24,7 +24,7 @@ interface UserInfo {
  * @param id 用户的ID
  * @returns {Promise<UserInfo>} 用户信息
  */
-export async function apiGetUserInfo (id: string): Promise<UserInfo> {
+export async function apiGetUserInfo (id: number): Promise<UserInfo> {
   const { data } = await axios.get('/api/user/get-info', { params: { userID: id } })
   return data
 }

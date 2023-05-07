@@ -36,6 +36,12 @@ import { apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode } from '@/script
 import PasswordForm from './PasswordForm.vue'
 import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
+import {store} from "@/scripts/GlobalStorage"
+
+async function onSuccessLogin () {
+  await store.dispatch('updateInfo')
+  await router.push('home')
+}
 
 export default {
   components: { CodeForm, PasswordForm, EmailForm },
@@ -62,8 +68,7 @@ export default {
           this.$refs.passwordForm.password,
           this.rememberMe
         )
-        // login success
-        await router.push('home')
+        await onSuccessLogin()
       } catch (e) {
         if (e.response.status === 400) {
           this.$refs.passwordForm.clear()
@@ -89,7 +94,7 @@ export default {
           this.$refs.codeForm.code,
           this.rememberMe
         )
-        await router.push('home') // on success
+        await onSuccessLogin()
       } catch (e) {
         if (e.response.status === 400) {
           this.$refs.codeForm.emailCode = ''

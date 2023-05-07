@@ -34,6 +34,7 @@
 import Cookies from 'js-cookie'
 import { HomeFilled, Download } from '@element-plus/icons-vue'
 import LoginPane from '@/components/login_page/LoginPane.vue'
+import {router} from "@/router"
 
 export default {
   data () {
@@ -73,7 +74,7 @@ export default {
     // check whether the user has logged in
     if (Cookies.get('satoken')) {
       // if token not acceptable, will jump back to this page
-      // router.push('/home')
+      router.push('home')
     }
   }
 }

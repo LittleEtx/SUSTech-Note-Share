@@ -64,7 +64,6 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
 
 // 提交头像
 const submitAvatar = () => {
-  console.log('uploading...')
   uploader.value!.submit()
 }
 
@@ -78,7 +77,6 @@ const checkImage: UploadProps['beforeUpload'] = (file: UploadRawFile) => {
 }
 
 const uploadAvatar: UploadProps['httpRequest'] = async () => {
-  console.log(avatar)
   if (!avatar) {
     ElMessage.error('请先选择头像')
     return

@@ -22,5 +22,6 @@ app.use(store)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
-
+// 更新用户信息，供全局使用
+await store.dispatch('updateInfo')
 app.mount('#app')
