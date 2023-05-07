@@ -9,7 +9,7 @@
     <transition name="basic-fade">
       <div v-show="isShowBox" class="login-container">
         <div class="icon-header">
-          <img src="@/assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
+          <img src="../assets/icon/icon_with_words_shadow.svg" style="height: 100px" alt="">
         </div>
         <div class="login-box">
           <login-pane></login-pane>
@@ -19,9 +19,11 @@
     <!--  buttons for download and return  -->
     <transition name="basic-fade">
       <div class="buttons" v-show="!isShowBox">
+        <!--suppress JSValidateTypes -->
         <el-button style="margin-right: 10px" type="info" :icon="HomeFilled" circle
                    @click="isShowBox = !isShowBox"
         ></el-button>
+        <!--suppress JSValidateTypes -->
         <el-button style type="primary" :icon="Download" circle @click="downloadBackground"></el-button>
       </div>
     </transition>
@@ -109,17 +111,19 @@ export default {
   align-items: center;
 }
 
+/*noinspection CssUnusedSymbol*/
 .mask-fade-enter-active, .mask-fade-leave-active {
   transition: backdrop-filter .5s;
 }
-
+/*noinspection CssUnusedSymbol*/
 .mask-fade-enter-from, .mask-fade-leave-to {
   backdrop-filter: blur(0px);
 }
-
+/*noinspection CssUnusedSymbol*/
 .basic-fade-enter-active, .basic-fade-leave-active {
   transition: opacity .3s;
 }
+/*noinspection CssUnusedSymbol*/
 .basic-fade-enter-from, .basic-fade-leave-to {
   opacity: 0;
 }

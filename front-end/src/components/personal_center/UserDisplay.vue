@@ -1,6 +1,24 @@
 <template>
 <div class="head-container">
-  <div><img :src="userInfo.avatar" class="avatar" alt=""></div>
+  <div>
+    <img :src="userInfo.avatar"  class="avatar" alt="">
+    <!--suppress JSValidateTypes -->
+    <el-button :icon="Switch" circle size="large"
+               style="position: absolute; margin-left: -40px; margin-top: 170px"
+               @click="showUploadAvatar = true"
+    ></el-button>
+  </div>
+<!--  上传头像对话框   -->
+  <el-dialog
+    v-model="showUploadAvatar"
+    :close-on-click-modal="false" :show-close="false"
+    title="上传头像"
+  >
+    <upload-avatar
+      @close-dialog="showUploadAvatar = false"
+      @submit-avatar="submitAvatar"
+    ></upload-avatar>
+  </el-dialog>
   <div style="margin-top: 20px"></div>
   <div class="info-display">
 <!--   用户信息显示   -->
@@ -64,10 +82,17 @@
 
 <script>
 import {apiGetUserInfo, apiUpdateInfo} from '@/scripts/API_User'
-import { Calendar, Female, Male } from '@element-plus/icons-vue'
+import {Calendar, Female, Male, Switch} from '@element-plus/icons-vue'
+import UploadAvatar from "@/components/personal_center/UploadAvatar.vue"
 
+// noinspection JSUnusedGlobalSymbols
 export default {
-  components: { Female, Male, Calendar },
+  computed: {
+    Switch () {
+      return Switch
+    }
+  },
+  components: {UploadAvatar, Female, Male, Calendar },
   props: {
     id: {
       type: String,
@@ -79,6 +104,7 @@ export default {
       userInfo: {},
       editable: false,
       editing: false,
+      showUploadAvatar: false,
       submittingNewInfo: false
     }
   },
@@ -93,6 +119,10 @@ export default {
     }
   },
   methods: {
+    async submitAvatar () {
+      this.showUploadAvatar = false
+      this.userInfo = await apiGetUserInfo(this.id)
+    },
     async cancelEdit () {
       this.userInfo = await apiGetUserInfo(this.id)
       this.editing = false

@@ -3,7 +3,7 @@
 <div style="height: 60px; margin-left: 20px; margin-right: 20px">
   <el-row type="flex" justify="center" align="middle" style="height: 100%">
     <el-col :span="9">
-      <img src="../../assets/icon/icon_with_word.svg" class="icon"
+      <img src="../assets/icon/icon_with_word.svg" class="icon"
            @click="router.push('home')" alt="">
     </el-col>
     <el-col :span="6">
@@ -117,7 +117,7 @@ export default {
 }
 
 .avatar {
-  height: 50px;
+  height: 40px;
   border-radius: 50%;
   float: right;
   cursor: pointer;

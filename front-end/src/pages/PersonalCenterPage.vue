@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import MainHeader from './subcomponents/MainHeader.vue'
-import UserDisplay from './personal_center/UserDisplay.vue'
+import MainHeader from '../components/MainHeader.vue'
+import UserDisplay from '../components/personal_center/UserDisplay.vue'
 
 export default {
   name: 'PersonalCenterPage',

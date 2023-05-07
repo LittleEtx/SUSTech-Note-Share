@@ -42,3 +42,12 @@ export async function apiUpdateInfo (
     birth
   })
 }
+
+/**
+ * 上传用户头像
+ */
+export async function apiUploadAvatar (file: File): Promise<void> {
+  const params = new FormData()
+  params.append('avatar', file)
+  await axios.post('/api/user/upload-avatar', params)
+}

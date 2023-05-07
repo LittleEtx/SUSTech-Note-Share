@@ -3,9 +3,9 @@
     <img :src="notebook.cover" class="notebook-cover" alt="">
     <!--  mask, like and star when public  -->
     <div style="position: absolute" v-show="showPublic">
-      <img src="../../assets/notebook/notebook-cover-mask.png" class="notebook-cover" alt="">
+      <img src="../assets/notebook/notebook-cover-mask.png" class="notebook-cover" alt="">
       <div class="notebook-popularity">
-        <img src="../../assets/notebook/thumb-up-fill.svg" alt="" style="height: 12px;">
+        <img src="../assets/notebook/thumb-up-fill.svg" alt="" style="height: 12px;">
         <div style="margin-left: 5px"> {{ notebook.like }} </div>
         <i class="el-icon-star-on" style="font-size: 14px; margin-left: 15px"></i>
         <div style="margin-left: 5px"> {{ notebook.star }} </div>
@@ -22,7 +22,7 @@
     </div>
     <!--  up  -->
     <el-link class="notebook-info">
-        <img src="../../assets/notebook/up.svg" style="width: 20px" alt="">
+        <img src="../assets/notebook/up.svg" style="width: 20px" alt="">
         <div> {{ authorName }}</div>
     </el-link>
   </div>
@@ -51,7 +51,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          cover: require('../../assets/default-file/default-notebook-cover.png'),
+          cover: require('../assets/default-file/default-notebook-cover.png'),
           title: '笔记本标题',
           tag: 'CS304 - 软件工程',
           updateTime: new Date().toLocaleString(),

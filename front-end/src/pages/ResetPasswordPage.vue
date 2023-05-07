@@ -11,7 +11,7 @@
 
 <script>
 
-import ResetPassword from './login_page/ResetPassword.vue'
+import ResetPassword from '../components/login_page/ResetPassword.vue'
 
 export default {
   name: 'ResetPasswordPage',
