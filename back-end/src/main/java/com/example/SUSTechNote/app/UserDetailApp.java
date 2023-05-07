@@ -81,6 +81,9 @@ public class UserDetailApp {
 
     @GetMapping("/get-info")
     public ResponseEntity<?> getInfo(Integer userID){
+        if (userID == null) {
+            return ResponseEntity.badRequest().body("attribute userID is required");
+        }
         User user = userService.findUserById(userID);
         if (user == null) {
             return ResponseEntity.badRequest().body("user not exist!");

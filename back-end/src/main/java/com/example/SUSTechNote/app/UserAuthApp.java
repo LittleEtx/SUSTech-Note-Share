@@ -92,7 +92,7 @@ public class UserAuthApp {
             return ResponseEntity.badRequest().body("The mailbox format is incorrect");
         }
         // TODO：对发送的频次进行限制以防止DDoS攻击
-        String subject = "SUSTechNote邮箱注册验证码";
+        String subject = "SUSTechNoteShare邮箱验证码";
         String verificationCode = generateCode();
         String msg = "您的验证码是: \n" + verificationCode + "\n验证码5分钟内有效";
         if (mailService.sendSimpleMail("SUSTechNote", userEmail, "", subject, msg)) {
