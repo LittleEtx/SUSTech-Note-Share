@@ -108,7 +108,7 @@ public class UserDetailApp {
         String newName = jsonObject.getString("userName");
         // 每周只能改一次用户名
         if (!Objects.equals(newName, user.getUserName()) &&
-                now.minusDays(1).isBefore(lastUpdateTime)) {
+                lastUpdateTime != null && now.minusDays(1).isBefore(lastUpdateTime)) {
             return ResponseEntity.badRequest().body("username can only be changed once per day");
         }
         user.setUserName(newName);
