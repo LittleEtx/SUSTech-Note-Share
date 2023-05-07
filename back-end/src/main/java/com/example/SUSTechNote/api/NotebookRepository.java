@@ -18,4 +18,15 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Query(value = "select count(*) from notebooks where authorid = ?1", nativeQuery = true)
     int findNotebookCountByAuthorID(int userID);
 
+    @Query(value = "select * from notebooks where authorid = ?1", nativeQuery = true)
+    List<Notebook> findNotebookByAuthorID(int userID);
+
+    @Query(value = "select cover from notebooks where notebookid = ?1", nativeQuery = true)
+    String findCoverByNotebookID(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update notebooks set cover = ?1 where notebookid = ?2", nativeQuery = true)
+    void updateCover(String Cover, String notebookID);
+
 }

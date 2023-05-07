@@ -2,7 +2,9 @@ package com.example.SUSTechNote.service;
 
 import com.example.SUSTechNote.entity.Notebook;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -17,9 +19,11 @@ public interface NotebookService {
 
     Notebook getNotebookBasic(String notebookID);
 
-    List<Notebook> findAllNotebook();
+    List<Notebook> findNotebooks();
 
     Notebook findNotebookByID(String notebookID);
 
     int findNotebookCountByUserID(int userID);
+
+    String uploadCover(String notebookID, MultipartFile cover) throws IOException;
 }
