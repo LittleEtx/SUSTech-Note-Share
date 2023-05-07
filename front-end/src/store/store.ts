@@ -5,18 +5,18 @@ import type {UserInfo} from "../scripts/interfaces";
 import type {InjectionKey} from "vue";
 
 export interface State {
-  userInfo: UserInfo | {}
+  userInfo?: UserInfo
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
 
 export const store = createStore<State>({
   state: {
-    userInfo: {}
+    userInfo: undefined as UserInfo | undefined
   },
   mutations: {
     logout (state: State) {
-      state.userInfo = {}
+      state.userInfo = undefined
     },
     setUserInfo (state: State, info: UserInfo) {
       state.userInfo = info

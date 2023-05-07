@@ -1,7 +1,7 @@
 <template>
 <div class="head-container">
   <div>
-    <el-avatar :src="userInfo.avatar"  class="avatar" :alt="DefaultAvatar"> </el-avatar>
+    <user-avatar :src="userInfo.avatar" :size="240"> </user-avatar>
     <!--suppress JSValidateTypes -->
     <el-button :icon="Switch" circle size="large"
                style="position: absolute; margin-left: -40px; margin-top: 170px"
@@ -86,6 +86,7 @@ import {Calendar, Female, Male, Switch} from '@element-plus/icons-vue'
 import UploadAvatar from "@/components/personal_center/UploadAvatar.vue"
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import {store} from "@/store/store"
+import UserAvatar from "@/components/UserAvatar.vue"
 
 // noinspection JSUnusedGlobalSymbols
 export default {
@@ -100,7 +101,7 @@ export default {
       return this.editable ? store.state.userInfo : this.tempInfo
     }
   },
-  components: {UploadAvatar, Female, Male, Calendar },
+  components: {UserAvatar, UploadAvatar, Female, Male, Calendar },
   props: {
     id: {
       type: Number,
@@ -117,7 +118,6 @@ export default {
     }
   },
   async beforeMount () {
-    console.log(store.state.userInfo)
     if (!this.id || this.id === store.state.userInfo.userID) {
       this.editable = true
     } else {
@@ -163,10 +163,6 @@ export default {
   justify-content: space-between;
   min-width: 240px;
   width: 240px;
-}
-.avatar {
-  width: 240px;
-  height: 240px;
 }
 
 .info-display {

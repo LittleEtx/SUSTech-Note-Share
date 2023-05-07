@@ -17,13 +17,13 @@
     <el-col :span="3">
       <el-popover placement="bottom-start" trigger="hover" width="200px">
         <template #reference>
-          <img :src="avatar" class="avatar" alt="">
+          <user-avatar class="avatar" :size="40"></user-avatar>
         </template>
         <template #default>
           <div class="pop-out">
             <!-- 个人信息展示  -->
             <div style="display: flex; justify-content: right; margin-bottom: 10px">
-              <img :src="avatar" class="avatar" alt="">
+              <user-avatar :size="40"></user-avatar>
               <div style="margin-left: 10px; display: flex; flex-direction: column;
               justify-content: center; align-items: start">
                 <p style="margin: 0; font-size: 15px"><b>{{userName}}</b> </p>
@@ -58,6 +58,7 @@ import { router } from '@/router'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
+import UserAvatar from "@/components/UserAvatar.vue"
 
 export default {
   computed: {
@@ -89,7 +90,7 @@ export default {
       return this.$store.state.userInfo.userID
     }
   },
-  components: { ArrowRight, Search },
+  components: {UserAvatar, ArrowRight, Search },
   methods: {
     async logout () {
       try {
@@ -118,8 +119,6 @@ export default {
 }
 
 .avatar {
-  height: 40px;
-  border-radius: 50%;
   float: right;
   cursor: pointer;
 }
