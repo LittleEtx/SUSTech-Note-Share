@@ -13,7 +13,7 @@
       </template>
       <template v-else-if="active === 1">
         <p> 你即将重置密码的邮箱： </p>
-        <p><b> {{email}} </b></p>
+        <p><b> {{ email }} </b></p>
         <p> 验证码已发送至邮箱 </p>
         <code-form ref="codeForm" @send-code="getEmailValidateCode"></code-form>
         <p>

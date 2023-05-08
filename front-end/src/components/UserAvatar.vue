@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {useStore} from "../store/store";
-import {computed, ref} from "vue";
+import { useStore } from '@/store/store'
+import { computed, ref } from 'vue'
 
 interface Props {
   userId?: number,
@@ -12,7 +12,7 @@ const useID = ref(true)
 
 const store = useStore()
 const id = computed(() => props.userId || store.state.userInfo?.userID)
-const url = computed( () => props.avatarUrl || store.state.userInfo?.avatar)
+const url = computed(() => props.avatarUrl || store.state.userInfo?.avatar)
 const onUrlFail = () => {
   useID.value = true
 }
@@ -26,7 +26,3 @@ const onUrlFail = () => {
   </template>
 </el-avatar>
 </template>
-
-<style scoped>
-
-</style>

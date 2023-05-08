@@ -81,29 +81,19 @@
 </template>
 
 <script>
-import {apiGetUserInfo, apiUpdateInfo} from '@/scripts/API_User'
-import {Calendar, Female, Male, Switch} from '@element-plus/icons-vue'
-import UploadAvatar from "@/components/personal_center/UploadAvatar.vue"
+import { apiGetUserInfo, apiUpdateInfo } from '@/scripts/API_User'
+import { Calendar, Female, Male, Switch } from '@element-plus/icons-vue'
+import UploadAvatar from '@/components/personal_center/UploadAvatar.vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
-import {store} from "@/store/store"
-import UserAvatar from "@/components/UserAvatar.vue"
+import { store } from '@/store/store'
+import UserAvatar from '@/components/UserAvatar.vue'
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  computed: {
-    Switch () {
-      return Switch
-    },
-    DefaultAvatar () {
-      return DefaultAvatar
-    },
-    userInfo () {
-      return this.editable ? store.state.userInfo : this.tempInfo
-    }
-  },
-  components: {UserAvatar, UploadAvatar, Female, Male, Calendar },
+  components: { UserAvatar, UploadAvatar, Female, Male, Calendar },
   props: {
     id: {
+      default: undefined,
       type: Number,
       required: false
     }
@@ -115,6 +105,17 @@ export default {
       editing: false,
       showUploadAvatar: false,
       submittingNewInfo: false
+    }
+  },
+  computed: {
+    Switch () {
+      return Switch
+    },
+    DefaultAvatar () {
+      return DefaultAvatar
+    },
+    userInfo () {
+      return this.editable ? store.state.userInfo : this.tempInfo
     }
   },
   async beforeMount () {

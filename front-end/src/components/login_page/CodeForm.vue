@@ -24,9 +24,7 @@ import { ChatLineSquare } from '@element-plus/icons-vue'
 export default {
   components: { ChatLineSquare },
   expose: ['validate', 'code', 'wait', 'clear'],
-  computed: {
-    code () { return this.codeForm.emailCode }
-  },
+  emits: { 'send-code': null },
   data () {
     return {
       disabled: false,
@@ -40,6 +38,9 @@ export default {
         ]
       }
     }
+  },
+  computed: {
+    code () { return this.codeForm.emailCode }
   },
   methods: {
     clear () {

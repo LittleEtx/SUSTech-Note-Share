@@ -1,5 +1,5 @@
-import { Store } from 'vuex'
-import type {UserInfo} from "../scripts/interfaces";
+import { type Store } from 'vuex'
+import type { UserInfo } from '@/scripts/interfaces'
 
 declare module '@vue/runtime-core' {
   // declare your own store states

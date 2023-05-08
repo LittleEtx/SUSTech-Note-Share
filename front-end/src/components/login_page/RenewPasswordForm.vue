@@ -14,18 +14,6 @@
 <script>
 export default {
   name: 'RenewPasswordForm',
-  computed: {
-    password () { return this.passwordForm.pwd }
-  },
-  methods: {
-    validate () {
-      return this.$refs.form.validate()
-    },
-    clear () {
-      this.passwordForm.pwd = ''
-      this.passwordForm.pwd2 = ''
-    }
-  },
   data () {
     const passwordValidate = (rule, value, callback) => {
       if (this.passwordForm.pwd2 === '') {
@@ -51,6 +39,18 @@ export default {
           { validator: passwordValidate, trigger: ['blur', 'change'] }
         ]
       }
+    }
+  },
+  computed: {
+    password () { return this.passwordForm.pwd }
+  },
+  methods: {
+    validate () {
+      return this.$refs.form.validate()
+    },
+    clear () {
+      this.passwordForm.pwd = ''
+      this.passwordForm.pwd2 = ''
     }
   }
 }

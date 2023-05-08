@@ -1,11 +1,16 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+  "extends": ["@vue/tsconfig/tsconfig.dom.json", "@tsconfig/node18/tsconfig.json"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.ts", "node_modules/**/*.ts",
+    "vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
+  "exclude": ["src/**/__tests__/*"],
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "composite": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
     },
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
+    "module": "ESNext",
+    "types": ["node"]
+  }
 }

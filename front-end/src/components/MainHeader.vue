@@ -58,9 +58,10 @@ import { router } from '@/router'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
-import UserAvatar from "@/components/UserAvatar.vue"
+import UserAvatar from '@/components/UserAvatar.vue'
 
 export default {
+  components: { UserAvatar, ArrowRight, Search },
   computed: {
     SwitchButton () {
       return SwitchButton
@@ -90,7 +91,6 @@ export default {
       return this.$store.state.userInfo.userID
     }
   },
-  components: {UserAvatar, ArrowRight, Search },
   methods: {
     async logout () {
       try {

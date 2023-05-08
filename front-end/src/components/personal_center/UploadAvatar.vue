@@ -37,19 +37,20 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import {Plus} from "@element-plus/icons-vue";
-import type {UploadInstance, UploadProps, UploadRawFile} from "element-plus";
-import {ElMessage, genFileId} from "element-plus";
-import {apiUploadAvatar} from "../../scripts/API_User";
+import { ref } from 'vue'
+import { Plus } from '@element-plus/icons-vue'
+import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
+import { ElMessage, genFileId } from 'element-plus'
+import { apiUploadAvatar } from '@/scripts/API_User'
+import type { File } from 'buffer'
 
 const emit = defineEmits(['close-dialog', 'submit-avatar'])
 const imageUrl = ref('')
 const uploader = ref<UploadInstance>() // 获取上传组件实例，这里定义的名字应和ref的名字一致
 const loading = ref(false)
-let avatar: File;
+let avatar: File
 const handleChange: UploadProps['onChange'] = (file) => {
-  //show file in DOM
+  // show file in DOM
   imageUrl.value = URL.createObjectURL(file.raw as Blob)
   avatar = file.raw as File
 }
@@ -88,7 +89,6 @@ const uploadAvatar: UploadProps['httpRequest'] = async () => {
 }
 
 </script>
-
 
 <style scoped>
 .avatar-size {

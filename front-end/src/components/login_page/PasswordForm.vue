@@ -26,13 +26,6 @@ import { Lock } from '@element-plus/icons-vue'
 export default {
   components: { Lock },
   expose: ['validate', 'password', 'clear'],
-  computed: {
-    password () { return this.pwdLoginForm.pwd }
-  },
-  methods: {
-    validate () { return this.$refs.form.validate() },
-    clear () { this.pwdLoginForm.pwd = '' }
-  },
   data () {
     return {
       pwdLoginForm: {
@@ -45,6 +38,13 @@ export default {
         ]
       }
     }
+  },
+  computed: {
+    password () { return this.pwdLoginForm.pwd }
+  },
+  methods: {
+    validate () { return this.$refs.form.validate() },
+    clear () { this.pwdLoginForm.pwd = '' }
   }
 }
 </script>

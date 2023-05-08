@@ -1,5 +1,6 @@
 import axios from 'axios'
-import type {UserInfo} from "./interfaces";
+import type { UserInfo } from './interfaces'
+import type { File } from 'buffer'
 
 /**
  * 返回用户ID
@@ -9,7 +10,6 @@ export async function apiGetUserID (): Promise<number> {
   const { data } = await axios.get('/api/user/get-id')
   return data
 }
-
 
 /**
  * 返回用户信息
@@ -25,7 +25,7 @@ export async function apiGetUserInfo (id: number): Promise<UserInfo> {
  * 更新用户信息
  */
 export async function apiUpdateInfo (
-    userName: string, description: string, gender?:number, birth?: string
+  userName: string, description: string, gender?: number, birth?: string
 ): Promise<void> {
   await axios.post('/api/user/update-info', {
     userName,
@@ -38,7 +38,7 @@ export async function apiUpdateInfo (
 /**
  * 上传用户头像
  */
-export async function apiUploadAvatar (file: File): Promise<void> {
+export async function apiUploadAvatar (file: Blob): Promise<void> {
   const params = new FormData()
   params.append('avatar', file)
   await axios.post('/api/user/upload-avatar', params)

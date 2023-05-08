@@ -15,7 +15,6 @@
     <el-link>
         <h5 class="notebook-title" :class="isBig ? 'notebook-title-big' : 'notebook-title-small'"> {{ notebook.title }}</h5>
     </el-link>
-    <el-link> <div class="notebook-info"> {{ notebook.tag }}</div> </el-link>
     <div class="notebook-info">
         <div class="el-icon-time"></div>
         {{ (isBig ? '上次更新于：' : '') + notebook.updateTime }}
@@ -32,11 +31,6 @@
 import { apiGetUserInfo } from '@/scripts/API_User'
 
 export default {
-  computed: {
-    isBig () {
-      return this.size === 'big'
-    }
-  },
   props: {
     size: {
       type: String,
@@ -68,6 +62,11 @@ export default {
   data () {
     return {
       authorName: ''
+    }
+  },
+  computed: {
+    isBig () {
+      return this.size === 'big'
     }
   },
   async beforeMount () {

@@ -17,7 +17,7 @@
           </el-form-item>
         </template>
       </el-input>
-      </el-form-item>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -29,21 +29,10 @@ export default {
   name: 'EmailForm',
   components: { User },
   expose: ['validate', 'email'],
-  computed: {
-    validPostfixes () { return validEmailPostfixes },
-    email () { return this.emailForm.ID + '@' + this.emailForm.region }
-  },
   props: {
     disabled: {
       type: Boolean,
       default: false
-    }
-  },
-  methods: {
-    validate () { return this.$refs.form.validate() },
-    clear () {
-      this.emailForm.ID = ''
-      this.emailForm.region = ''
     }
   },
   data () {
@@ -74,6 +63,17 @@ export default {
           { required: true, message: '请选择邮箱后缀', trigger: 'change' }
         ]
       }
+    }
+  },
+  computed: {
+    validPostfixes () { return validEmailPostfixes },
+    email () { return this.emailForm.ID + '@' + this.emailForm.region }
+  },
+  methods: {
+    validate () { return this.$refs.form.validate() },
+    clear () {
+      this.emailForm.ID = ''
+      this.emailForm.region = ''
     }
   }
 }

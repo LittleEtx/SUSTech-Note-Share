@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img src="../assets/icon/icon_with_word.svg" alt=""
+    <img :src="SUSTechNoteShareIcon" alt=""
          style="width: 150px; margin-top: 30px; cursor: pointer"
          @click="$router.push('home')"
     >
@@ -10,14 +10,19 @@
 </template>
 
 <script>
-
-import ResetPassword from '../components/login_page/ResetPassword.vue'
+import SUSTechNoteShareIcon from '@/assets/icon/icon_with_word.svg'
+import ResetPassword from '@/components/login_page/ResetPassword.vue'
 
 export default {
   name: 'ResetPasswordPage',
   components: { ResetPassword },
   beforeMount () {
     console.log('test')
+  },
+  computed: {
+    SUSTechNoteShareIcon () {
+      return SUSTechNoteShareIcon
+    }
   }
 }
 </script>
