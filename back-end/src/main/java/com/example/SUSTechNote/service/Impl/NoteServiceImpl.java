@@ -13,9 +13,9 @@ import java.util.List;
 public class NoteServiceImpl implements NoteService {
 
     private final Logger logger = LoggerFactory.getLogger(NoteServiceImpl.class);
-    private final NoteRepository NoteRepository;
+    private final NoteRepository noteRepository;
     public NoteServiceImpl(NoteRepository NoteRepository) {
-        this.NoteRepository = NoteRepository;
+        this.noteRepository = NoteRepository;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class NoteServiceImpl implements NoteService {
             note.setNoteName(title);
             note.setIsPublic(isPublic);
             note.setStatus(0);
-            NoteRepository.save(note);
+            noteRepository.save(note);
         } catch (Exception e) {
             logger.error("addNote error: " + e.getMessage());
         }
@@ -38,7 +38,7 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public int updateNote(Note Note){
         if (checkNote(Note.getNoteID()) == 1 ){
-            NoteRepository.save(Note);
+            noteRepository.save(Note);
             return 1;
         }
         if (checkNote(Note.getNoteID()) == 400){
@@ -49,7 +49,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public int checkNote(String NoteID){
-        List<Note> Notes = NoteRepository.findNotesByNoteID(NoteID);
+        List<Note> Notes =noteRepository.findNotesByNoteID(NoteID);
         if (Notes.size() == 1) {
             return 1;
         } else if (Notes.size() > 1) {
@@ -60,21 +60,17 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public int deleteNote(String NoteID){
-        if (checkNote(NoteID) == 1){
-            NoteRepository.deleteNotesByNoteID(NoteID);
-            return 1;
-        }
-        return 0;
+    public void deleteNote(String NoteID){
+        noteRepository.deleteNotesByNoteID(NoteID);
     }
 
     @Override
     public List<Note> findAllNote(){
-        return NoteRepository.findAll();
+        return noteRepository.findAll();
     }
 
     @Override
     public int findNotesCountByNotebookID(String notebookID) {
-        return NoteRepository.findNotesByNotebookID(notebookID);
+        return noteRepository.findNotesByNotebookID(notebookID);
     }
 }

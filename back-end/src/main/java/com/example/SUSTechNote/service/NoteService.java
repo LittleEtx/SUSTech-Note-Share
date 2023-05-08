@@ -15,7 +15,7 @@ public interface NoteService {
 
     int checkNote(String noteID);
 
-    int deleteNote(String noteID);
+    void deleteNote(String noteID);
 
     List<Note> findAllNote();
 

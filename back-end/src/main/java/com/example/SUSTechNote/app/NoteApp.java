@@ -63,9 +63,15 @@ public class NoteApp {
     }
 
 
-    @GetMapping("/deletenote")
-    public int deletenote(String noteID) {
-        return noteService.deleteNote(noteID);
+    @PostMapping ("/note/delete")
+    public ResponseEntity<?> deleteNote(@RequestBody JSONObject jsonObject) {
+        String noteID = jsonObject.getString("noteID");
+        try {
+            noteService.deleteNote(noteID);
+            return ResponseEntity.ok("Note deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Note deletion failed \n" + e);
+        }
     }
 
     @GetMapping("/findAllnote")

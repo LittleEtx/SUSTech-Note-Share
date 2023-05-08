@@ -11,7 +11,7 @@ import java.util.List;
 public interface NotebookService {
     void addNotebook(String noteBookID, int userID, String directory, String savingPath, String title, String tag, String description, int isPublic);
 
-    void updateNotebook(Notebook notebook);
+    void updateNotebook(String notebookID, String notebookName, String tag, String description);
 
     Boolean checkNotebook(String notebookID);
 
@@ -26,4 +26,6 @@ public interface NotebookService {
     int findNotebookCountByUserID(int userID);
 
     String uploadCover(String notebookID, MultipartFile cover) throws IOException;
+
+    void renameDir(int userID, String oldName, String newName);
 }
