@@ -12,6 +12,7 @@
   <el-dialog
     v-model="showUploadAvatar"
     :close-on-click-modal="false" :show-close="false"
+    destroy-on-close
     title="上传头像"
   >
     <upload-avatar
@@ -43,7 +44,11 @@
       <div v-loading="submittingNewInfo" element-loading-background="rgba(255, 255, 255, 0.3)">
         <el-form label-position="top" label-width="10px" class="modify-info-form" size="small">
           <el-form-item label="用户名（24小时内只能修改一次）">
-            <el-input v-model="userInfo.userName"></el-input>
+            <el-input
+              v-model="userInfo.userName"
+              maxlength="20"
+              show-word-limit
+            ></el-input>
           </el-form-item>
           <el-form-item label="性别">
             <el-radio-group v-model="userInfo.gender" size="small">
@@ -66,6 +71,8 @@
               :autosize="{ minRows: 3 }"
               placeholder="个性签名"
               v-model="userInfo.description"
+              maxlength="200"
+              show-word-limit
             ></el-input>
           </el-form-item>
         </el-form>

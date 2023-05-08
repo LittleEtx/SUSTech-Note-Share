@@ -1,33 +1,36 @@
 <template>
 <div>
   <div class="header">
-      <main-header></main-header>
+    <main-header></main-header>
   </div>
   <div class="main-container">
     <user-display :id="userID"></user-display>
     <div style=" margin-left: 30px"></div>
-    <el-tabs style="width: 100%">
-      <el-tab-pane name="note">
-        <template #label>
-          <span><el-icon><Collection /></el-icon> <b>笔记</b> </span>
-        </template>
-      </el-tab-pane>
-      <el-tab-pane name="star">
-        <template #label>
-          <span><el-icon><Star /></el-icon> <b>收藏</b> </span>
-        </template>
-      </el-tab-pane>
-      <el-tab-pane name="share">
-        <template #label>
-          <span><el-icon><Share /></el-icon> <b>分享</b> </span>
-        </template>
-      </el-tab-pane>
-      <el-tab-pane name="group">
-        <template #label>
-          <span><el-icon><MenuIcon /></el-icon> <b>群组</b> </span>
-        </template>
-      </el-tab-pane>
-    </el-tabs>
+    <div style="width: 100%">
+      <el-tabs>
+        <el-tab-pane name="note">
+          <template #label>
+            <span><el-icon><Collection /></el-icon> <b>笔记</b> </span>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane name="star">
+          <template #label>
+            <span><el-icon><Star /></el-icon> <b>收藏</b> </span>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane name="share">
+          <template #label>
+            <span><el-icon><Share /></el-icon> <b>分享</b> </span>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane name="group">
+          <template #label>
+            <span><el-icon><MenuIcon /></el-icon> <b>群组</b> </span>
+          </template>
+        </el-tab-pane>
+      </el-tabs>
+      <center-main-display></center-main-display>
+    </div>
   </div>
 </div>
 </template>
@@ -36,10 +39,12 @@
 import MainHeader from '../components/MainHeader.vue'
 import UserDisplay from '../components/personal_center/UserDisplay.vue'
 import { Collection, Share, Star, Menu as MenuIcon } from '@element-plus/icons-vue'
+import CenterMainDisplay from '@/components/personal_center/CenterMainDisplay.vue'
 
 export default {
   name: 'HomePage',
   components: {
+    CenterMainDisplay,
     Share,
     Star,
     Collection,

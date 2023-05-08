@@ -1,134 +1,48 @@
 <template>
-  <div class="notebook" :style="{ width: isBig ? '240px' : '180px' }">
-    <img :src="notebook.cover" class="notebook-cover" alt="">
-    <!--  mask, like and star when public  -->
-    <div style="position: absolute" v-show="showPublic">
-      <img src="../assets/notebook/notebook-cover-mask.png" class="notebook-cover" alt="">
-      <div class="notebook-popularity">
-        <img src="../assets/notebook/thumb-up-fill.svg" alt="" style="height: 12px;">
-        <div style="margin-left: 5px"> {{ notebook.like }} </div>
-        <i class="el-icon-star-on" style="font-size: 14px; margin-left: 15px"></i>
-        <div style="margin-left: 5px"> {{ notebook.star }} </div>
-      </div>
+<el-card shadow="hover" class="card-size"
+         :body-style="{ padding: '0px' }">
+  <img :src="notebook.cover" alt="" class="cover">
+  <div style="padding: 8px 10px 0 10px; text-align: left;">
+    <el-text truncated>
+      <b> {{ notebook.title }} </b>
+    </el-text>
+    <div style="margin-top: 5px; font-size: 10px">
+      <el-text style="vertical-align: center" size="small">
+          <el-tag size="small" v-if="notebook.isPublic">Public</el-tag>
+          <el-tag size="small" type="info" v-else>Private</el-tag>
+          {{ notebook.tag }}
+      </el-text>
+      <br />
+      <el-text size="small">
+        <el-icon><Clock /></el-icon>
+        {{ notebook.updateTime }}
+      </el-text>
     </div>
-    <!--  title & info  -->
-    <el-link>
-        <h5 class="notebook-title" :class="isBig ? 'notebook-title-big' : 'notebook-title-small'"> {{ notebook.title }}</h5>
-    </el-link>
-    <div class="notebook-info">
-        <div class="el-icon-time"></div>
-        {{ (isBig ? '上次更新于：' : '') + notebook.updateTime }}
-    </div>
-    <!--  up  -->
-    <el-link class="notebook-info">
-        <img src="../assets/notebook/up.svg" style="width: 20px" alt="">
-        <div> {{ authorName }}</div>
-    </el-link>
   </div>
+</el-card>
 </template>
 
-<script>
-import { apiGetUserInfo } from '@/scripts/API_User'
+<script setup lang="ts">
 
-export default {
-  props: {
-    size: {
-      type: String,
-      default: 'big',
-      range: ['big', 'small']
-    },
-    showPublic: {
-      type: Boolean,
-      default: true
-    },
-    notebook: {
-      type: Object,
-      default: () => {
-        return {
-          cover: require('../assets/default-file/default-notebook-cover.png'),
-          title: '笔记本标题',
-          tag: 'CS304 - 软件工程',
-          updateTime: new Date().toLocaleString(),
-          isPublic: true,
-          description: '这是一个笔记本',
-          authorID: 12112628,
-          like: 114,
-          star: 514
-        }
-      },
-      required: true
-    }
-  },
-  data () {
-    return {
-      authorName: ''
-    }
-  },
-  computed: {
-    isBig () {
-      return this.size === 'big'
-    }
-  },
-  async beforeMount () {
-    this.authorName = (await apiGetUserInfo(this.notebook.authorID)).userName
-  }
+import type { NotebookInfo } from '@/scripts/interfaces'
+import { Clock } from '@element-plus/icons-vue'
+interface Props {
+  notebook: NotebookInfo
 }
+
+const props = defineProps<Props>()
+
 </script>
 
 <style scoped>
-.notebook {
-  display: flex;
-  flex-direction: column;
-  justify-content:flex-start;
-  align-items: start;
+.card-size {
+  width: 200px;
+  height: 200px;
 }
 
-.notebook-cover {
-  cursor: pointer;
+.cover {
   width: 100%;
-  border-radius: 10px;
-}
-
-.notebook-title {
-  margin: 0;
-  height: 40px;
-  width: 100%;
-  text-align: left;
-  font-size: 16px;
-  word-break: break-word;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-}
-
-.notebook-title-big {
-  -webkit-line-clamp: 2;
-  height: 40px;
-}
-
-.notebook-title-small {
-  -webkit-line-clamp: 1;
-  height: 20px;
-}
-
-.notebook-info {
-  margin-top: 4px;
-  text-align: left;
-  font-size: 12px;
-  overflow:hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.notebook-popularity {
-  font-size: 12px;
-  color: white;
-  float: left;
-  position: relative;
-  margin-top: -25px;
-  margin-left: 10px;
-  display: flex;
-  flex-direction: row;
+  height: 120px;
+  object-fit: cover;
 }
 </style>
