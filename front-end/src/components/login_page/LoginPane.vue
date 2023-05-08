@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { router } from '@/router'
+import { router } from '../../router'
 import { apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode } from '@/scripts/API_Auth'
 import PasswordForm from './PasswordForm.vue'
 import EmailForm from './EmailForm.vue'

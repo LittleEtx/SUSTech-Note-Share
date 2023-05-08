@@ -38,7 +38,7 @@ import { apiResetPassVerifyEmail, apiResetPassVerifyCode, apiResetPassword } fro
 import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
 import RenewPasswordForm from './RenewPasswordForm.vue'
-import { router } from '@/router'
+import { router } from '../../router'
 
 export default {
   components: { RenewPasswordForm, CodeForm, EmailForm },

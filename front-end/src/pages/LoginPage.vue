@@ -37,7 +37,7 @@
 import Cookies from 'js-cookie'
 import { HomeFilled, Download } from '@element-plus/icons-vue'
 import LoginPane from '@/components/login_page/LoginPane.vue'
-import { router } from '@/router'
+import { router } from '../router'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
 
 export default {

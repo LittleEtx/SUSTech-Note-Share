@@ -54,7 +54,7 @@
 
 <script>
 import { apiLogout } from '@/scripts/API_Auth'
-import { router } from '@/router'
+import { router } from '../router'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
