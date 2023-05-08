@@ -1,7 +1,7 @@
 <template>
 <div class="head-container">
   <div>
-    <user-avatar :src="userInfo.avatar" :size="240"> </user-avatar>
+    <user-avatar :src="userInfo?.avatar" :size="240"> </user-avatar>
     <!--suppress JSValidateTypes -->
     <el-button :icon="Switch" circle size="large"
                style="position: absolute; margin-left: -40px; margin-top: 170px"
@@ -25,17 +25,17 @@
     <template v-if="!editing">
       <!--    user name and gender    -->
       <span style="font-size: 20px">
-        <b> {{ userInfo.userName }} </b>
-        <el-icon v-if="userInfo.gender === 1" size="15px"><Male /></el-icon>
-        <el-icon v-if="userInfo.gender === 0" size="15px"><Female /></el-icon>
+        <b> {{ userInfo?.userName }} </b>
+        <el-icon v-if="userInfo?.gender === 1" size="15px"><Male /></el-icon>
+        <el-icon v-if="userInfo?.gender === 0" size="15px"><Female /></el-icon>
       </span>
       <!--   email   -->
-      <p style="margin: 0; font-size: 10px"> {{ userInfo.email }}</p>
-      <p style="margin-top: 10px; margin-bottom: 0; font-size: 15px" v-show="userInfo.birth !== null">
+      <p style="margin: 0; font-size: 10px"> {{ userInfo?.email }}</p>
+      <p style="margin-top: 10px; margin-bottom: 0; font-size: 15px" v-show="userInfo?.birth !== null">
           <el-icon><Calendar /></el-icon>
-          {{ userInfo.birth }}
+          {{ userInfo?.birth }}
       </p>
-      <p style="margin-top: 10px; font-size: 10px"> {{ userInfo.description }}</p>
+      <p style="margin-top: 10px; font-size: 10px"> {{ userInfo?.description }}</p>
       <el-button v-show="editable" style="width: 100%" plain @click="editing = true"> 修改个人信息 </el-button>
     </template>
 <!--   修改用户信息   -->
@@ -119,7 +119,7 @@ export default {
     }
   },
   async beforeMount () {
-    if (!this.id || this.id === store.state.userInfo.userID) {
+    if (!this.id || this.id === store.state.userInfo?.userID) {
       this.editable = true
     } else {
       this.editable = false

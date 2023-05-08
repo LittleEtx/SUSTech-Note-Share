@@ -82,13 +82,13 @@ export default {
       return SUSTechNoteIcon
     },
     avatar () {
-      return this.$store.state.userInfo.avatar
+      return this.$store.state.userInfo?.avatar
     },
     userName () {
-      return this.$store.state.userInfo.userName
+      return this.$store.state.userInfo?.userName
     },
     userID () {
-      return this.$store.state.userInfo.userID
+      return this.$store.state.userInfo?.userID
     }
   },
   methods: {

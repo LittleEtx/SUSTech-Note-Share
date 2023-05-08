@@ -53,7 +53,7 @@ export default {
     }
   },
   async beforeMount () {
-    this.userID = this.$store.state.userInfo.userID
+    this.userID = this.$store.state.userInfo?.userID
   }
 }
 </script>

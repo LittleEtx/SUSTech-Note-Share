@@ -6,13 +6,13 @@ const onResponseSuccess = response => {
   return response
 }
 
-const onResponseError = err => {
+const onResponseError = async err => {
   const status = err.status || err.response.status
   if (status === 401 || status === 403) {
     // not logged in, remove login token
     console.error('[axios-global]invalid token')
     Cookies.remove('satoken')
-    return router.push('/login')
+    await router.push('/login')
   }
 
   if (status >= 500) {
