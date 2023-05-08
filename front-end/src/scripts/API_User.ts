@@ -1,6 +1,5 @@
 import axios from 'axios'
 import type { UserInfo } from './interfaces'
-import type { File } from 'buffer'
 
 /**
  * 返回用户ID

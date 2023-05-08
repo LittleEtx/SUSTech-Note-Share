@@ -13,8 +13,7 @@
   :before-upload="checkImage"
   :http-request="uploadAvatar"
 >
-  <iframe ></iframe>
-  <img v-if="imageUrl" class="avatar-size" :src="imageUrl" alt=""/>
+  <el-avatar v-if="imageUrl" class="avatar-size" :src="imageUrl" alt=""/>
   <div v-else class="avatar-size avatar-waiting">
     <el-icon size="50px"><Plus /></el-icon>
     <div>

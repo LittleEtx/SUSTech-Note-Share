@@ -20,7 +20,7 @@ const onUrlFail = () => {
 
 <template>
 
-<el-avatar :src="url" @error="onUrlFail" :size="size!">
+<el-avatar :src="url!" @error="onUrlFail" :size="size!">
   <template v-if="useID">
     {{ id }}
   </template>
