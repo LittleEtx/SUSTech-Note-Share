@@ -9,10 +9,8 @@ import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
@@ -66,6 +64,18 @@ public class NotebookApp {
         return notebookService.getNotebookBasic(notebookID);
     }
 
+    @PostMapping("/notebook/upload_cover")
+    public ResponseEntity<?> uploadCover(@RequestParam("cover")MultipartFile cover, @RequestParam("notebookID") String notebookID){
+        try {
+            logger.debug("try upload cover");
+            String url = notebookService.uploadCover(notebookID, cover);
+            logger.debug("success upload cover");
+            return ResponseEntity.ok("Cover uploaded successfully \n" + url);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Cover upload failed \n" + e);
+        }
+    }
+
     @PostMapping("/updateNotebook")
     public ResponseEntity<?> updateNotebook(Notebook notebook){
         try {
@@ -95,9 +105,14 @@ public class NotebookApp {
         }
     }
 
-    @GetMapping("/findAllNotebook")
-    public List<Notebook> findAllNotebook(){
-        return notebookService.findAllNotebook();
+    @GetMapping("/center/notebooks/get")
+    public ResponseEntity<?> findNotebooks(){
+        try {
+            List<Notebook> notebooks = notebookService.findNotebooks();
+            return ResponseEntity.ok(notebooks);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Notebook query failed \n" + e);
+        }
     }
 
     @PostMapping("/notebook/directory")
@@ -120,12 +135,14 @@ public class NotebookApp {
     public JSONObject traversal(File file, JSONObject jsonObject, String prePath) {
         if (file.isDirectory()){
             File[] files = file.listFiles();
-            for (File f : files){
-                if (f.isDirectory()){
-                    JSONObject jsonObject1 = new JSONObject();
-                    jsonObject.put(f.getName(), traversal(f, jsonObject1, prePath+f.getName()+"/"));
-                } else {
-                    jsonObject.put(f.getName(), prePath+f.getName());
+            if (files != null){
+                for (File f : files){
+                    if (f.isDirectory()){
+                        JSONObject jsonObject1 = new JSONObject();
+                        jsonObject.put(f.getName(), traversal(f, jsonObject1, prePath+f.getName()+"/"));
+                    } else {
+                        jsonObject.put(f.getName(), prePath+f.getName());
+                    }
                 }
             }
         }
