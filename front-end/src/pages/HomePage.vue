@@ -4,10 +4,20 @@
     <main-header></main-header>
   </div>
   <div class="main-container">
-    <user-display :id="userID"></user-display>
+    <transition name="el-zoom-in-center">
+      <user-display :id="userInfo.userID" v-show="activeSlot === 'info'"></user-display>
+    </transition>
     <div style=" margin-left: 30px"></div>
     <div style="width: 100%">
-      <el-tabs>
+      <el-tabs v-model="activeSlot">
+        <el-tab-pane name="info" v-if="activeSlot !== 'info'">
+          <template #label>
+            <span>
+              <user-avatar :size="20" style="vertical-align: bottom; margin-right: 5px"></user-avatar>
+              <b> {{ userInfo.userName }} </b>
+            </span>
+          </template>
+        </el-tab-pane>
         <el-tab-pane name="note">
           <template #label>
             <span><el-icon><Collection /></el-icon> <b>笔记</b> </span>
@@ -39,11 +49,13 @@
 import MainHeader from '../components/MainHeader.vue'
 import UserDisplay from '../components/personal_center/UserDisplay.vue'
 import { Collection, Share, Star, Menu as MenuIcon } from '@element-plus/icons-vue'
-import CenterMainDisplay from '@/components/personal_center/CenterMainDisplay.vue'
+import CenterMainDisplay from '@/components/personal_center/CenterMain.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 
 export default {
   name: 'HomePage',
   components: {
+    UserAvatar,
     CenterMainDisplay,
     Share,
     Star,
@@ -54,11 +66,12 @@ export default {
   },
   data () {
     return {
-      userID: -1
+      activeSlot: 'info',
+      userInfo: {}
     }
   },
   async beforeMount () {
-    this.userID = this.$store.state.userInfo?.userID
+    this.userInfo = this.$store.state.userInfo
   }
 }
 </script>

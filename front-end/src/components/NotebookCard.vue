@@ -8,9 +8,9 @@
     </el-text>
     <div style="margin-top: 5px; font-size: 10px">
       <el-text style="vertical-align: center" size="small">
-          <el-tag size="small" v-if="notebook.isPublic">Public</el-tag>
-          <el-tag size="small" type="info" v-else>Private</el-tag>
-          {{ notebook.tag }}
+        <el-tag size="small" v-if="notebook.isPublic">公开</el-tag>
+        <el-tag size="small" type="info" v-else>私有</el-tag>
+        {{ notebook.tag }}
       </el-text>
       <br />
       <el-text size="small">
@@ -29,8 +29,7 @@ import { Clock } from '@element-plus/icons-vue'
 interface Props {
   notebook: NotebookInfo
 }
-
-const props = defineProps<Props>()
+defineProps<Props>()
 
 </script>
 

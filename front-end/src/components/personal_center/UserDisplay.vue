@@ -168,7 +168,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
   min-width: 240px;
   width: 240px;
 }
