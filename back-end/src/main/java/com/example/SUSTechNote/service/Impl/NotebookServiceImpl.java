@@ -56,9 +56,9 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public void updateNotebook(Notebook notebook){
+    public void updateNotebook(String notebookID, String notebookName, String tag, String description){
         try {
-            notebookRepository.save(notebook);
+            notebookRepository.updateNotebook(notebookID, notebookName, tag, description);
         } catch (Exception e) {
             logger.error("updateNotebook error: " + e.getMessage());
         }
@@ -153,5 +153,10 @@ public class NotebookServiceImpl implements NotebookService {
         logger.info("user " + userID + " update notebook cover " + notebookID + " url to: " + url);
         notebookRepository.updateCover(url, notebookID);
         return url;
+    }
+
+    @Override
+    public void renameDir(int userID, String oldName, String newName) {
+        notebookRepository.renameDir(userID, oldName, newName);
     }
 }

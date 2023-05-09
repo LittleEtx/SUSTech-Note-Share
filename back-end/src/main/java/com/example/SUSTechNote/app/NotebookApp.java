@@ -76,13 +76,30 @@ public class NotebookApp {
         }
     }
 
-    @PostMapping("/updateNotebook")
-    public ResponseEntity<?> updateNotebook(Notebook notebook){
+    @PostMapping("/notebook/update_info")
+    public ResponseEntity<?> updateNotebook(@RequestBody JSONObject jsonObject){
+        String notebookID = jsonObject.getString("notebookID");
+        String notebookName = jsonObject.getString("notebookName");
+        String tag = jsonObject.getString("tag");
+        String description = jsonObject.getString("description");
         try {
-            notebookService.updateNotebook(notebook);
+            notebookService.updateNotebook(notebookID, notebookName, tag, description);
             return ResponseEntity.ok("Notebook updated successfully");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Notebook update failed");
+            return ResponseEntity.badRequest().body("Notebook update failed" + e);
+        }
+    }
+
+    @PostMapping("/notebook/rename_dir")
+    public ResponseEntity<?> renameDir(@RequestBody JSONObject jsonObject) {
+        String oldName = jsonObject.getString("old_name");
+        String newName = jsonObject.getString("new_name");
+        int userID = StpUtil.getLoginIdAsInt(); //获取用户ID
+        try {
+            notebookService.renameDir(userID, oldName, newName);
+            return ResponseEntity.ok("Directory renamed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Directory rename failed" + e);
         }
     }
 
