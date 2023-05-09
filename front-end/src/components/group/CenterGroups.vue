@@ -1,9 +1,9 @@
 <template>
   <div class="note-container">
-    <el-card class="note-card create-card" shadow="always" @click="handleClickCreateCard">
+    <el-card class="note-card create-card" shadow="hover" @click="handleClickCreateCard">
       <div class="create-card-icon"><el-icon><Plus /></el-icon></div>
     </el-card>
-    <el-card v-for="note in group" :key="note.id" class="note-card" shadow="always" @click="handleClickNoteCard(note, $event)">
+    <el-card v-for="note in group" :key="note.id" class="note-card" shadow="hover" @click="handleClickNoteCard(note, $event)">
       <template #header>
         <div class="note-title note-header">
           <el-icon><Notebook /></el-icon>
@@ -219,7 +219,7 @@ export default {
       if (event.target.tagName === 'BUTTON') {
         return
       }
-      this.$router.push('/login')
+      this.$router.push('/showTest')
     },
     handleClickCreateCard () {
       // 处理创建新卡片的逻辑

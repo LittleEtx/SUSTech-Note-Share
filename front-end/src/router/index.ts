@@ -4,6 +4,7 @@ import ResetPasswordPage from '@/pages/ResetPasswordPage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import PersonalCenterPage from '@/pages/PersonalCenterPage.vue'
 import group from '@/components/group/CenterGroups.vue'
+import groupShow from '@/components/group/groupShow.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -34,6 +35,10 @@ export const router = createRouter({
     {
       path: '/groupTest',
       component: group
+    },
+    {
+      path: '/showTest',
+      component: groupShow
     }
   ]
 })
