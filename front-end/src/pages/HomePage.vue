@@ -40,6 +40,7 @@
         </el-tab-pane>
       </el-tabs>
       <center-main v-show="activeSlot === 'info'"></center-main>
+      <center-notebooks v-show="activeSlot === 'note'"></center-notebooks>
       <center-groups v-show="activeSlot === 'group'"></center-groups>
     </div>
   </div>
@@ -53,10 +54,12 @@ import { Collection, Share, Star, Menu as MenuIcon } from '@element-plus/icons-v
 import CenterMain from '@/components/personal_center/CenterMain.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import CenterGroups from '@/components/group/CenterGroups.vue'
+import CenterNotebooks from "@/components/personal_center/CenterNotebooks.vue"
 
 export default {
   name: 'HomePage',
   components: {
+    CenterNotebooks,
     CenterGroups,
     UserAvatar,
     CenterMain,

@@ -1,7 +1,11 @@
 <template>
 <el-card shadow="hover" class="card-size"
          :body-style="{ padding: '0px' }">
-  <img :src="notebook.cover" alt="" class="cover">
+  <el-image :src="notebook.cover" class="cover">
+     <template #error>
+        <img :src="DefaultCover" class="cover" alt=""/>
+     </template>
+  </el-image>
   <div style="padding: 8px 10px 0 10px; text-align: left;">
     <el-text truncated>
       <b> {{ notebook.title }} </b>
@@ -26,6 +30,7 @@
 
 import type { NotebookInfo } from '@/scripts/interfaces'
 import { Clock } from '@element-plus/icons-vue'
+import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
 interface Props {
   notebook: NotebookInfo
 }
