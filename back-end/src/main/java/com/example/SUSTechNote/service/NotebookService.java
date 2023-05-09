@@ -24,6 +24,7 @@ public interface NotebookService {
     Notebook findNotebookByID(String notebookID);
 
     int findNotebookCountByUserID(int userID);
+    List<Notebook> findPublicNotebooks(int userID);
 
     String uploadCover(String notebookID, MultipartFile cover) throws IOException;
 

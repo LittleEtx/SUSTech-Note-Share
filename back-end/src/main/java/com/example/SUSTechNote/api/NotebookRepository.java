@@ -23,11 +23,19 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Query(value = "update notebooks set notebook_name = ?2, tag = ?3, description = ?4 where notebookid = ?1", nativeQuery = true)
     void updateNotebook(String notebookID, String notebookName, String tag, String description);
 
-    @Query(value = "select * from notebooks where authorid = ?1", nativeQuery = true)
+    @Query(value = "select * from notebooks " +
+            "where authorid = ?1 " +
+            "and remove_time is not null", nativeQuery = true)
     List<Notebook> findNotebookByAuthorID(int userID);
 
     @Query(value = "select cover from notebooks where notebookid = ?1", nativeQuery = true)
     String findCoverByNotebookID(String notebookID);
+
+    @Query(value = "select * from notebooks " +
+            "where authorid = ?1 " +
+            "and is_public = 1 " +
+            "and remove_time IS NOT NULL", nativeQuery = true)
+    List<Notebook> findPublicNotebooksByAuthorID(int userID);
 
     @Modifying
     @Transactional

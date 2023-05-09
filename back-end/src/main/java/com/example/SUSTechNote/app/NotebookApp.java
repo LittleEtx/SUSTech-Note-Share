@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.List;
 
 @RestController
+@RequestMapping("/notebook")
 public class NotebookApp {
 
     private final Logger logger = LoggerFactory.getLogger(NotebookApp.class);
@@ -27,44 +27,13 @@ public class NotebookApp {
         this.staticPathHelper = staticPathHelper;
     }
 
-    @PostMapping("center/notebooks/create")
-    public ResponseEntity<?> createNotebook(@RequestBody JSONObject jsonObject){
-        //获取目前登录用户的id
-        int userID = StpUtil.getLoginIdAsInt();
-        int count = notebookService.findNotebookCountByUserID(userID);
-        if(count >= 500){
-            return ResponseEntity.badRequest().body("You have reached the maximum number of notebooks");
-        } else {
-            String basePath = staticPathHelper.getStaticPath() + "/notebooks/" + userID + "/";
-            String noteBookID = userID + "_" + (count + 1);
-            String savePath = basePath + noteBookID;
-            File folder = new File(savePath);
-            if (!folder.exists()) {
-                logger.info("create noteBook folder: " + folder.getAbsolutePath());
-                folder.mkdirs();
-            }
-            String directory = jsonObject.getString("directory");
-            String realPath = savePath.substring(savePath.lastIndexOf("static"));
-            String title = jsonObject.getString("title");
-            String tag = jsonObject.getString("tag");
-            String description = jsonObject.getString("description");
-            int is_public = jsonObject.getInteger("is_public");
-            try {
-                notebookService.addNotebook(noteBookID,userID,directory,realPath,title,tag,description,is_public);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Notebook creation failed");
-            }
-            return ResponseEntity.ok(noteBookID);
-        }
-    }
-
-    @PostMapping("/notebook/basic")
+    @PostMapping("/basic")
     public Notebook getNotebookBasic(@RequestBody JSONObject jsonObject){
         String notebookID = jsonObject.getString("notebookID");
         return notebookService.getNotebookBasic(notebookID);
     }
 
-    @PostMapping("/notebook/upload_cover")
+    @PostMapping("/upload_cover")
     public ResponseEntity<?> uploadCover(@RequestParam("cover")MultipartFile cover, @RequestParam("notebookID") String notebookID){
         try {
             logger.debug("try upload cover");
@@ -76,7 +45,7 @@ public class NotebookApp {
         }
     }
 
-    @PostMapping("/notebook/update_info")
+    @PostMapping("/update_info")
     public ResponseEntity<?> updateNotebook(@RequestBody JSONObject jsonObject){
         String notebookID = jsonObject.getString("notebookID");
         String notebookName = jsonObject.getString("notebookName");
@@ -90,7 +59,7 @@ public class NotebookApp {
         }
     }
 
-    @PostMapping("/notebook/rename_dir")
+    @PostMapping("/rename_dir")
     public ResponseEntity<?> renameDir(@RequestBody JSONObject jsonObject) {
         String oldName = jsonObject.getString("old_name");
         String newName = jsonObject.getString("new_name");
@@ -104,7 +73,7 @@ public class NotebookApp {
     }
 
     @SaCheckLogin
-    @PostMapping("notebook/delete")
+    @PostMapping("/delete")
     public ResponseEntity<?> deleteNotebook(@RequestBody JSONObject jsonObject){
         int status = jsonObject.getInteger("status");
         String notebookID = jsonObject.getString("notebookID");
@@ -122,17 +91,7 @@ public class NotebookApp {
         }
     }
 
-    @GetMapping("/center/notebooks/get")
-    public ResponseEntity<?> findNotebooks(){
-        try {
-            List<Notebook> notebooks = notebookService.findNotebooks();
-            return ResponseEntity.ok(notebooks);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Notebook query failed \n" + e);
-        }
-    }
-
-    @PostMapping("/notebook/directory")
+    @PostMapping("/directory")
     public ResponseEntity<?> getNotebookDirectory(@RequestBody JSONObject jsonObject){
         String notebookID = jsonObject.getString("notebookID");
         Notebook notebook = notebookService.findNotebookByID(notebookID);

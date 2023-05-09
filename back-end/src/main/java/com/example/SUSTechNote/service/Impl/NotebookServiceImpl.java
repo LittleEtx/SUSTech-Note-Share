@@ -122,6 +122,11 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
+    public List<Notebook> findPublicNotebooks(int userID) {
+        return notebookRepository.findPublicNotebooksByAuthorID(userID);
+    }
+
+    @Override
     public String uploadCover(String notebookID, MultipartFile cover) throws IOException {
         //使用随机UUID作为文件名
         String fileName = UUID.randomUUID().toString().replaceAll("-", "") +
