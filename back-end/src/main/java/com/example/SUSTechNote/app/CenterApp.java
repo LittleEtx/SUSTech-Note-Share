@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -47,7 +49,7 @@ public class CenterApp {
             String title = jsonObject.getString("title");
             String tag = jsonObject.getString("tag");
             String description = jsonObject.getString("description");
-            int is_public = jsonObject.getInteger("is_public");
+            int is_public = jsonObject.getInteger("isPublic");
             try {
                 notebookService.addNotebook(noteBookID,userID,directory,realPath,title,tag,description,is_public);
             } catch (Exception e) {
@@ -61,7 +63,7 @@ public class CenterApp {
     public ResponseEntity<?> findNotebooks(){
         try {
             List<Notebook> notebooks = notebookService.findNotebooks();
-            return ResponseEntity.ok(notebooks);
+            return ResponseEntity.ok(NotebookInterface.fromNotebooks(notebooks));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Notebook query failed \n" + e);
         }
@@ -70,10 +72,45 @@ public class CenterApp {
     @GetMapping("public-notebooks")
     public ResponseEntity<?> findNotebookByNotebookID(@Param("userID") int userID){
         try {
-            List<Notebook> notebook = notebookService.findPublicNotebooks(userID);
-            return ResponseEntity.ok(notebook);
+            List<Notebook> notebooks = notebookService.findPublicNotebooks(userID);
+            return ResponseEntity.ok(NotebookInterface.fromNotebooks(notebooks));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Notebook query failed \n" + e);
+        }
+    }
+
+    private  record NotebookInterface(
+        String notebookID,
+        int authorID,
+        String title,
+        String tag,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        LocalDateTime updateTime,
+        String cover,
+        String description,
+        String directory,
+        int isPublic,
+        int likeCount,
+        int starCount
+
+    ){
+        public static NotebookInterface fromNotebook(Notebook notebook){
+            return new NotebookInterface(
+                notebook.getNotebookID(),
+                notebook.getAuthorID(),
+                notebook.getNotebookName(),
+                notebook.getTag(),
+                notebook.getUpdateTime(),
+                notebook.getCover(),
+                notebook.getDescription(),
+                notebook.getDirectory(),
+                notebook.getIsPublic(),
+                notebook.getLikeNum() == null ? 0 : notebook.getLikeNum(),
+                notebook.getStar() == null ? 0 : notebook.getStar()
+            );
+        }
+        public static List<NotebookInterface> fromNotebooks(List<Notebook> notebooks){
+            return notebooks.stream().map(NotebookInterface::fromNotebook).toList();
         }
     }
 }

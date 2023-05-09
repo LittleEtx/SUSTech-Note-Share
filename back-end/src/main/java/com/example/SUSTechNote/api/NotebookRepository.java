@@ -25,7 +25,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Query(value = "select * from notebooks " +
             "where authorid = ?1 " +
-            "and remove_time is not null", nativeQuery = true)
+            "and remove_time is null", nativeQuery = true)
     List<Notebook> findNotebookByAuthorID(int userID);
 
     @Query(value = "select cover from notebooks where notebookid = ?1", nativeQuery = true)
@@ -34,7 +34,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Query(value = "select * from notebooks " +
             "where authorid = ?1 " +
             "and is_public = 1 " +
-            "and remove_time IS NOT NULL", nativeQuery = true)
+            "and remove_time IS NULL", nativeQuery = true)
     List<Notebook> findPublicNotebooksByAuthorID(int userID);
 
     @Modifying
