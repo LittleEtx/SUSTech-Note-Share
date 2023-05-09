@@ -14,7 +14,7 @@
           <template #label>
             <span>
               <user-avatar :size="20" style="vertical-align: bottom; margin-right: 5px"></user-avatar>
-              <b> {{ userInfo.userName }} </b>
+              <b> {{ userInfo?.userName }} </b>
             </span>
           </template>
         </el-tab-pane>
