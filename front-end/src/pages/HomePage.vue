@@ -5,7 +5,7 @@
   </div>
   <div class="main-container">
     <transition name="el-zoom-in-center">
-      <user-display :id="userInfo.userID" v-show="activeSlot === 'info'"></user-display>
+      <user-display :id="userInfo?.userID" v-show="activeSlot === 'info'"></user-display>
     </transition>
     <div style=" margin-left: 30px"></div>
     <div style="width: 100%">
@@ -39,7 +39,8 @@
           </template>
         </el-tab-pane>
       </el-tabs>
-      <center-main-display></center-main-display>
+      <center-main v-show="activeSlot === 'info'"></center-main>
+      <center-groups v-show="activeSlot === 'group'"></center-groups>
     </div>
   </div>
 </div>
@@ -49,14 +50,16 @@
 import MainHeader from '../components/MainHeader.vue'
 import UserDisplay from '../components/personal_center/UserDisplay.vue'
 import { Collection, Share, Star, Menu as MenuIcon } from '@element-plus/icons-vue'
-import CenterMainDisplay from '@/components/personal_center/CenterMain.vue'
+import CenterMain from '@/components/personal_center/CenterMain.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
+import CenterGroups from '@/components/group/CenterGroups.vue'
 
 export default {
   name: 'HomePage',
   components: {
+    CenterGroups,
     UserAvatar,
-    CenterMainDisplay,
+    CenterMain,
     Share,
     Star,
     Collection,

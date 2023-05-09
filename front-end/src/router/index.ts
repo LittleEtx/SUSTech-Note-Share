@@ -3,7 +3,7 @@ import LoginPage from '@/pages/LoginPage.vue'
 import ResetPasswordPage from '@/pages/ResetPasswordPage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import PersonalCenterPage from '@/pages/PersonalCenterPage.vue'
-import group from '@/components/group/Main.vue'
+import group from '@/components/group/CenterGroups.vue'
 
 export const router = createRouter({
   history: createWebHistory(),

@@ -1,15 +1,15 @@
 <template>
   <div class="note-container">
-    <el-card class="note-card create-card" shadow="always" @click.native="handleClickCreateCard">
+    <el-card class="note-card create-card" shadow="always" @click="handleClickCreateCard">
       <div class="create-card-icon"><el-icon><Plus /></el-icon></div>
     </el-card>
     <el-card v-for="note in group" :key="note.id" class="note-card" shadow="always" @click="handleClickNoteCard(note, $event)">
-      <div slot="header" class="note-header">
-        <div class="note-title">
+      <template #header>
+        <div class="note-title note-header">
           <el-icon><Notebook /></el-icon>
           <span style="margin-left: 5px">{{ note.title }}</span></div>
         <div class="note-date">{{ note.date }}</div>
-      </div>
+      </template>
       <div class="note-content">描述信息：{{ note.content }}</div>
       <div class="note-creator">群主：{{ note.creator }}</div>
       <div class="note-footer">
@@ -52,7 +52,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="createNote('form')">创建</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
+              <el-button @click="resetForm()">重置</el-button>
             </el-form-item>
           </el-form>
         </template>
@@ -69,7 +69,7 @@
             </div>
             <el-form-item>
               <el-button style="margin-top: 15px" type="primary" @click="joinGroup('ruleForm')">加入</el-button>
-              <el-button style="margin-top: 15px" @click="cancelForm('ruleForm')">取消</el-button>
+              <el-button style="margin-top: 15px" @click="cancelForm()">取消</el-button>
             </el-form-item>
           </el-form>
         </template>
@@ -91,7 +91,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="createNote('form')">创建</el-button>
-          <el-button @click="resetForm('form')">重置</el-button>
+          <el-button @click="resetForm()">重置</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -99,11 +99,12 @@
 </template>
 
 <script>
-import {useRouter} from "vue-router/dist/vue-router";
+import { Notebook, Plus } from '@element-plus/icons-vue'
 // 打开页面时从后端读取存在的群组并做过滤，然后保存到groupList中；
 // 读取当前用户加入的群组(群组名称、描述信息、创建日期)
 export default {
-  data() {
+  components: { Notebook, Plus },
+  data () {
     return {
       nowUser: '陈孙兵',
       group: [
@@ -134,7 +135,7 @@ export default {
           date: '2022-05-05',
           content: '这是该群组的描述',
           creator: '陈孙兵'
-        },
+        }
       ],
       activeName: 'creat',
       createFormVisible: false,
@@ -148,81 +149,81 @@ export default {
       },
       rules: {
         title: [
-          { required: true, message: '群组名称不能为空', trigger: 'blur' },
+          { required: true, message: '群组名称不能为空', trigger: 'blur' }
         ]
       },
       groupList: [
-        {name:'高数', description: '这是高数的描述'},
-        {name:'大物', description: '这是大物的描述'},
-        {name:'计网', description: '这是计网的描述'},
-        {name:'离散', description: '这是离散的描述'}],
+        { name: '高数', description: '这是高数的描述' },
+        { name: '大物', description: '这是大物的描述' },
+        { name: '计网', description: '这是计网的描述' },
+        { name: '离散', description: '这是离散的描述' }],
       ruleForm: {
         groupJoin: ''
       },
       join_rules: {
         groupJoin: [
-          { required: true, message: '请选择群组', trigger: 'blur' },
+          { required: true, message: '请选择群组', trigger: 'blur' }
         ]
-      },
-    };
+      }
+    }
   },
   methods: {
-    createNote(formName) {
+    createNote (formName) {
       // 将当前用户（群主）、群组名称、群组描述、创建日期发给后端
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // alert('submit!');
-          const d = new Date();
-          const date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+          const d = new Date()
+          const date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
           alert(date)
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    joinGroup(formName) {
+    joinGroup (formName) {
       // 直接加入群组
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          alert('submit!')
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.form.title = '';
-      this.form.content = '';
+    resetForm () {
+      this.form.title = ''
+      this.form.content = ''
     },
-    cancelForm(formName) {
-      this.form.title = '';
-      this.form.content = '';
-      this.createFormVisible = false;
+    cancelForm () {
+      this.form.title = ''
+      this.form.content = ''
+      this.createFormVisible = false
     },
-    edit(note) {
+    edit (note) {
       // 修改群信息(名称、描述信息)
-      this.form = Object.assign({}, note);
+      this.form = Object.assign({}, note)
       this.editFormVisible = true
     },
-    remove(id) {
+    remove (id) {
       // 解散或者退出群组
-      this.group = this.group.filter(note => note.id !== id);
+      this.group = this.group.filter(note => note.id !== id)
     },
-    handleClickNoteCard(note, event) {
+    handleClickNoteCard (note, event) {
       // 处理点击卡片事件
       if (event.target.tagName === 'BUTTON') {
         return
       }
       this.$router.push('/login')
     },
-    handleClickCreateCard() {
+    handleClickCreateCard () {
       // 处理创建新卡片的逻辑
       this.createFormVisible = true
     }
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
