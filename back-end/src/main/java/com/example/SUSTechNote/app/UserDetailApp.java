@@ -107,15 +107,18 @@ public class UserDetailApp {
         LocalDateTime now = LocalDateTime.now();
         String newName = jsonObject.getString("userName");
         // 每周只能改一次用户名
-        if (!Objects.equals(newName, user.getUserName()) &&
-                lastUpdateTime != null && now.minusDays(1).isBefore(lastUpdateTime)) {
-            return ResponseEntity.badRequest().body("username can only be changed once per day");
+        if (!Objects.equals(newName, user.getUserName())) {
+            if (lastUpdateTime != null && now.minusDays(1).isBefore(lastUpdateTime)) {
+                return ResponseEntity.badRequest().body("username can only be changed once per day");
+            }
+            // update username
+            user.setUserName(newName);
+            user.setUpdateTime(now);
         }
-        user.setUserName(newName);
+        user.setUpdateTime(now);
         user.setDescription(jsonObject.getString("description"));
         user.setGender(jsonObject.getInteger("gender"));
         user.setBirth(jsonObject.getSqlDate("birth"));
-        user.setUpdateTime(now);
         userService.updateUser(user);
         return ResponseEntity.ok().body("update success");
     }
