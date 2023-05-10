@@ -68,6 +68,7 @@ import NotebookDisplay from '@/components/NotebookCard.vue'
 import { apiGetUserNotebooks } from '@/scripts/API_Center'
 import { CirclePlus, Folder, MoreFilled } from '@element-plus/icons-vue'
 import NewNotebook from '@/components/personal_center/NewNotebook.vue'
+import { ElMessageBox } from 'element-plus'
 
 const showCreateNotebook = ref(false)
 
@@ -91,9 +92,16 @@ onBeforeMount(async () => {
 // submit create notebook
 const newNotebookRef = ref<InstanceType<typeof NewNotebook>>()
 const submitCreateNotebook = async () => {
-  const id = await newNotebookRef.value!.submit()
-  console.log(id)
-  showCreateNotebook.value = false
+  try {
+    const id = await newNotebookRef.value!.submit()
+    console.log(id)
+    showCreateNotebook.value = false
+  } catch (e) {
+    if (e.response?.status === 400) {
+      await ElMessageBox.alert('无法创建笔记本：' + e.response.data.message)
+    }
+    // 表单未验证通过
+  }
 }
 
 </script>

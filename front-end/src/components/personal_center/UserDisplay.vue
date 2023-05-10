@@ -114,7 +114,7 @@ import UserAvatar from '@/components/UserAvatar.vue'
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  components: {Plus, UserAvatar, ImgUploader, Female, Male, Calendar},
+  components: { Plus, UserAvatar, ImgUploader, Female, Male, Calendar },
   props: {
     id: {
       default: undefined,
@@ -159,7 +159,11 @@ export default {
         return
       }
       this.uploadingAvatar = true
-      await apiUploadAvatar(img.value)
+      try {
+        await apiUploadAvatar(img.value)
+      } catch (e) {
+        await this.$alert('上传失败: ' + e.response.data)
+      }
       await store.dispatch('updateInfo')
       this.uploadingAvatar = false
       this.showUploadAvatar = false

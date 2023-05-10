@@ -119,15 +119,15 @@ const info = reactive<NewNotebookInfo>({
 
 const rules = reactive<FormRules>({
   title: [
-    {required: true, message: '请输入笔记本标题', trigger: 'blur'},
-    {min: 1, max: 40, message: '长度在 1 到 40 个字符', trigger: 'blur'}
+    { required: true, message: '请输入笔记本标题', trigger: 'blur' },
+    { min: 1, max: 40, message: '长度在 1 到 40 个字符', trigger: 'blur' }
   ],
   directory: [
-    {required: true, message: '请选择或输入分区', trigger: 'blur'},
-    {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
+    { required: true, message: '请选择或输入分区', trigger: 'blur' },
+    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
   ],
   isPublic: [
-    {required: true, message: '请选择可见性', trigger: 'blur'}
+    { required: true, message: '请选择可见性', trigger: 'blur' }
   ]
 })
 
@@ -163,17 +163,19 @@ const handleInputConfirm = () => {
 const coverUploader = ref<InstanceType<typeof ImgUploader>>()
 const form = ref<FormInstance>()
 
-// 提交表单，若核实不通过会抛出reject异常
-const submit = async () => {
-  const file = coverUploader.value!.file
+// 提交表单，表单未验证通过会抛出异常
+const submit = async (): Promise<string | undefined> => {
   await form.value!.validate()
+  const file = coverUploader.value!.getImgFile()
+  console.log(file.value)
   const id = await apiCreateNotebook(info)
   if (file) {
-    await apiUploadNotebookCover(id, file)
+    // 同时上传封面
+    await apiUploadNotebookCover(id, file.value)
   }
   return id
 }
-defineExpose({submit})
+defineExpose({ submit })
 
 </script>
 

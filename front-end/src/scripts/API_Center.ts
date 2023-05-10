@@ -4,8 +4,8 @@ import axios from 'axios'
 /**
  * 获取本用户的所有笔记本
  */
-export async function apiGetUserNotebooks(): Promise<NotebookInfo[]> {
-  const {data} = await axios.get('/api/center/notebooks/get')
+export async function apiGetUserNotebooks (): Promise<NotebookInfo[]> {
+  const { data } = await axios.get('/api/center/notebooks/get')
   return data.map((notebook: any) => {
     notebook.tags = notebook.tag.split(',')
     return notebook
@@ -24,8 +24,8 @@ export interface NewNotebookInfo {
  * 创建笔记本
  * @param info 笔记本信息
  */
-export async function apiCreateNotebook(info: NewNotebookInfo): Promise<string> {
-  const {data} = await axios.post('/api/center/notebooks/create', {
+export async function apiCreateNotebook (info: NewNotebookInfo): Promise<string> {
+  const { data } = await axios.post('/api/center/notebooks/create', {
     title: info.title,
     directory: info.directory,
     description: info.description,
