@@ -1,4 +1,5 @@
 <template>
+<!-- 不使用uploader默认的上传方法  -->
 <el-upload
   ref="uploader"
   style="margin: 0 auto"
@@ -8,10 +9,9 @@
   :limit="1"
   :auto-upload="false"
   :show-file-list="false"
-  :on-exceed="handleExceed"
-  :on-change="handleChange"
-  :before-upload="checkImage"
-  :http-request="uploadAvatar"
+  :on-exceed="handleExceed!"
+  :on-change="handleChange!"
+  :before-upload="checkImage!"
 >
   <el-avatar v-if="imageUrl" class="avatar-size" :src="imageUrl" alt=""/>
   <div v-else class="avatar-size avatar-waiting">
@@ -26,13 +26,6 @@
     </div>
   </template>
 </el-upload>
-<div style="margin-top: 20px"></div>
-<span>
-  <el-button style="width: 30%" @click="$emit('close-dialog')">取消</el-button>
-  <el-button type="primary" @click="submitAvatar" style="width: 30%">
-    确定
-  </el-button>
-</span>
 </template>
 
 <script setup lang="ts">
@@ -43,15 +36,14 @@ import { ElMessage, genFileId } from 'element-plus'
 import { apiUploadAvatar } from '@/scripts/API_User'
 import type { File } from 'buffer'
 
-const emit = defineEmits(['close-dialog', 'submit-avatar'])
 const imageUrl = ref('')
 const uploader = ref<UploadInstance>() // 获取上传组件实例，这里定义的名字应和ref的名字一致
 const loading = ref(false)
-let avatar: File
+let image: File
 const handleChange: UploadProps['onChange'] = (file) => {
   // show file in DOM
   imageUrl.value = URL.createObjectURL(file.raw as Blob)
-  avatar = file.raw as File
+  image = file.raw as File
 }
 
 // 当超过限制时，清空文件列表，重新上传
@@ -62,30 +54,30 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   uploader.value!.handleStart(file)
 }
 
-// 提交头像
-const submitAvatar = () => {
-  uploader.value!.submit()
-}
-
 // 检查图片大小
 const checkImage: UploadProps['beforeUpload'] = (file: UploadRawFile) => {
   const isLt2M = file.size / 1024 / 1024 < 2
   if (!isLt2M) {
-    ElMessage.error('上传头像图片大小不能超过 2MB!')
+    ElMessage.error('上传图片大小不能超过 2MB!')
   }
   return isLt2M
 }
 
-const uploadAvatar: UploadProps['httpRequest'] = async () => {
-  if (!avatar) {
-    ElMessage.error('请先选择头像')
+// 提交头像
+const submit = async () => {
+  if (!image) {
+    ElMessage.error('请先选择图片')
     return
   }
   loading.value = true
-  await apiUploadAvatar(avatar)
+  await apiUploadAvatar(image)
   loading.value = false
-  emit('submit-avatar')
 }
+
+defineExpose({
+  submit,
+  imageUrl
+})
 
 </script>
 

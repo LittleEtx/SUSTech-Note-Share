@@ -11,6 +11,7 @@
         <email-form ref="passEmailForm"></email-form>
         <password-form ref="passwordForm"></password-form>
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
+        <br /> <el-text type="info" size="small">勾选后在该设备上将自动登录</el-text>
         <p>
           <el-button class="button-size" type="primary" @click="loginViaPassword">登录</el-button>
           <el-button class="button-size" @click="register">注册</el-button>
@@ -19,19 +20,25 @@
       <template v-else>
         <!--   验证码登录选框     -->
         <email-form ref="codeEmailForm"></email-form>
-        <code-form ref="codeForm" @send-code="getEmailValidateCode"
-        ></code-form>
+        <code-form ref="codeForm" @send-code="getEmailValidateCode"></code-form>
         <el-checkbox v-model="rememberMe">记住我</el-checkbox>
-        <p>
-          <el-button class="button-size" type="primary" @click="loginViaCode('emailLogForm')">登录/注册</el-button>
-        </p>
+        <div> <el-text type="info" size="small">勾选后在该设备上将自动登录</el-text> </div>
+        <div style="margin-top: 20px">
+          <el-button
+            class="button-size" type="primary"
+            @click="loginViaCode()"
+          >
+            登录/注册
+          </el-button>
+        </div>
+        <div> <el-text type="info" size="small">未注册的邮箱将自动注册</el-text> </div>
       </template>
     </div>
   </div>
 </template>
 
 <script>
-import { router } from '../../router'
+import { router } from '@/router'
 import { apiLoginViaCode, apiLoginViaPassword, apiSendEmailCode } from '@/scripts/API_Auth'
 import PasswordForm from './PasswordForm.vue'
 import EmailForm from './EmailForm.vue'

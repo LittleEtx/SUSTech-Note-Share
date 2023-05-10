@@ -1,12 +1,20 @@
 <template>
 <div v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.3)">
   <div style="text-align: right">
-    <el-button type="primary">
+    <el-button type="primary" @click="showCreateNotebook = true">
       <el-icon><CirclePlus /></el-icon> 新建笔记本
     </el-button>
+    <el-dialog
+      v-model="showCreateNotebook"
+      :close-on-click-modal="false" :show-close="false"
+      destroy-on-close
+    >
+      <new-notebook></new-notebook>
+    </el-dialog>
   </div>
   <el-row style="margin-top: 20px">
-    <el-col :span="4">
+<!--   左侧边栏展示所有文件夹   -->
+    <el-col :xs="8" :sm="6" :md="4">
       <el-menu
         class="el-menu-vertical-demo"
         :default-active="notebookByDirs.keys().next().value"
@@ -17,17 +25,24 @@
           v-for="(dir, index) in notebookByDirs.keys()"
           :key="index"
           :index="dir"
+          class="dir-item-menu"
         >
           <el-icon><Folder /></el-icon>
-          <el-text truncated> {{ dir }} </el-text>
+           {{ dir }}
         </el-menu-item>
       </el-menu>
     </el-col>
-    <el-col :span="20">
+<!--   右侧展示所有卡片   -->
+    <el-col :xs="16" :sm="18" :md="20">
       <el-space :size="20" wrap style="width: 100%; padding-left: 20px">
-        <notebook-display v-for="(notebook, index) in notebookByDirs.get(selectedDir)"
-          :key="index" :notebook="notebook"
-        ></notebook-display>
+        <div
+          v-for="(notebook, index) in notebookByDirs.get(selectedDir)"
+          :key="index"
+          style="position: relative"
+        >
+          <notebook-display :notebook="notebook" @mouseenter=""></notebook-display>
+          <el-icon type="info" class="more-icon"><MoreFilled /></el-icon>
+        </div>
       </el-space>
     </el-col>
   </el-row>
@@ -39,7 +54,10 @@ import { NotebookInfo } from '@/scripts/interfaces'
 import { onBeforeMount, ref } from 'vue'
 import NotebookDisplay from '@/components/NotebookCard.vue'
 import { apiGetUserNotebooks } from '@/scripts/API_Center'
-import { CirclePlus, Folder } from '@element-plus/icons-vue'
+import { CirclePlus, Folder, MoreFilled } from '@element-plus/icons-vue'
+import NewNotebook from '@/components/personal_center/NewNotebook.vue'
+
+const showCreateNotebook = ref(false)
 
 const notebookByDirs = ref<Map<string, NotebookInfo[]>>(new Map())
 const selectedDir = ref<string>('')
@@ -61,5 +79,15 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
+.dir-item-menu {
+  white-space: nowrap;  /* 1.不换行 */
+  overflow: hidden;  /* 2.超出的部分隐藏 */
+  text-overflow: ellipsis; /* 3.文字用省略号替代超出的部分 */
+}
 
+.more-icon {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
 </style>

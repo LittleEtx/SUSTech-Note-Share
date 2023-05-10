@@ -1,11 +1,12 @@
 <template>
 <div class="head-container">
-  <div>
+  <div style="position: relative">
     <user-avatar :src="userInfo?.avatar" :size="240"> </user-avatar>
     <!--suppress JSValidateTypes -->
-    <el-button :icon="Switch" circle size="large"
-               style="position: absolute; margin-left: -40px; margin-top: 170px"
-               @click="showUploadAvatar = true"
+    <el-button
+      :icon="Switch" circle size="large"
+      style="position: absolute; margin-left: -40px; margin-top: 170px"
+      @click="showUploadAvatar = true"
     ></el-button>
   </div>
 <!--  上传头像对话框   -->
@@ -15,10 +16,16 @@
     destroy-on-close
     title="上传头像"
   >
-    <upload-avatar
-      @close-dialog="showUploadAvatar = false"
-      @submit-avatar="submitAvatar"
-    ></upload-avatar>
+    <img-uploader
+      ref="imgUploader"
+    ></img-uploader>
+    <div style="margin-top: 20px"></div>
+    <span>
+      <el-button style="width: 30%" @click="showUploadAvatar = false">取消</el-button>
+      <el-button type="primary" @click="submitAvatar" style="width: 30%">
+        确定
+      </el-button>
+    </span>
   </el-dialog>
   <div style="margin-top: 20px"></div>
   <div class="info-display">
@@ -90,14 +97,14 @@
 <script>
 import { apiGetUserInfo, apiUpdateInfo } from '@/scripts/API_User'
 import { Calendar, Female, Male, Switch } from '@element-plus/icons-vue'
-import UploadAvatar from '@/components/personal_center/UploadAvatar.vue'
+import ImgUploader from '@/components/personal_center/ImgUploader.vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import { store } from '@/store/store'
 import UserAvatar from '@/components/UserAvatar.vue'
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  components: { UserAvatar, UploadAvatar, Female, Male, Calendar },
+  components: { UserAvatar, ImgUploader, Female, Male, Calendar },
   props: {
     id: {
       default: undefined,
@@ -135,6 +142,7 @@ export default {
   },
   methods: {
     async submitAvatar () {
+      await this.$refs.imgUploader.submit()
       await store.dispatch('updateInfo')
       this.showUploadAvatar = false
     },
