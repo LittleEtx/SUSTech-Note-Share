@@ -31,7 +31,6 @@
 import { reactive, ref } from 'vue'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { ElMessage, genFileId } from 'element-plus'
-import { apiUploadAvatar } from '@/scripts/API_User'
 import type { File } from 'buffer'
 import { Plus } from '@element-plus/icons-vue'
 
@@ -50,11 +49,11 @@ const imgStyle = reactive({
 
 const imageUrl = ref('')
 const uploader = ref<UploadInstance>() // 获取上传组件实例，这里定义的名字应和ref的名字一致
-let image: File
+const image = ref<File>()
 const handleChange: UploadProps['onChange'] = (file) => {
   // show file in DOM
   imageUrl.value = URL.createObjectURL(file.raw as Blob)
-  image = file.raw as File
+  image.value = file.raw as File
 }
 
 // 当超过限制时，清空文件列表，重新上传
@@ -74,18 +73,9 @@ const checkImage: UploadProps['beforeUpload'] = (file: UploadRawFile) => {
   return isLt2M
 }
 
-// 提交头像
-const submit = async () => {
-  if (!image) {
-    ElMessage.error('请先选择图片')
-    return
-  }
-  await apiUploadAvatar(image)
-}
-
 defineExpose({
-  submit,
-  imageUrl
+  getImgFile: () => image,
+  getImgUrl: () => imageUrl
 })
 
 </script>

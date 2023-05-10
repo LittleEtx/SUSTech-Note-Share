@@ -26,19 +26,19 @@
         <el-button type="primary" class="button-width" @click="resetPassword">下一步</el-button>
       </template>
       <template v-else>
-        <p style="margin-top: 50px">(*^_^*)新登录密码重置成功，请重新登录！</p>
-        <el-button type="primary" @click="logOn" class="button-width">重新登录</el-button>
+        <p style="margin-top: 50px">(*^_^*)新登录密码重置成功！</p>
+        <el-button type="primary" @click="finish" class="button-width">返回重置前页面</el-button>
       </template>
     </div>
   </div>
 </template>
 
 <script>
-import { apiResetPassVerifyEmail, apiResetPassVerifyCode, apiResetPassword } from '@/scripts/API_Auth'
+import { apiResetPassVerifyCode, apiResetPassVerifyEmail, apiResetPassword } from '@/scripts/API_Auth'
 import EmailForm from './EmailForm.vue'
 import CodeForm from './CodeForm.vue'
 import RenewPasswordForm from './RenewPasswordForm.vue'
-import { router } from '../../router'
+import { router } from '@/router'
 
 export default {
   components: { RenewPasswordForm, CodeForm, EmailForm },
@@ -124,8 +124,8 @@ export default {
       this.$refs.codeForm.wait()
       await apiResetPassVerifyEmail(this.$refs.emailForm.email)
     },
-    logOn () {
-      router.push('login')
+    finish () {
+      router.back()
     }
   }
 }

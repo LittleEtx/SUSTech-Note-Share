@@ -16,9 +16,6 @@ import ResetPassword from '@/components/login_page/ResetPassword.vue'
 export default {
   name: 'ResetPasswordPage',
   components: { ResetPassword },
-  beforeMount () {
-    console.log('test')
-  },
   computed: {
     SUSTechNoteShareIcon () {
       return SUSTechNoteShareIcon

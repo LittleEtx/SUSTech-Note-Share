@@ -1,22 +1,28 @@
 <template>
 <div class="common-layout">
-  <el-form label-position="top" label-width="10px" size="small">
+  <el-form label-position="top" label-width="10px" size="small"
+           :rules="rules"
+           ref="form" :model="info"
+  >
     <el-container>
       <el-aside width="220px">
         <el-form-item label="封面">
-          <img-uploader :width="200" type="cover" :height="120"></img-uploader>
+          <img-uploader
+            :width="200" type="cover" :height="120"
+            ref="coverUploader"
+          ></img-uploader>
         </el-form-item>
       </el-aside>
       <el-main>
-        <el-form-item label="笔记本标题">
+        <el-form-item label="笔记本标题" prop="title">
           <el-input
             v-model="info.title"
             maxlength="40"
-            placeholder="标题"
+            placeholder="这个笔记本的名字"
             show-word-limit
           ></el-input>
         </el-form-item>
-        <el-form-item label="分区">
+        <el-form-item label="分区" prop="directory">
           <el-select
             filterable
             allow-create
@@ -31,7 +37,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="可见性">
+        <el-form-item label="可见性" prop="isPublic">
           <el-radio-group v-model="info.isPublic" size="small">
             <el-radio border :label="true">公开</el-radio>
             <el-radio border :label="false">私有</el-radio>
@@ -92,8 +98,10 @@
 
 <script setup lang="ts">
 import ImgUploader from '@/components/personal_center/ImgUploader.vue'
-import { nextTick, ref } from 'vue'
-import { ElInput, ElMessage } from 'element-plus'
+import { nextTick, reactive, ref } from 'vue'
+import { ElForm, ElInput, ElMessage, FormInstance, FormRules } from 'element-plus'
+import { apiCreateNotebook, NewNotebookInfo } from '@/scripts/API_Center'
+import { apiUploadNotebookCover } from '@/scripts/API_Notebook'
 
 interface Props {
   directories: Iterable<string> // 现有的文件夹分类
@@ -101,15 +109,7 @@ interface Props {
 
 defineProps<Props>()
 
-interface NewNotebookInfo {
-  title: string, // 笔记本标题
-  tags: string[], // 笔记本标签
-  description: string, // 笔记本描述
-  directory: string, // 笔记本所处文件夹
-  isPublic: boolean, // 是否公开
-}
-
-const info = ref<NewNotebookInfo>({
+const info = reactive<NewNotebookInfo>({
   title: '',
   tags: [],
   description: '',
@@ -117,12 +117,26 @@ const info = ref<NewNotebookInfo>({
   isPublic: false
 })
 
+const rules = reactive<FormRules>({
+  title: [
+    {required: true, message: '请输入笔记本标题', trigger: 'blur'},
+    {min: 1, max: 40, message: '长度在 1 到 40 个字符', trigger: 'blur'}
+  ],
+  directory: [
+    {required: true, message: '请选择或输入分区', trigger: 'blur'},
+    {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
+  ],
+  isPublic: [
+    {required: true, message: '请选择可见性', trigger: 'blur'}
+  ]
+})
+
 // 标签相关
 const inputVisible = ref(false)
 const inputRef = ref<InstanceType<typeof ElInput>>()
 const inputValue = ref('')
 const handleClose = (tag: string) => {
-  info.value.tags.splice(info.value.tags.indexOf(tag), 1)
+  info.tags.splice(info.tags.indexOf(tag), 1)
 }
 
 const showInput = () => {
@@ -133,17 +147,33 @@ const showInput = () => {
 }
 
 const handleInputConfirm = () => {
-  if (info.value.tags.indexOf(inputValue.value) > -1) {
+  if (info.tags.indexOf(inputValue.value) > -1) {
     console.log('标签已存在')
     ElMessage.warning('标签已存在')
     return
   }
   if (inputValue.value) {
-    info.value.tags.push(inputValue.value)
+    info.tags.push(inputValue.value)
   }
   inputVisible.value = false
   inputValue.value = ''
 }
+
+// 上传图片相关
+const coverUploader = ref<InstanceType<typeof ImgUploader>>()
+const form = ref<FormInstance>()
+
+// 提交表单，若核实不通过会抛出reject异常
+const submit = async () => {
+  const file = coverUploader.value!.file
+  await form.value!.validate()
+  const id = await apiCreateNotebook(info)
+  if (file) {
+    await apiUploadNotebookCover(id, file)
+  }
+  return id
+}
+defineExpose({submit})
 
 </script>
 

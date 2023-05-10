@@ -9,10 +9,19 @@
       style="text-align: center"
       title="新建笔记本"
       show-close
-      :close-on-click-modal="false" :show-close="false"
+      :close-on-click-modal="false"
       destroy-on-close
     >
-      <new-notebook :directories="notebookByDirs.keys()"></new-notebook>
+      <new-notebook
+        :directories="notebookByDirs.keys()"
+        ref="newNotebookRef"
+      ></new-notebook>
+      <div style="text-align: right; margin-right: 20px">
+        <el-button style="width: 30%" @click="showCreateNotebook = false">取消</el-button>
+        <el-button type="primary" @click="submitCreateNotebook" style="width: 30%">
+          确定
+        </el-button>
+      </div>
     </el-dialog>
   </div>
   <el-row style="margin-top: 20px">
@@ -78,6 +87,14 @@ onBeforeMount(async () => {
   })
   loading.value = false
 })
+
+// submit create notebook
+const newNotebookRef = ref<InstanceType<typeof NewNotebook>>()
+const submitCreateNotebook = async () => {
+  const id = await newNotebookRef.value!.submit()
+  console.log(id)
+  showCreateNotebook.value = false
+}
 
 </script>
 
