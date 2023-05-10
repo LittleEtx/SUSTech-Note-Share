@@ -20,7 +20,7 @@
     </slot>
   </div>
   <template #tip>
-    <div class="el-upload__tip">
+    <div class="el-upload__tip" style="text-align: center">
       请上传 2Mb 以内的 jpg/png 文件
     </div>
   </template>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, reactive, ref} from 'vue'
+import { reactive, ref } from 'vue'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { ElMessage, genFileId } from 'element-plus'
 import { apiUploadAvatar } from '@/scripts/API_User'
@@ -40,8 +40,9 @@ interface Props {
   width: number
   height: number
 }
+
 const props = defineProps<Props>()
-const imgStyle = reactive( {
+const imgStyle = reactive({
   borderRadius: props.type === 'avatar' ? '50%' : '10%',
   width: `${props.width}px`,
   height: `${props.height}px`

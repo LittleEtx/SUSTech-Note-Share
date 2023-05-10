@@ -11,7 +11,7 @@ export interface UserInfo {
 export interface NotebookInfo {
   id: string // 笔记本ID
   title: string // 笔记本标题
-  tag: string // 笔记本标签
+  tags: string[] // 笔记本标签
   updateTime: string // 笔记本更新时间
   authorID: number // 笔记本作者ID
   cover: string // 笔记本封面URL

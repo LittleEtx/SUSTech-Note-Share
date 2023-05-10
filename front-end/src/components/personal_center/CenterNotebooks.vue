@@ -6,10 +6,13 @@
     </el-button>
     <el-dialog
       v-model="showCreateNotebook"
+      style="text-align: center"
+      title="新建笔记本"
+      show-close
       :close-on-click-modal="false" :show-close="false"
       destroy-on-close
     >
-      <new-notebook></new-notebook>
+      <new-notebook :directories="notebookByDirs.keys()"></new-notebook>
     </el-dialog>
   </div>
   <el-row style="margin-top: 20px">
@@ -40,7 +43,7 @@
           :key="index"
           style="position: relative"
         >
-          <notebook-display :notebook="notebook" @mouseenter=""></notebook-display>
+          <notebook-display :notebook="notebook"></notebook-display>
           <el-icon type="info" class="more-icon"><MoreFilled /></el-icon>
         </div>
       </el-space>

@@ -14,7 +14,7 @@
       <el-text style="vertical-align: center" size="small">
         <el-tag size="small" v-if="notebook.isPublic">公开</el-tag>
         <el-tag size="small" type="info" v-else>私有</el-tag>
-        {{ notebook.tag }}
+        {{ notebook.tags.length > 0 ? notebook.tags[0] : '' }}
       </el-text>
       <br />
       <el-text size="small">
@@ -31,6 +31,7 @@
 import type { NotebookInfo } from '@/scripts/interfaces'
 import { Clock } from '@element-plus/icons-vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
+
 interface Props {
   notebook: NotebookInfo
 }

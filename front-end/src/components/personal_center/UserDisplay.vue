@@ -56,7 +56,7 @@
 <!--   修改用户信息   -->
     <template v-else>
       <div v-loading="submittingNewInfo" element-loading-background="rgba(255, 255, 255, 0.3)">
-        <el-form label-position="top" label-width="10px" class="modify-info-form" size="small">
+        <el-form label-position="top" label-width="10px" size="small">
           <el-form-item label="用户名（24小时内只能修改一次）">
             <el-input
               v-model="userInfo.userName"
@@ -102,11 +102,11 @@
 </template>
 
 <script>
-import { apiGetUserInfo, apiUpdateInfo } from '@/scripts/API_User'
-import { Calendar, Female, Male, Plus, Switch } from '@element-plus/icons-vue'
+import {apiGetUserInfo, apiUpdateInfo} from '@/scripts/API_User'
+import {Calendar, Female, Male, Plus, Switch} from '@element-plus/icons-vue'
 import ImgUploader from '@/components/personal_center/ImgUploader.vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
-import { store } from '@/store/store'
+import {store} from '@/store/store'
 import UserAvatar from '@/components/UserAvatar.vue'
 
 // noinspection JSUnusedGlobalSymbols
