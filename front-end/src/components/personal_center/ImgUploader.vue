@@ -13,12 +13,11 @@
   :on-change="handleChange!"
   :before-upload="checkImage!"
 >
-  <el-avatar v-if="imageUrl" class="avatar-size" :src="imageUrl" alt=""/>
-  <div v-else class="avatar-size avatar-waiting">
-    <el-icon size="50px"><Plus /></el-icon>
-    <div>
-      点击上传头像
-    </div>
+  <el-image v-if="imageUrl" :src="imageUrl" :style="imgStyle" alt=""/>
+  <div v-else class="avatar-waiting" :style="imgStyle">
+    <slot>
+      <el-icon size="50px"><Plus /></el-icon>
+    </slot>
   </div>
   <template #tip>
     <div class="el-upload__tip">
@@ -29,16 +28,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import {computed, reactive, ref} from 'vue'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { ElMessage, genFileId } from 'element-plus'
 import { apiUploadAvatar } from '@/scripts/API_User'
 import type { File } from 'buffer'
+import { Plus } from '@element-plus/icons-vue'
+
+interface Props {
+  type: 'avatar' | 'cover'
+  width: number
+  height: number
+}
+const props = defineProps<Props>()
+const imgStyle = reactive( {
+  borderRadius: props.type === 'avatar' ? '50%' : '10%',
+  width: `${props.width}px`,
+  height: `${props.height}px`
+})
 
 const imageUrl = ref('')
 const uploader = ref<UploadInstance>() // 获取上传组件实例，这里定义的名字应和ref的名字一致
-const loading = ref(false)
 let image: File
 const handleChange: UploadProps['onChange'] = (file) => {
   // show file in DOM
@@ -69,9 +79,7 @@ const submit = async () => {
     ElMessage.error('请先选择图片')
     return
   }
-  loading.value = true
   await apiUploadAvatar(image)
-  loading.value = false
 }
 
 defineExpose({
@@ -82,16 +90,9 @@ defineExpose({
 </script>
 
 <style scoped>
-.avatar-size {
-  width: 256px;
-  height: 256px;
-  border-radius: 50%;
-}
-
 .avatar-waiting {
   border: 1px dashed var(--el-border-color);
   color: var(--el-color-info);
-  border-radius: 50%;
   cursor: pointer;
   transition: var(--el-transition-duration-fast);
   display: flex;

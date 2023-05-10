@@ -16,16 +16,23 @@
     destroy-on-close
     title="上传头像"
   >
-    <img-uploader
-      ref="imgUploader"
-    ></img-uploader>
-    <div style="margin-top: 20px"></div>
-    <span>
-      <el-button style="width: 30%" @click="showUploadAvatar = false">取消</el-button>
-      <el-button type="primary" @click="submitAvatar" style="width: 30%">
-        确定
-      </el-button>
-    </span>
+    <div v-loading="uploadingAvatar" element-loading-background="rgba(255, 255, 255, 0.3)">
+       <img-uploader
+         ref="imgUploader"
+         type="avatar"
+         :height="256" :width="256"
+       >
+        <el-icon size="50px"><Plus /></el-icon>
+        <p> 点击上传头像 </p>
+      </img-uploader>
+      <div style="margin-top: 20px"></div>
+      <span>
+        <el-button style="width: 30%" @click="showUploadAvatar = false">取消</el-button>
+        <el-button type="primary" @click="submitAvatar" style="width: 30%">
+          确定
+        </el-button>
+      </span>
+    </div>
   </el-dialog>
   <div style="margin-top: 20px"></div>
   <div class="info-display">
@@ -96,7 +103,7 @@
 
 <script>
 import { apiGetUserInfo, apiUpdateInfo } from '@/scripts/API_User'
-import { Calendar, Female, Male, Switch } from '@element-plus/icons-vue'
+import { Calendar, Female, Male, Plus, Switch } from '@element-plus/icons-vue'
 import ImgUploader from '@/components/personal_center/ImgUploader.vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import { store } from '@/store/store'
@@ -104,7 +111,7 @@ import UserAvatar from '@/components/UserAvatar.vue'
 
 // noinspection JSUnusedGlobalSymbols
 export default {
-  components: { UserAvatar, ImgUploader, Female, Male, Calendar },
+  components: { Plus, UserAvatar, ImgUploader, Female, Male, Calendar },
   props: {
     id: {
       default: undefined,
@@ -118,7 +125,8 @@ export default {
       editable: false,
       editing: false,
       showUploadAvatar: false,
-      submittingNewInfo: false
+      submittingNewInfo: false,
+      uploadingAvatar: false
     }
   },
   computed: {
@@ -142,8 +150,10 @@ export default {
   },
   methods: {
     async submitAvatar () {
+      this.uploadingAvatar = true
       await this.$refs.imgUploader.submit()
       await store.dispatch('updateInfo')
+      this.uploadingAvatar = false
       this.showUploadAvatar = false
     },
     async cancelEdit () {
