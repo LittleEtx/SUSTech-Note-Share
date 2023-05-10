@@ -164,4 +164,10 @@ public class NotebookServiceImpl implements NotebookService {
     public void renameDir(int userID, String oldName, String newName) {
         notebookRepository.renameDir(userID, oldName, newName);
     }
+
+    @Override
+    public boolean checkAuthority(int userID, String notebookID) {
+        int authorID = notebookRepository.findAuthorIDByNotebookID(notebookID);
+        return authorID == userID;
+    }
 }

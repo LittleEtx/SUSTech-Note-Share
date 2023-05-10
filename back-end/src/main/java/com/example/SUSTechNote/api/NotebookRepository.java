@@ -1,4 +1,5 @@
 package com.example.SUSTechNote.api;
+
 import com.example.SUSTechNote.entity.Notebook;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,4 +47,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Transactional
     @Query(value = "update notebooks set directory = ?3 where directory = ?2 and authorid = ?1", nativeQuery = true)
     void renameDir(int userID, String oldName, String newName);
+
+    @Query(value = "select authorid from notebooks where notebookid = ?1", nativeQuery = true)
+    int findAuthorIDByNotebookID(String notebookID);
 }

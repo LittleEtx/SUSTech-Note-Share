@@ -7,16 +7,17 @@ import java.time.LocalDateTime;
 @Table(name = "history")
 public class History {
     @Id
-    private String historyID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer historyID;
     private Integer userID;
     private String notebookID;
     private LocalDateTime visitTime;
 
-    public String getHistoryID() {
+    public Integer getHistoryID() {
         return historyID;
     }
 
-    public void setHistoryID(String historyID) {
+    public void setHistoryID(int historyID) {
         this.historyID = historyID;
     }
 

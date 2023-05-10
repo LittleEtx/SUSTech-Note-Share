@@ -52,6 +52,14 @@ public class User {
 
     @ManyToMany
     @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groupList;
+
+    @ManyToMany
+    @JoinTable(
             name = "user_course",    // 自动生成的第三方表名，可省略
             joinColumns = @JoinColumn(name = "user_id"),       // 将本表id，存储到第三方表，列名为per_id
             inverseJoinColumns = @JoinColumn(name = "course_id")       // 将对方表id，存储到第三方表，列名为dept_id

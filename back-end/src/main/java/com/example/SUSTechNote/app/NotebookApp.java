@@ -35,13 +35,15 @@ public class NotebookApp {
 
     @PostMapping("/upload_cover")
     public ResponseEntity<?> uploadCover(@RequestParam("cover")MultipartFile cover, @RequestParam("notebookID") String notebookID){
-        try {
-            logger.debug("try upload cover");
-            String url = notebookService.uploadCover(notebookID, cover);
-            logger.debug("success upload cover");
-            return ResponseEntity.ok("Cover uploaded successfully \n" + url);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Cover upload failed \n" + e);
+        if (checkAuthority(notebookID)) {
+            try {
+                String url = notebookService.uploadCover(notebookID, cover);
+                return ResponseEntity.ok("Cover uploaded successfully \n" + url);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Cover upload failed \n" + e);
+            }
+        } else {
+            return ResponseEntity.badRequest().body("You have no authority to upload cover");
         }
     }
 
@@ -51,12 +53,17 @@ public class NotebookApp {
         String notebookName = jsonObject.getString("notebookName");
         String tag = jsonObject.getString("tag");
         String description = jsonObject.getString("description");
-        try {
-            notebookService.updateNotebook(notebookID, notebookName, tag, description);
-            return ResponseEntity.ok("Notebook updated successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Notebook update failed" + e);
+        if (checkAuthority(notebookID)) {
+            try {
+                notebookService.updateNotebook(notebookID, notebookName, tag, description);
+                return ResponseEntity.ok("Notebook updated successfully");
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Notebook update failed" + e);
+            }
+        } else {
+            return ResponseEntity.badRequest().body("You have no authority to update this notebook");
         }
+
     }
 
     @PostMapping("/rename_dir")
@@ -123,5 +130,11 @@ public class NotebookApp {
             }
         }
         return jsonObject;
+    }
+
+    public Boolean checkAuthority(String notebookID) {
+        int userID = StpUtil.getLoginIdAsInt(); //获取用户ID
+        boolean flag = notebookService.checkAuthority(userID, notebookID);
+        return flag;
     }
 }
