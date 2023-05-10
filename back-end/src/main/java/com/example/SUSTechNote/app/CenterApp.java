@@ -35,28 +35,41 @@ public class CenterApp {
         int count = notebookService.findNotebookCountByUserID(userID);
         if(count >= 500){
             return ResponseEntity.badRequest().body("You have reached the maximum number of notebooks");
-        } else {
-            String basePath = staticPathHelper.getStaticPath() + "/notebooks/" + userID + "/";
-            String noteBookID = userID + "_" + (count + 1);
-            String savePath = basePath + noteBookID;
-            File folder = new File(savePath);
-            if (!folder.exists()) {
-                logger.info("create noteBook folder: " + folder.getAbsolutePath());
-                folder.mkdirs();
-            }
-            String directory = jsonObject.getString("directory");
-            String realPath = savePath.substring(savePath.lastIndexOf("static"));
-            String title = jsonObject.getString("title");
-            String tag = jsonObject.getString("tag");
-            String description = jsonObject.getString("description");
-            int is_public = jsonObject.getInteger("isPublic");
-            try {
-                notebookService.addNotebook(noteBookID,userID,directory,realPath,title,tag,description,is_public);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Notebook creation failed");
-            }
-            return ResponseEntity.ok(noteBookID);
         }
+        String basePath = staticPathHelper.getStaticPath() + "/notebooks/" + userID + "/";
+        String noteBookID = userID + "_" + (count + 1);
+        String savePath = basePath + noteBookID;
+        File folder = new File(savePath);
+        if (!folder.exists()) {
+            logger.info("create noteBook folder: " + folder.getAbsolutePath());
+            if (!folder.mkdirs()) {
+                logger.warn("create notebook folder failed!");
+                return ResponseEntity.internalServerError()
+                        .body("Notebook creation failed");
+            }
+        }
+        String directory = jsonObject.getString("directory");
+        String realPath = savePath.substring(savePath.lastIndexOf("static"));
+        String title = jsonObject.getString("title");
+        String tag = jsonObject.getString("tag");
+        String description = jsonObject.getString("description");
+        Boolean isPublic = jsonObject.getBoolean("isPublic");
+        if (title == null || directory == null || isPublic == null) {
+            return ResponseEntity.badRequest()
+                    .body("Must provide title, directory and isPublic");
+        }
+        if (title.isEmpty() || directory.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("Title and directory cannot be empty");
+        }
+        try {
+            notebookService.addNotebook(noteBookID, userID,
+                    directory, realPath, title, tag, description, isPublic ? 1 : 0);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Notebook creation failed");
+        }
+        logger.info("user " + userID + " created notebook " + noteBookID);
+        return ResponseEntity.ok(noteBookID);
     }
 
     @GetMapping("notebooks/get")
