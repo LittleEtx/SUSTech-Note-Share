@@ -1,9 +1,9 @@
 <template>
   <div class="note-container">
-    <el-card class="note-card create-card" shadow="always" @click="handleClickCreateCard">
+    <el-card class="note-card create-card" shadow="hover" @click="handleClickCreateCard">
       <div class="create-card-icon"><el-icon><Plus /></el-icon></div>
     </el-card>
-    <el-card v-for="note in group" :key="note.id" class="note-card" shadow="always" @click="handleClickNoteCard(note, $event)">
+    <el-card v-for="note in group" :key="note.id" class="note-card" shadow="hover" @click="handleClickNoteCard(note, $event)">
       <template #header>
         <div class="note-title note-header">
           <el-icon><Notebook /></el-icon>
@@ -61,12 +61,10 @@
           <el-form ref="ruleForm" :model="ruleForm" label-width="120px" :rules="join_rules">
             <el-form-item label="选择加入的群组" prop="groupJoin">
               <el-select  v-model="ruleForm.groupJoin" placeholder="请选择群组">
-                <el-option v-for="(item, index) in groupList"  :key="index" :label="item.name" :value="item" />
+                <el-option v-for="(item, index) in groupList"  :key="index" :label="item.name" :value="item.name" />
               </el-select>
             </el-form-item>
-            <div class="description">
-              描述信息：{{ ruleForm.groupJoin.description }}
-            </div>
+            <div v-if="selectedGroup" style="margin-top: 10px; color: #999">描述信息：{{ selectedGroup.description }}</div>
             <el-form-item>
               <el-button style="margin-top: 15px" type="primary" @click="joinGroup('ruleForm')">加入</el-button>
               <el-button style="margin-top: 15px" @click="cancelForm()">取消</el-button>
@@ -106,7 +104,7 @@ export default {
   components: { Notebook, Plus },
   data () {
     return {
-      nowUser: '陈孙兵',
+      nowUser: '杨子德',
       group: [
         {
           id: 1,
@@ -167,6 +165,11 @@ export default {
       }
     }
   },
+  computed: {
+    selectedGroup() {
+      return this.groupList.find(group => group.name === this.ruleForm.groupJoin)
+    }
+  },
   methods: {
     createNote (formName) {
       // 将当前用户（群主）、群组名称、群组描述、创建日期发给后端
@@ -216,10 +219,12 @@ export default {
       if (event.target.tagName === 'BUTTON') {
         return
       }
-      this.$router.push('/login')
+      this.$router.push('/showTest')
     },
     handleClickCreateCard () {
       // 处理创建新卡片的逻辑
+      this.form.title = ''
+      this.form.content = ''
       this.createFormVisible = true
     }
   }
