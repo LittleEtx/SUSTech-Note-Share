@@ -9,7 +9,7 @@ export interface UserInfo {
 }
 
 export interface NotebookInfo {
-  id: string // 笔记本ID
+  notebookID: string // 笔记本ID
   title: string // 笔记本标题
   tags: string[] // 笔记本标签
   updateTime: string // 笔记本更新时间

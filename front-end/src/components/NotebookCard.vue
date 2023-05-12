@@ -1,10 +1,13 @@
 <template>
-<el-card shadow="hover" class="card-size"
-         :body-style="{ padding: '0px' }">
+<el-card
+  shadow="hover" class="card-size"
+  :body-style="{ padding: '0px' }"
+  @click="$router.push(`/notebook/${notebook.notebookID}`)"
+>
   <el-image :src="notebook.cover" class="cover">
-     <template #error>
-        <img :src="DefaultCover" class="cover" alt=""/>
-     </template>
+    <template #error>
+      <img :src="DefaultCover" class="cover" alt=""/>
+    </template>
   </el-image>
   <div style="padding: 8px 10px 0 10px; text-align: left;">
     <el-text truncated>

@@ -24,9 +24,9 @@
       </div>
     </el-dialog>
   </div>
-  <el-row style="margin-top: 20px">
-<!--   左侧边栏展示所有文件夹   -->
-    <el-col :xs="8" :sm="6" :md="4">
+  <el-container>
+    <el-aside width="180px">
+      <!--   左侧边栏展示所有文件夹   -->
       <el-menu
         class="el-menu-vertical-demo"
         :default-active="notebookByDirs.keys().next().value"
@@ -39,25 +39,29 @@
           :index="dir"
           class="dir-item-menu"
         >
-          <el-icon><Folder /></el-icon>
-           {{ dir }}
+          <el-icon>
+            <Folder/>
+          </el-icon>
+          {{ dir }}
         </el-menu-item>
       </el-menu>
-    </el-col>
-<!--   右侧展示所有卡片   -->
-    <el-col :xs="16" :sm="18" :md="20">
-      <el-space :size="20" wrap style="width: 100%; padding-left: 20px">
+    </el-aside>
+    <el-main style="text-align: left">
+      <!--   右侧展示所有卡片   -->
+      <el-space :size="20" wrap style="padding-left: 20px">
         <div
           v-for="(notebook, index) in notebookByDirs.get(selectedDir)"
           :key="index"
           style="position: relative"
         >
           <notebook-display :notebook="notebook"></notebook-display>
-          <el-icon type="info" class="more-icon"><MoreFilled /></el-icon>
+          <el-icon type="info" class="more-icon">
+            <MoreFilled/>
+          </el-icon>
         </div>
       </el-space>
-    </el-col>
-  </el-row>
+    </el-main>
+  </el-container>
 </div>
 </template>
 
@@ -69,6 +73,7 @@ import { apiGetUserNotebooks } from '@/scripts/API_Center'
 import { CirclePlus, Folder, MoreFilled } from '@element-plus/icons-vue'
 import NewNotebook from '@/components/personal_center/NewNotebook.vue'
 import { ElMessageBox } from 'element-plus'
+import { router } from '@/router'
 
 const showCreateNotebook = ref(false)
 
@@ -96,6 +101,8 @@ const submitCreateNotebook = async () => {
     const id = await newNotebookRef.value!.submit()
     console.log(id)
     showCreateNotebook.value = false
+    // 跳转到新建的笔记本
+    await router.push(`/notebook/${ id }`)
   } catch (e) {
     if (e.response?.status === 400) {
       await ElMessageBox.alert('无法创建笔记本：' + e.response.data.message)

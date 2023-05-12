@@ -100,8 +100,7 @@
 import ImgUploader from '@/components/personal_center/ImgUploader.vue'
 import { nextTick, reactive, ref } from 'vue'
 import { ElForm, ElInput, ElMessage, FormInstance, FormRules } from 'element-plus'
-import { apiCreateNotebook, NewNotebookInfo } from '@/scripts/API_Center'
-import { apiUploadNotebookCover } from '@/scripts/API_Notebook'
+import { apiCreateNotebook, apiUploadNotebookCover, NewNotebookInfo } from '@/scripts/API_Notebook'
 
 interface Props {
   directories: Iterable<string> // 现有的文件夹分类
@@ -169,7 +168,7 @@ const submit = async (): Promise<string | undefined> => {
   const file = coverUploader.value!.getImgFile()
   console.log(file.value)
   const id = await apiCreateNotebook(info)
-  if (file) {
+  if (file.value) {
     // 同时上传封面
     await apiUploadNotebookCover(id, file.value)
   }

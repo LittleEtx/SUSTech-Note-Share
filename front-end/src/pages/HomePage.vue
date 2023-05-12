@@ -50,11 +50,11 @@
 <script>
 import MainHeader from '../components/MainHeader.vue'
 import UserDisplay from '../components/personal_center/UserDisplay.vue'
-import { Collection, Share, Star, Menu as MenuIcon } from '@element-plus/icons-vue'
+import { Collection, Menu as MenuIcon, Share, Star } from '@element-plus/icons-vue'
 import CenterMain from '@/components/personal_center/CenterMain.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import CenterGroups from '@/components/group/CenterGroups.vue'
-import CenterNotebooks from "@/components/personal_center/CenterNotebooks.vue"
+import CenterNotebooks from '@/components/personal_center/CenterNotebooks.vue'
 
 export default {
   name: 'HomePage',

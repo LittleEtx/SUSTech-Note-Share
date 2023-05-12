@@ -1,14 +1,20 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import LoginPage from '@/pages/LoginPage.vue'
 import ResetPasswordPage from '@/pages/ResetPasswordPage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import PersonalCenterPage from '@/pages/PersonalCenterPage.vue'
 import group from '@/components/group/CenterGroups.vue'
 import groupShow from '@/components/group/groupShow.vue'
+import NotebookPage from '@/pages/NotebookPage.vue'
+import NotFoundPage from '@/pages/NotFoundPage.vue'
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(), // 暂时使用Hash模式，线上部署时再改成History模式
   routes: [
+    {
+      path: '/:pathMatch(.*)',
+      component: NotFoundPage
+    },
     {
       path: '/',
       redirect: 'home'
@@ -27,6 +33,10 @@ export const router = createRouter({
       path: '/home',
       name: 'home',
       component: HomePage
+    },
+    {
+      path: '/notebook/:notebookID',
+      component: NotebookPage
     },
     {
       path: '/user/:userId',
