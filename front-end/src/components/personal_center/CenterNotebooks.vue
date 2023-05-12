@@ -102,7 +102,7 @@ const submitCreateNotebook = async () => {
     const id = await newNotebookRef.value!.submit()
     showCreateNotebook.value = false
     // 跳转到新建的笔记本
-    await router.replace(`/notebook/${id}`)
+    await router.push({ name: 'notebook', params: { id: id } })
   } catch (e) {
     if (e.response?.status === 400) {
       await ElMessageBox.alert('无法创建笔记本：' + e.response.data.message)

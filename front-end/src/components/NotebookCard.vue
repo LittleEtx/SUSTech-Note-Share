@@ -5,7 +5,7 @@
   style="cursor: pointer"
   @click="$router.push(`/notebook/${notebook.notebookID}`)"
 >
-  <el-image :src="notebook.cover" class="cover">
+  <el-image :src="notebook.cover === null ? DefaultCover : notebook.cover" class="cover">
     <template #error>
       <img :src="DefaultCover" class="cover" alt=""/>
     </template>
@@ -16,7 +16,7 @@
     </el-text>
     <div style="margin-top: 5px; font-size: 10px">
       <el-text style="vertical-align: center" size="small">
-        <el-tag size="small" v-if="notebook.isPublic">公开</el-tag>
+        <el-tag size="small" type="success" v-if="notebook.isPublic">公开</el-tag>
         <el-tag size="small" type="info" v-else>私有</el-tag>
         {{ notebook.tags.length > 0 ? notebook.tags[0] : '' }}
       </el-text>
@@ -40,7 +40,6 @@ interface Props {
   notebook: NotebookInfo
 }
 defineProps<Props>()
-
 </script>
 
 <style scoped>

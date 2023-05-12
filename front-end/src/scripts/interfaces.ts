@@ -14,7 +14,7 @@ export interface NotebookInfo {
   tags: string[] // 笔记本标签
   updateTime: string // 笔记本更新时间
   authorID: number // 笔记本作者ID
-  cover: string // 笔记本封面URL
+  cover: string | null // 笔记本封面URL
   description: string // 笔记本描述
   isPublic: boolean // 是否公开
   likeCount: number // 点赞数

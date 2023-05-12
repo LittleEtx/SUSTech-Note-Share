@@ -69,7 +69,7 @@ export default {
     // check whether the user has logged in
     if (Cookies.get('satoken')) {
       // if token not acceptable, will jump back to this page
-      router.replace('home')
+      router.push({ name: 'home' })
     }
   },
   methods: {
