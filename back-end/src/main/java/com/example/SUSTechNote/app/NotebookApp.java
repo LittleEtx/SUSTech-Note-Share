@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
+import com.example.SUSTechNote.interfaces.NotebookInterface;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
@@ -27,10 +28,59 @@ public class NotebookApp {
         this.staticPathHelper = staticPathHelper;
     }
 
+    /**
+     * 创建笔记本
+     * @return 笔记本ID
+     */
+    @PostMapping("/create")
+    public ResponseEntity<?> createNotebook(@RequestBody JSONObject jsonObject){
+        //获取目前登录用户的id
+        int userID = StpUtil.getLoginIdAsInt();
+        int count = notebookService.findNotebookCountByUserID(userID);
+        if(count >= 500){
+            return ResponseEntity.badRequest().body("You have reached the maximum number of notebooks");
+        }
+        String basePath = staticPathHelper.getStaticPath() + "/notebooks/" + userID + "/";
+        String noteBookID = userID + "_" + (count + 1);
+        String savePath = basePath + noteBookID;
+        File folder = new File(savePath);
+        if (!folder.exists()) {
+            logger.info("create noteBook folder: " + folder.getAbsolutePath());
+            if (!folder.mkdirs()) {
+                logger.warn("create notebook folder failed!");
+                return ResponseEntity.internalServerError()
+                        .body("Notebook creation failed");
+            }
+        }
+        String directory = jsonObject.getString("directory");
+        String realPath = savePath.substring(savePath.lastIndexOf("static"));
+        String title = jsonObject.getString("title");
+        String tag = jsonObject.getString("tag");
+        String description = jsonObject.getString("description");
+        Boolean isPublic = jsonObject.getBoolean("isPublic");
+        if (title == null || directory == null || isPublic == null) {
+            return ResponseEntity.badRequest()
+                    .body("Must provide title, directory and isPublic");
+        }
+        if (title.isEmpty() || directory.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("Title and directory cannot be empty");
+        }
+        try {
+            notebookService.addNotebook(noteBookID, userID,
+                    directory, realPath, title, tag, description, isPublic ? 1 : 0);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Notebook creation failed");
+        }
+        logger.info("user " + userID + " created notebook " + noteBookID);
+        return ResponseEntity.ok(noteBookID);
+    }
+
     @PostMapping("/basic")
-    public Notebook getNotebookBasic(@RequestBody JSONObject jsonObject){
+    public ResponseEntity<?> getNotebookBasic(@RequestBody JSONObject jsonObject){
         String notebookID = jsonObject.getString("notebookID");
-        return notebookService.getNotebookBasic(notebookID);
+        return ResponseEntity.ok(NotebookInterface.fromNotebook(
+                notebookService.getNotebookBasic(notebookID)));
     }
 
     @PostMapping("/upload_cover")
@@ -134,7 +184,6 @@ public class NotebookApp {
 
     public Boolean checkAuthority(String notebookID) {
         int userID = StpUtil.getLoginIdAsInt(); //获取用户ID
-        boolean flag = notebookService.checkAuthority(userID, notebookID);
-        return flag;
+        return notebookService.checkAuthority(userID, notebookID);
     }
 }
