@@ -61,6 +61,7 @@ const handleInputConfirm = () => {
       <el-tag
         v-for="tag in tags"
         :key="tag"
+        effect="plain"
         class="mx-1"
         closable
         :disable-transitions="false"
@@ -94,6 +95,7 @@ const handleInputConfirm = () => {
         v-for="tag in tags"
         :key="tag"
         class="mx-1"
+        effect="plain"
       >
         {{ tag }}
       </el-tag>

@@ -14,33 +14,12 @@
           </template>
         </el-image>
         <div style="margin-left: 20px"></div>
-        <div style="text-align: left; width: 100%">
-          <span>
-            <el-text style="font-size: 20px; vertical-align: center">
-              <b> {{ notebook?.title }} </b>
-            </el-text>
-            <el-tag type="success" v-if="notebook?.isPublic">公开</el-tag>
-            <el-tag type="info" v-else>私有</el-tag>
-          </span>
-
-          <div style="margin-top: 5px; font-size: 10px">
-            <el-text size="small">
-              <el-icon>
-                <Clock/>
-              </el-icon>
-              上次修改于：{{ notebook?.updateTime }}
-            </el-text>
-          </div>
-          <div style="margin-top: 5px">
-            <notebook-tags
-              :modify="canModify"
-              :tags="getTags"
-              @update="tags => updateTags(tags)"
-            ></notebook-tags>
-          </div>
-          <el-text size="small" type="info">
-            {{ notebook?.description }}
-          </el-text>
+        <div style="display: flex; flex-direction: column; width: 100%">
+          <notebook-header
+            :can-modify="canModify"
+            :notebook="notebook"
+            @update="getNotebookInfo(notebookID)"
+          ></notebook-header>
           <!--    按钮组    -->
           <el-tabs v-model="activeSlot">
             <el-tab-pane name="note">
@@ -61,7 +40,6 @@
           </el-tabs>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -72,11 +50,11 @@ import { useRoute } from 'vue-router'
 import MainHeader from '@/components/MainHeader.vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
 import type { NotebookInfo } from '@/scripts/interfaces'
-import { apiGetBasicInfo, apiUpdateBasicInfo } from '@/scripts/API_Notebook'
+import { apiGetBasicInfo } from '@/scripts/API_Notebook'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
-import { ChatLineSquare, Clock, Collection, Setting } from '@element-plus/icons-vue'
+import { ChatLineSquare, Collection, Setting } from '@element-plus/icons-vue'
 import { useStore } from '@/store/store'
-import NotebookTags from '@/components/NotebookTags.vue'
+import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -85,10 +63,6 @@ const notebook = ref<NotebookInfo>()
 const show404 = ref(false)
 const activeSlot = ref('note')
 const canModify = ref(false)
-
-const getTags = computed(() => {
-  return notebook.value?.tags ?? []
-})
 
 const notebookID = computed(() => {
   return route.params.notebookID as string
@@ -104,14 +78,6 @@ const getNotebookInfo = async (notebookID: string) => {
     if (e.response?.status === 404) {
       show404.value = true
     }
-  }
-}
-
-// 更新标签
-const updateTags = async (newTags: string[]) => {
-  if (notebook.value?.tags !== newTags) {
-    await apiUpdateBasicInfo(notebookID.value, { tags: newTags })
-    await getNotebookInfo(notebookID.value)
   }
 }
 

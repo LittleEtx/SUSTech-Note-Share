@@ -1,4 +1,5 @@
 import type { NotebookInfo } from '@/scripts/interfaces'
+import { getTags } from '@/scripts/interfaces'
 import axios from 'axios'
 
 /**
@@ -7,7 +8,7 @@ import axios from 'axios'
 export async function apiGetUserNotebooks (): Promise<NotebookInfo[]> {
   const { data } = await axios.get('/api/center/get-notebooks')
   return data.map((notebook: any) => {
-    notebook.tags = notebook.tag.split(',')
+    notebook.tags = getTags(notebook.tag)
     return notebook
   })
 }
@@ -18,5 +19,8 @@ export async function apiGetUserNotebooks (): Promise<NotebookInfo[]> {
  */
 export async function apiGetPublicNotebooks (userID: number): Promise<NotebookInfo[]> {
   const { data } = await axios.get('/api/center/get-public-notebooks', { params: { userID } })
-  return data
+  return data.map((notebook: any) => {
+    notebook.tags = getTags(notebook.tag)
+    return notebook
+  })
 }

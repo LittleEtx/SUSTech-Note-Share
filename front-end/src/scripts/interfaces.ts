@@ -21,3 +21,7 @@ export interface NotebookInfo {
   starCount: number // 评论数
   directory: string // 所属文件夹
 }
+
+export function getTags (tag?: string): string[] {
+  return !tag || tag === '' ? [] : tag.split(',')
+}

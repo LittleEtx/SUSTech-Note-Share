@@ -20,7 +20,7 @@
         <el-tag size="small" type="info" v-else>私有</el-tag>
         {{ notebook.tags.length > 0 ? notebook.tags[0] : '' }}
       </el-text>
-      <br />
+      <div style="height: 3px"></div>
       <el-text size="small">
         <el-icon><Clock /></el-icon>
         {{ notebook.updateTime }}

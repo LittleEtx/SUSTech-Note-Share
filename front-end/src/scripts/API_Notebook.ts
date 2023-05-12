@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { NotebookInfo } from '@/scripts/interfaces'
+import { getTags } from '@/scripts/interfaces'
 
 export interface NewNotebookInfo {
   title: string // 笔记本标题
@@ -42,7 +43,7 @@ export async function apiUploadNotebookCover (notebookID: string, file: File): P
  */
 export async function apiGetBasicInfo (notebookID: string): Promise<NotebookInfo> {
   const { data } = await axios.get('/api/notebook/basic', { params: { notebookID } })
-  data.tags = data.tag.split(',')
+  data.tags = getTags(data.tag)
   return data
 }
 
