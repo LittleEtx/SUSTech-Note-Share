@@ -8,19 +8,22 @@ interface Props {
   modify: boolean
 }
 
-const props = defineProps<Props>()
-const tagRef = ref(props.tags)
-const emit = defineEmits<{
+interface Emits {
   (e: 'update', tags: string[]): void
-}>()
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 // 标签相关
 const inputVisible = ref(false)
 const inputRef = ref<InstanceType<typeof ElInput>>()
 const inputValue = ref('')
 const handleClose = (tag: string) => {
-  tagRef.value.splice(tagRef.value.indexOf(tag), 1)
-  emit('update', tagRef.value)
+  // use concat() to copy the array to avoid modification
+  const tempTags = props.tags.concat()
+  tempTags.splice(tempTags.indexOf(tag), 1)
+  emit('update', tempTags)
 }
 
 const showInput = () => {
@@ -31,7 +34,7 @@ const showInput = () => {
 }
 
 const handleInputConfirm = () => {
-  if (tagRef.value.indexOf(inputValue.value) > -1) {
+  if (props.tags.indexOf(inputValue.value) > -1) {
     ElMessage.warning('标签已存在')
     return
   }
@@ -42,8 +45,9 @@ const handleInputConfirm = () => {
       ElMessage.warning('标签只能包含中文、英文和数字')
       return
     }
-    tagRef.value.push(inputValue.value)
-    emit('update', tagRef.value)
+    const tempTags = props.tags.concat()
+    tempTags.push(inputValue.value)
+    emit('update', tempTags)
   }
   inputVisible.value = false
   inputValue.value = ''
@@ -55,7 +59,7 @@ const handleInputConfirm = () => {
   <el-space wrap>
     <template v-if="modify">
       <el-tag
-        v-for="tag in tagRef"
+        v-for="tag in tags"
         :key="tag"
         class="mx-1"
         closable
@@ -65,7 +69,7 @@ const handleInputConfirm = () => {
         {{ tag }}
       </el-tag>
       <el-input
-        v-show="tagRef.length < 10"
+        v-show="tags.length < 10"
         v-if="inputVisible"
         ref="inputRef"
         v-model="inputValue"
@@ -77,7 +81,7 @@ const handleInputConfirm = () => {
       />
       <el-button
         v-else
-        v-show="tagRef.length < 10"
+        v-show="tags.length < 10"
         class="button-new-tag ml-1"
         size="small"
         @click="showInput"
@@ -87,7 +91,7 @@ const handleInputConfirm = () => {
     </template>
     <template v-else>
       <el-tag
-        v-for="tag in tagRef"
+        v-for="tag in tags"
         :key="tag"
         class="mx-1"
       >

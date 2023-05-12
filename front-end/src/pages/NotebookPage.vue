@@ -15,11 +15,14 @@
         </el-image>
         <div style="margin-left: 20px"></div>
         <div style="text-align: left; width: 100%">
-          <el-text style="font-size: 20px; vertical-align: center">
-            <b> {{ notebook?.title }} </b>
+          <span>
+            <el-text style="font-size: 20px; vertical-align: center">
+              <b> {{ notebook?.title }} </b>
+            </el-text>
             <el-tag type="success" v-if="notebook?.isPublic">公开</el-tag>
             <el-tag type="info" v-else>私有</el-tag>
-          </el-text>
+          </span>
+
           <div style="margin-top: 5px; font-size: 10px">
             <el-text size="small">
               <el-icon>
@@ -32,7 +35,7 @@
             <notebook-tags
               :modify="canModify"
               :tags="getTags"
-              @update="updateTags"
+              @update="tags => updateTags(tags)"
             ></notebook-tags>
           </div>
           <el-text size="small" type="info">
@@ -69,7 +72,7 @@ import { useRoute } from 'vue-router'
 import MainHeader from '@/components/MainHeader.vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
 import type { NotebookInfo } from '@/scripts/interfaces'
-import { apiGetBasicInfo } from '@/scripts/API_Notebook'
+import { apiGetBasicInfo, apiUpdateBasicInfo } from '@/scripts/API_Notebook'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import { ChatLineSquare, Clock, Collection, Setting } from '@element-plus/icons-vue'
 import { useStore } from '@/store/store'
@@ -87,21 +90,28 @@ const getTags = computed(() => {
   return notebook.value?.tags ?? []
 })
 
+const notebookID = computed(() => {
+  return route.params.notebookID as string
+})
+
 const getNotebookInfo = async (notebookID: string) => {
   try {
     notebook.value = await apiGetBasicInfo(notebookID)
     canModify.value = notebook.value?.authorID === store.state.userInfo?.userID
     show404.value = false
   } catch (e) {
+    // 若笔记本不存在或用户无权访问，则显示 404 页面
     if (e.response?.status === 404) {
       show404.value = true
     }
   }
 }
 
+// 更新标签
 const updateTags = async (newTags: string[]) => {
   if (notebook.value?.tags !== newTags) {
-    notebook.value!.tags = newTags
+    await apiUpdateBasicInfo(notebookID.value, { tags: newTags })
+    await getNotebookInfo(notebookID.value)
   }
 }
 
@@ -113,7 +123,7 @@ watch(
 )
 
 onBeforeMount(() => {
-  getNotebookInfo(route.params.notebookID as string)
+  getNotebookInfo(notebookID.value)
 })
 
 </script>

@@ -45,3 +45,22 @@ export async function apiGetBasicInfo (notebookID: string): Promise<NotebookInfo
   data.tags = data.tag.split(',')
   return data
 }
+
+interface UpdateNotebookInfo {
+  tags?: string[]
+  description?: string
+  title?: string
+}
+
+export async function apiUpdateBasicInfo (
+  notebookID: string,
+  { tags, description, title }: UpdateNotebookInfo
+): Promise<void> {
+  const tag = tags?.join(',')
+  await axios.post('/api/notebook/update_info', {
+    notebookID,
+    tag,
+    description,
+    title
+  })
+}
