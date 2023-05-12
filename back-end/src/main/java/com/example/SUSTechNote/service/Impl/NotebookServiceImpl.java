@@ -7,6 +7,7 @@ import com.example.SUSTechNote.entity.Notebook;
 
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
+import com.mysql.cj.x.protobuf.MysqlxExpr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -56,12 +58,24 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public void updateNotebook(String notebookID, String notebookName, String tag, String description){
+    public boolean updateNotebook(String notebookID, String notebookName, String tag, String description){
+        if (!checkNotebook(notebookID)) {
+            logger.trace("updateNotebook error: " + notebookID + " does not exist.");
+            return false;
+        }
+        var notebook = getNotebookBasic(notebookID);
         try {
-            notebookRepository.updateNotebook(notebookID, notebookName, tag, description);
+            notebookRepository.updateNotebook(
+                    notebookID,
+                    Objects.requireNonNullElse(notebookName, notebook.getNotebookName()),
+                    Objects.requireNonNullElse(tag, notebook.getTag()),
+                    Objects.requireNonNullElse(description, notebook.getDescription())
+            );
         } catch (Exception e) {
             logger.error("updateNotebook error: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -70,7 +84,7 @@ public class NotebookServiceImpl implements NotebookService {
         if (notebooks.size() == 1) {
             Notebook notebook = notebooks.get(0);
             if (notebook.getStatus() != 0) {
-                logger.error("checkNotebook error: " + notebookID + "'s status is not 0.");
+                logger.debug("checkNotebook error: " + notebookID + "'s status is not 0.");
                 return false;
             }
             return true;
@@ -78,7 +92,7 @@ public class NotebookServiceImpl implements NotebookService {
             logger.error("checkNotebook error: " + notebookID + " has more than one record.");
             return false;
         } else {
-            logger.error("checkNotebook error: " + notebookID + " does not exist.");
+            logger.debug("checkNotebook error: " + notebookID + " does not exist.");
             return false;
         }
     }

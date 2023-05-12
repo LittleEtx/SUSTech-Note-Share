@@ -11,7 +11,7 @@ import java.util.List;
 public interface NotebookService {
     void addNotebook(String noteBookID, int userID, String directory, String savingPath, String title, String tag, String description, int isPublic);
 
-    void updateNotebook(String notebookID, String notebookName, String tag, String description);
+    boolean updateNotebook(String notebookID, String notebookName, String tag, String description);
 
     Boolean checkNotebook(String notebookID);
 

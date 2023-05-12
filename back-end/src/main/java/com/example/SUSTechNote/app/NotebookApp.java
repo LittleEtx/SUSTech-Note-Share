@@ -109,20 +109,18 @@ public class NotebookApp {
     @PostMapping("/update_info")
     public ResponseEntity<?> updateNotebook(@RequestBody JSONObject jsonObject){
         String notebookID = jsonObject.getString("notebookID");
-        String notebookName = jsonObject.getString("notebookName");
+        String title = jsonObject.getString("title");
         String tag = jsonObject.getString("tag");
         String description = jsonObject.getString("description");
-        if (checkAuthority(notebookID)) {
-            try {
-                notebookService.updateNotebook(notebookID, notebookName, tag, description);
-                return ResponseEntity.ok("Notebook updated successfully");
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Notebook update failed" + e);
-            }
-        } else {
+        if (!checkAuthority(notebookID)) {
             return ResponseEntity.badRequest().body("You have no authority to update this notebook");
         }
-
+        try {
+            notebookService.updateNotebook(notebookID, title, tag, description);
+            return ResponseEntity.ok("Notebook updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Notebook update failed" + e);
+        }
     }
 
     @PostMapping("/rename_dir")
