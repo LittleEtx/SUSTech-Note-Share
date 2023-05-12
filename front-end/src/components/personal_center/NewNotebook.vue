@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import ImgUploader from '@/components/personal_center/ImgUploader.vue'
+import ImgUploader from '@/components/ImgUploader.vue'
 import { reactive, ref } from 'vue'
 import { ElForm, ElInput, FormInstance, FormRules } from 'element-plus'
 import { apiCreateNotebook, apiUploadNotebookCover, NewNotebookInfo } from '@/scripts/API_Notebook'

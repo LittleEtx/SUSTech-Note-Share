@@ -33,6 +33,11 @@ const showInput = () => {
   })
 }
 
+const clearInput = () => {
+  inputVisible.value = false
+  inputValue.value = ''
+}
+
 const handleInputConfirm = () => {
   if (props.tags.indexOf(inputValue.value) > -1) {
     ElMessage.warning('标签已存在')
@@ -77,6 +82,8 @@ const handleInputConfirm = () => {
         class="ml-1 w-20"
         size="small"
         style="width: 60px"
+        :maxlength="10"
+        @keyup.esc="clearInput"
         @keyup.enter="handleInputConfirm"
         @blur="handleInputConfirm"
       />

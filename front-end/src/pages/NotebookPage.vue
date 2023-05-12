@@ -8,11 +8,15 @@
     </div>
     <div class="main-container">
       <div style="display: flex; flex-direction: row; width: 100%">
-        <el-image :src="notebook?.cover!" class="cover">
-          <template #error>
-            <img :src="DefaultCover" class="cover" alt=""/>
-          </template>
-        </el-image>
+        <img-uploader
+          style="min-width: 200px"
+          :origin-url="notebookCover"
+          type="cover" :height="120" :width="200"
+          :show-tip="false"
+          @change="file => onUploadCover(file as File)"
+          v-loading="loadingCover"
+          element-loading-background="rgba(255, 255, 255, 0.3)"
+        ></img-uploader>
         <div style="margin-left: 20px"></div>
         <div style="display: flex; flex-direction: column; width: 100%">
           <notebook-header
@@ -20,6 +24,7 @@
             :notebook="notebook"
             @update="getNotebookInfo(notebookID)"
           ></notebook-header>
+          <div style="margin-top: 10px"></div>
           <!--    按钮组    -->
           <el-tabs v-model="activeSlot">
             <el-tab-pane name="note">
@@ -50,11 +55,12 @@ import { useRoute } from 'vue-router'
 import MainHeader from '@/components/MainHeader.vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
 import type { NotebookInfo } from '@/scripts/interfaces'
-import { apiGetBasicInfo } from '@/scripts/API_Notebook'
+import { apiGetBasicInfo, apiUploadNotebookCover } from '@/scripts/API_Notebook'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import { ChatLineSquare, Collection, Setting } from '@element-plus/icons-vue'
 import { useStore } from '@/store/store'
 import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
+import ImgUploader from '@/components/ImgUploader.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -66,6 +72,10 @@ const canModify = ref(false)
 
 const notebookID = computed(() => {
   return route.params.notebookID as string
+})
+
+const notebookCover = computed(() => {
+  return notebook.value?.cover || DefaultCover
 })
 
 const getNotebookInfo = async (notebookID: string) => {
@@ -92,6 +102,15 @@ onBeforeMount(() => {
   getNotebookInfo(notebookID.value)
 })
 
+// 上传封面
+const loadingCover = ref(false)
+const onUploadCover = async (file: File) => {
+  loadingCover.value = true
+  await apiUploadNotebookCover(notebookID.value, file)
+  await getNotebookInfo(notebookID.value)
+  loadingCover.value = false
+}
+
 </script>
 
 <style scoped>
@@ -104,10 +123,4 @@ onBeforeMount(() => {
   margin-top: 40px;
 }
 
-.cover {
-  width: 200px;
-  height: 120px;
-  min-width: 200px;
-  border-radius: 10px;
-}
 </style>

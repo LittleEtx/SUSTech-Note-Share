@@ -107,7 +107,7 @@
 <script>
 import { apiGetUserInfo, apiUpdateInfo, apiUploadAvatar } from '@/scripts/API_User'
 import { Calendar, Female, Male, Plus, Switch } from '@element-plus/icons-vue'
-import ImgUploader from '@/components/personal_center/ImgUploader.vue'
+import ImgUploader from '@/components/ImgUploader.vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import { store } from '@/store/store'
 import UserAvatar from '@/components/UserAvatar.vue'
