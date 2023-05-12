@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { NotebookInfo } from '@/scripts/interfaces'
 
 export interface NewNotebookInfo {
   title: string // 笔记本标题
@@ -33,4 +34,13 @@ export async function apiUploadNotebookCover (notebookID: string, file: File): P
   formData.append('cover', file)
   formData.append('notebookID', notebookID)
   await axios.post('/api/notebook/upload_cover', formData)
+}
+
+/**
+ * 获取笔记本的基本信息
+ * @param notebookID 笔记本id
+ */
+export async function apiGetBasicInfo (notebookID: string): Promise<NotebookInfo> {
+  const { data } = await axios.get('/api/notebook/basic', { params: { notebookID } })
+  return data
 }

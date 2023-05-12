@@ -4,7 +4,7 @@
   <el-row type="flex" justify="center" align="middle" style="height: 100%">
     <el-col :span="9">
       <img :src="SUSTechNoteIcon" class="icon"
-           @click="router.push('home')" alt="">
+           @click="router.replace('home')" alt="">
     </el-col>
     <el-col :span="6">
       <el-input placeholder="搜索笔记" class="search-input">
@@ -32,9 +32,11 @@
             </div>
             <!-- 快捷入口 -->
             <el-divider class="pop-divider" />
-            <el-link :underline="false" :icon="User" class="popover-button" @click="router.push('home')">
+            <el-link :underline="false" :icon="User" class="popover-button" @click="router.replace('home')">
               <h5 class="popover-word">个人中心</h5>
-              <el-icon><ArrowRight /></el-icon>
+              <el-icon>
+                <ArrowRight/>
+              </el-icon>
             </el-link>
             <el-link :underline="false" :icon="Lock" class="popover-button" @click="resetPassword">
               <h5 class="popover-word">修改密码</h5>
@@ -54,7 +56,7 @@
 
 <script>
 import { apiLogout } from '@/scripts/API_Auth'
-import { router } from '../router'
+import { router } from '@/router'
 import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
@@ -96,7 +98,7 @@ export default {
       try {
         await apiLogout()
         this.$store.commit('logout')
-        await router.push('/login')
+        await router.replace('/login')
       } catch (e) {
         this.$message({
           message: '登出失败',
@@ -105,7 +107,7 @@ export default {
       }
     },
     resetPassword () {
-      router.push('reset_password')
+      router.replace('reset_password')
     }
   }
 }

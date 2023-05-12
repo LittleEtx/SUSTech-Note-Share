@@ -104,15 +104,16 @@ import { apiCreateNotebook, apiUploadNotebookCover, NewNotebookInfo } from '@/sc
 
 interface Props {
   directories: Iterable<string> // 现有的文件夹分类
+  defaultDir: string
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const info = reactive<NewNotebookInfo>({
   title: '',
   tags: [],
   description: '',
-  directory: '',
+  directory: props.defaultDir,
   isPublic: false
 })
 
@@ -122,7 +123,7 @@ const rules = reactive<FormRules>({
     { min: 1, max: 40, message: '长度在 1 到 40 个字符', trigger: 'blur' }
   ],
   directory: [
-    { required: true, message: '请选择或输入分区', trigger: 'blur' },
+    { required: true, message: '请选择或输入分区', trigger: ['blur', 'change'] },
     { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
   ],
   isPublic: [

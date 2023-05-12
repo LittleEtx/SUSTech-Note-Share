@@ -35,7 +35,7 @@
 
 <script>
 import Cookies from 'js-cookie'
-import { HomeFilled, Download } from '@element-plus/icons-vue'
+import { Download, HomeFilled } from '@element-plus/icons-vue'
 import LoginPane from '@/components/login_page/LoginPane.vue'
 import { router } from '@/router'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_words_shadow.svg'
@@ -69,7 +69,7 @@ export default {
     // check whether the user has logged in
     if (Cookies.get('satoken')) {
       // if token not acceptable, will jump back to this page
-      router.push('home')
+      router.replace('home')
     }
   },
   methods: {

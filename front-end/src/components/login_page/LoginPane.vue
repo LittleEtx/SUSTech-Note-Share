@@ -47,7 +47,7 @@ import { store } from '@/store/store'
 
 async function onSuccessLogin () {
   await store.dispatch('updateInfo')
-  await router.push('home')
+  await router.replace('home')
 }
 
 export default {

@@ -2,6 +2,7 @@
 <el-card
   shadow="hover" class="card-size"
   :body-style="{ padding: '0px' }"
+  style="cursor: pointer"
   @click="$router.push(`/notebook/${notebook.notebookID}`)"
 >
   <el-image :src="notebook.cover" class="cover">

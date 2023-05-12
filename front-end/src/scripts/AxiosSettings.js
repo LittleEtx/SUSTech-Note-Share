@@ -12,7 +12,7 @@ const onResponseError = async err => {
     // not logged in, remove login token
     console.error('[axios-global]invalid token')
     Cookies.remove('satoken')
-    await router.push('/login')
+    await router.replace('/login')
   }
 
   if (status >= 500) {

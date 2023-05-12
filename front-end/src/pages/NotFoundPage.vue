@@ -16,7 +16,7 @@ import { router } from '@/router'
     <div style="margin-top: 20px">
       <el-button
         type="primary"
-        @click="router.push('home')"
+        @click="router.replace('home')"
         style="width: 120px"
       >
         返回首页

@@ -14,6 +14,7 @@
     >
       <new-notebook
         :directories="notebookByDirs.keys()"
+        :default-dir="selectedDir"
         ref="newNotebookRef"
       ></new-notebook>
       <div style="text-align: right; margin-right: 20px">
@@ -99,15 +100,14 @@ const newNotebookRef = ref<InstanceType<typeof NewNotebook>>()
 const submitCreateNotebook = async () => {
   try {
     const id = await newNotebookRef.value!.submit()
-    console.log(id)
     showCreateNotebook.value = false
     // 跳转到新建的笔记本
-    await router.push(`/notebook/${ id }`)
+    await router.replace(`/notebook/${id}`)
   } catch (e) {
     if (e.response?.status === 400) {
       await ElMessageBox.alert('无法创建笔记本：' + e.response.data.message)
     }
-    // 表单未验证通过
+    // else 表单未验证通过
   }
 }
 
