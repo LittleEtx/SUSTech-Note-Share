@@ -42,5 +42,6 @@ export async function apiUploadNotebookCover (notebookID: string, file: File): P
  */
 export async function apiGetBasicInfo (notebookID: string): Promise<NotebookInfo> {
   const { data } = await axios.get('/api/notebook/basic', { params: { notebookID } })
+  data.tags = data.tag.split(',')
   return data
 }

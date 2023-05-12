@@ -48,17 +48,17 @@
 </template>
 
 <script>
-import MainHeader from '../components/MainHeader.vue'
 import UserDisplay from '../components/personal_center/UserDisplay.vue'
 import { Collection, Menu as MenuIcon, Share, Star } from '@element-plus/icons-vue'
 import CenterMain from '@/components/personal_center/CenterMain.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import CenterGroups from '@/components/group/CenterGroups.vue'
 import CenterNotebooks from '@/components/personal_center/CenterNotebooks.vue'
+import MainHeader from '@/components/MainHeader.vue'
 
 export default {
-  name: 'HomePage',
   components: {
+    MainHeader,
     CenterNotebooks,
     CenterGroups,
     UserAvatar,
@@ -67,8 +67,7 @@ export default {
     Star,
     Collection,
     MenuIcon,
-    UserDisplay,
-    MainHeader
+    UserDisplay
   },
   data () {
     return {
@@ -76,7 +75,7 @@ export default {
       userInfo: {}
     }
   },
-  async beforeMount () {
+  beforeMount () {
     this.userInfo = this.$store.state.userInfo
   }
 }
