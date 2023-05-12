@@ -7,6 +7,7 @@ import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -76,11 +77,19 @@ public class NotebookApp {
         return ResponseEntity.ok(noteBookID);
     }
 
-    @PostMapping("/basic")
-    public ResponseEntity<?> getNotebookBasic(@RequestBody JSONObject jsonObject){
-        String notebookID = jsonObject.getString("notebookID");
-        return ResponseEntity.ok(NotebookInterface.fromNotebook(
-                notebookService.getNotebookBasic(notebookID)));
+    /**
+     * 获取笔记本的基本信息
+     * @param notebookID 笔记本ID
+     * @return 笔记本基本信息
+     */
+    @GetMapping("/basic")
+    public ResponseEntity<?> getNotebookBasic(@Param("notebookID") String notebookID){
+        var notebook = notebookService.getNotebookBasic(notebookID);
+        if (notebook == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(NotebookInterface.fromNotebook(notebook));
+        }
     }
 
     @PostMapping("/upload_cover")

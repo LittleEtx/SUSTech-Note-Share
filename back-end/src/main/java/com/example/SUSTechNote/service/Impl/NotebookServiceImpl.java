@@ -92,7 +92,8 @@ public class NotebookServiceImpl implements NotebookService {
 
     @Override
     public Notebook getNotebookBasic(String notebookID) {
-        return notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+        var notebooks = notebookRepository.findNotebooksByNotebookID(notebookID);
+        return notebooks.size() == 1 ? notebooks.get(0) : null;
     }
 
 
