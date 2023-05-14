@@ -1,7 +1,11 @@
 package com.example.SUSTechNote.service.Impl;
 
 import com.example.SUSTechNote.api.GroupRepository;
+import com.example.SUSTechNote.api.NotebookRepository;
+import com.example.SUSTechNote.api.UserRepository;
 import com.example.SUSTechNote.entity.Group;
+import com.example.SUSTechNote.entity.Notebook;
+import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +20,13 @@ public class GroupServiceImpl implements GroupService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
+    private final NotebookRepository notebookRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository, NotebookRepository notebookRepository) {
         this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
+        this.notebookRepository = notebookRepository;
     }
 
     @Override
@@ -40,6 +48,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void createGroup(int userID, String groupName, String groupDescription, String createTime, String groupOwnerName) {
         Group group = new Group();
+        group.setGroupOwnerID(userID);
         group.setGroupName(groupName);
         group.setGroupDescription(groupDescription);
         group.setCreateTime(createTime);
@@ -79,10 +88,42 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void updateGroup(int groupID, String groupName, String groupDescription) {
+    public String updateGroup(int userID, int groupID, String groupName, String groupDescription) {
         Group group = groupRepository.findById(groupID).get();
-        group.setGroupName(groupName);
-        group.setGroupDescription(groupDescription);
-        groupRepository.save(group);
+        if (group.getGroupOwnerID() != userID) {
+            return "User {} is not the owner of group {}".substring(userID, groupID);
+        } else {
+            group.setGroupName(groupName);
+            group.setGroupDescription(groupDescription);
+            groupRepository.save(group);
+            return "Update group successfully";
+        }
+    }
+
+    @Override
+    public Group groupInfo(int groupID) {
+        return groupRepository.findById(groupID).get();
+    }
+
+    @Override
+    public List<User> groupMembers(int groupID) {
+        List<Integer> userIDs = groupRepository.findGroupMembers(groupID);
+        List<User> users = new ArrayList<>();
+        for (Integer userID : userIDs) {
+            User user = userRepository.findUserByUserID(userID);
+            users.add(user);
+        }
+        return users;
+    }
+
+    @Override
+    public List<Notebook> groupNotebookInfo(int groupID) {
+        List<String> notebookIDs = groupRepository.findGroupNotebooksByGroupID(groupID);
+        List<Notebook> notebooks = new ArrayList<>();
+        for (String notebookID : notebookIDs) {
+            Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
+            notebooks.add(notebook);
+        }
+        return notebooks;
     }
 }

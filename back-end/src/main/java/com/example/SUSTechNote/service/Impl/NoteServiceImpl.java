@@ -28,7 +28,6 @@ public class NoteServiceImpl implements NoteService {
             note.setSavingPath(realPath);
             note.setNoteName(title);
             note.setIsPublic(isPublic);
-            note.setStatus(0);
             noteRepository.save(note);
         } catch (Exception e) {
             logger.error("addNote error: " + e.getMessage());
@@ -60,8 +59,14 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteNote(String NoteID){
-        noteRepository.deleteNotesByNoteID(NoteID);
+    public String deleteNote(String NoteID){
+        try {
+            noteRepository.deleteNotesByNoteID(NoteID);
+            return "Note deleted successfully";
+        } catch (Exception e) {
+            logger.error("deleteNote error: " + e.getMessage());
+            return "Note deleted failed\n" + e.getMessage() + "\n";
+        }
     }
 
     @Override
@@ -72,5 +77,10 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public int findNotesCountByNotebookID(String notebookID) {
         return noteRepository.findNotesByNotebookID(notebookID);
+    }
+
+    @Override
+    public String getNoteNameByNoteID(String noteID) {
+        return noteRepository.findNoteNameByNoteID(noteID);
     }
 }

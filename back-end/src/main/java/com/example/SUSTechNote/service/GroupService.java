@@ -1,6 +1,8 @@
 package com.example.SUSTechNote.service;
 
 import com.example.SUSTechNote.entity.Group;
+import com.example.SUSTechNote.entity.Notebook;
+import com.example.SUSTechNote.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,5 +23,11 @@ public interface GroupService {
 
     void deleteGroup(int userID, int groupID);
 
-    void updateGroup(int groupID, String groupName, String groupDescription);
+    String updateGroup(int userID, int groupID, String groupName, String groupDescription);
+
+    Group groupInfo(int groupID);
+
+    List<User> groupMembers(int groupID);
+
+    List<Notebook> groupNotebookInfo(int groupID);
 }
