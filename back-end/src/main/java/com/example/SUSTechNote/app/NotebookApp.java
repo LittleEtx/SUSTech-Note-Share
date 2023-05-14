@@ -163,9 +163,11 @@ public class NotebookApp {
         }
     }
 
-    @PostMapping("/directory")
-    public ResponseEntity<?> getNotebookDirectory(@RequestBody JSONObject jsonObject){
-        String notebookID = jsonObject.getString("notebookID");
+    @GetMapping("/directory")
+    public ResponseEntity<?> getNotebookDirectory(
+            @RequestParam("notebook") String notebookID
+    ){
+        logger.trace("User " + StpUtil.getLoginId() + " get notebook directory: " + notebookID);
         Notebook notebook = notebookService.findNotebookByID(notebookID);
         if (notebook == null){
             return ResponseEntity.badRequest().body("Notebook does not exist");
