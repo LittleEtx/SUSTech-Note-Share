@@ -1,30 +1,34 @@
 <template>
     <el-container class="container">
-    <el-aside width="300px" style="padding: 20px; height: 100%">
+    <el-aside width="300px" style="padding: 20px">
       <el-card class="group-card" shadow="hover">
-        <div slot="header">
+        <template #header>
           <h3>
-<!--            <el-button class="card-button" icon="el-icon-arrow-left" @click="goBack"></el-button>-->
+            <!--            <el-button class="card-button" icon="el-icon-arrow-left" @click="goBack"></el-button>-->
 
-            <el-button class="card-button"  style="width: 40px" text @click="goBack">
-            <el-icon size="25px"><Back /></el-icon></el-button>
-            <img src="../../assets/icon/icon_with_words_shadow.svg" alt="" style="width: 70px">
+            <el-button class="card-button" text @click="goBack">
+              <el-icon size="25px">
+                <Back/>
+              </el-icon>
+            </el-button>
+            <img :src="SUSTechLogo" alt="" style="width: 70px">
             {{ group.groupName }}
           </h3>
-        </div>
+        </template>
         <div class="group-description">
           描述：{{ group.groupDescription }}
         </div>
         <hr>
-        <div class="group-members" style=" overflow-y: auto;">
+        <div class="group-members">
           <h4>成员</h4>
-          <el-list-item v-for="(member, index) in group.members" :key="index">
+          <div v-for="(member, index) in group.members" :key="index">
             <el-link :underline="false" style="display:flex; align-items:center;">
-              <el-avatar :src="'http://10.32.58.153:8088'+member.avatar" size="medium" style="margin-right: 10px; margin-top: 10px"></el-avatar>
-              <span v-if="group.groupOwnerID === member.userID" style="margin-top: 10px; font-weight: bold">{{ member.userName }}</span>
+              <el-avatar :src="member.avatar" style="margin-right: 10px; margin-top: 10px"></el-avatar>
+              <span v-if="group.groupOwnerID === member.userID"
+                    style="margin-top: 10px; font-weight: bold">{{ member.userName }}</span>
               <span v-else style="margin-top: 10px">{{ member.userName }}</span>
             </el-link>
-          </el-list-item>
+          </div>
         </div>
       </el-card>
     </el-aside>
@@ -37,9 +41,6 @@
               style="position: relative"
           >
             <notebook-card :notebook="notebook"></notebook-card>
-            <el-icon type="info" class="more-icon">
-              <MoreFilled/>
-            </el-icon>
           </div>
         </el-space>
       </el-row>
@@ -48,15 +49,20 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { getTags } from '@/scripts/interfaces'
-import NotebookCard from "@/components/NotebookCard.vue";
+import NotebookCard from '@/components/NotebookCard.vue'
 import { Back } from '@element-plus/icons-vue'
-
+import SUSTechLogo from '@/assets/icon/icon_with_words_shadow.svg'
 
 export default {
-  components: {NotebookCard, Back},
+  components: { NotebookCard, Back },
+  computed: {
+    SUSTechLogo () {
+      return SUSTechLogo
+    }
+  },
   mounted () {
     const route = useRoute()
     this.group.groupID = route.params.groupID
@@ -65,7 +71,7 @@ export default {
     //   this.getData()
     // }, 100)
   },
-  data() {
+  data () {
     return {
       isFavorite: false,
       group: {
@@ -74,7 +80,7 @@ export default {
         groupDescription: '群组描述',
         groupOwnerID: '',
         members: [
-          {userID: 1, userName: '成员1', avatar: ''}
+          { userID: 1, userName: '成员1', avatar: '' }
         ],
         notebookInfos: [
           // {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
@@ -84,20 +90,20 @@ export default {
     }
   },
   methods: {
-    getData(){
-      axios.post("http://10.32.58.153:8088/api/group/groupInfo",{
+    getData () {
+      axios.post('/api/group/groupInfo', {
         groupID: this.group.groupID
       }).then(res => {
         this.group.groupName = res.data.groupName
         this.group.groupDescription = res.data.groupDescription
         this.group.groupOwnerID = res.data.groupOwnerID
-      });
-      axios.post("http://10.32.58.153:8088/api/group/groupMembers",{
+      })
+      axios.post('/api/group/groupMembers', {
         groupID: this.group.groupID
       }).then(res => {
         this.group.members = res.data
-      });
-      axios.post("http://10.32.58.153:8088/api/group/groupNotebooksInfo",{
+      })
+      axios.post('/api/group/groupNotebooksInfo', {
         groupID: this.group.groupID
       }).then(res => {
         this.group.notebookInfos = res.data
@@ -113,17 +119,17 @@ export default {
     //   }
     //   this.$router.push('/groupTest/')
     // },
-    goBack() {
+    goBack () {
       // 处理返回逻辑
       this.$router.back()
     },
-    toggleFavorite() {
-      this.isFavorite = !this.isFavorite;
-      const icon = this.isFavorite ? 'el-icon-star-on' : 'el-icon-star-off';
-      const text = this.isFavorite ? '取消收藏' : '收藏';
-      this.$message.success(this.isFavorite ? '已收藏' : '已取消收藏');
-      this.$refs.favoriteBtn.setIconClass(icon);
-      this.$refs.favoriteBtn.setText(text);
+    toggleFavorite () {
+      this.isFavorite = !this.isFavorite
+      const icon = this.isFavorite ? 'el-icon-star-on' : 'el-icon-star-off'
+      const text = this.isFavorite ? '取消收藏' : '收藏'
+      this.$message.success(this.isFavorite ? '已收藏' : '已取消收藏')
+      this.$refs.favoriteBtn.setIconClass(icon)
+      this.$refs.favoriteBtn.setText(text)
     }
   }
 }
@@ -131,11 +137,6 @@ export default {
 
 <style scoped>
 
-.more-icon {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-}
 .container {
   position: absolute;
   top: 0;
@@ -150,13 +151,14 @@ export default {
 .group-card {
   background-color: #fff;
   border-radius: 5px;
+  position: relative;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 .card-button {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 0;
 }
 
 .group-description {
@@ -167,8 +169,6 @@ export default {
 }
 
 .group-members {
-  height: 450px;
-  max-height: 450px;
   overflow-y: auto;
   background-color: #fff;
   border-radius: 5px;
@@ -181,49 +181,10 @@ export default {
   overflow-y: auto;
 }
 
-.note-card {
-  margin: 10px;
-  width: 240px;
-  height: 220px;
-  position: relative;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  transition: all 0.2s ease-in-out;
-}
-.note-button {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
-
-.note-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.note-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .note-header h4 {
   margin: 0;
   font-size: 18px;
   color: #333;
 }
 
-.note-time {
-  font-size: 14px;
-  color: #888;
-}
-
-.note-content {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #555;
-  line-height: 1.5;
-}
 </style>

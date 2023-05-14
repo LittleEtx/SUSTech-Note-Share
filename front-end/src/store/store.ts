@@ -5,17 +5,24 @@ import type { InjectionKey } from 'vue'
 
 export interface State {
   userInfo?: UserInfo
+  token: string
 }
 
 export const key: InjectionKey<Store<State>> = Symbol('key for store')
 
 export const store = createStore<State>({
   state: {
-    userInfo: undefined as UserInfo | undefined
+    userInfo: undefined as UserInfo | undefined,
+    token: ''
   },
   mutations: {
     logout (state: State) {
       state.userInfo = undefined
+      state.token = ''
+    },
+    setToken (state: State, token: string) {
+      // token of type: "satoken: xxx"
+      state.token = token.substring(token.indexOf(':') + 2)
     },
     setUserInfo (state: State, info: UserInfo) {
       state.userInfo = info

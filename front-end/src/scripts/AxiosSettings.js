@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { router } from '@/router'
+import { store } from '@/store/store'
 
 const onResponseSuccess = response => {
   return response
@@ -12,6 +13,7 @@ const onResponseError = async err => {
     // not logged in, remove login token
     console.error('[axios-global]invalid token')
     Cookies.remove('satoken')
+    store.commit('logout')
     await router.push({ name: 'login' })
   }
 
@@ -22,3 +24,11 @@ const onResponseError = async err => {
 }
 
 axios.interceptors.response.use(onResponseSuccess, onResponseError)
+axios.interceptors.request.use(
+  config => {
+    if (store.state.token !== '') {
+      config.headers.satoken = store.state.token
+    }
+    return config
+  }
+)

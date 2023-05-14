@@ -45,6 +45,9 @@
           </el-tabs>
         </div>
       </div>
+      <notebook-file-list :notes="noteInfos">
+
+      </notebook-file-list>
     </div>
   </div>
 </template>
@@ -55,17 +58,19 @@ import { useRoute } from 'vue-router'
 import MainHeader from '@/components/MainHeader.vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
 import type { NotebookInfo } from '@/scripts/interfaces'
-import { apiGetBasicInfo, apiUploadNotebookCover } from '@/scripts/API_Notebook'
+import { apiGetBasicInfo, apiGetNoteInfos, apiUploadNotebookCover, NoteInfo } from '@/scripts/API_Notebook'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import { ChatLineSquare, Collection, Setting } from '@element-plus/icons-vue'
 import { useStore } from '@/store/store'
 import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
 import ImgUploader from '@/components/ImgUploader.vue'
+import NotebookFileList from '@/components/notebook_page/NotebookFileList.vue'
 
 const route = useRoute()
 const store = useStore()
 
 const notebook = ref<NotebookInfo>()
+const noteInfos = ref<NoteInfo[]>([])
 const show404 = ref(false)
 const activeSlot = ref('note')
 const canModify = ref(false)
@@ -81,6 +86,7 @@ const notebookCover = computed(() => {
 const getNotebookInfo = async (notebookID: string) => {
   try {
     notebook.value = await apiGetBasicInfo(notebookID)
+    noteInfos.value = await apiGetNoteInfos(notebookID)
     canModify.value = notebook.value?.authorID === store.state.userInfo?.userID
     show404.value = false
   } catch (e) {
@@ -115,9 +121,6 @@ const onUploadCover = async (file: File) => {
 
 <style scoped>
 .main-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
   margin-left: 10%;
   margin-right: 10%;
   margin-top: 40px;

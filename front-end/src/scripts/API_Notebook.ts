@@ -53,6 +53,13 @@ interface UpdateNotebookInfo {
   title?: string
 }
 
+/**
+ * 更新笔记本的基本信息
+ * @param notebookID 需要更新的笔记本id
+ * @param tags 笔记本的标签
+ * @param description 笔记本的描述
+ * @param title 笔记本标题
+ */
 export async function apiUpdateBasicInfo (
   notebookID: string,
   { tags, description, title }: UpdateNotebookInfo
@@ -64,4 +71,21 @@ export async function apiUpdateBasicInfo (
     description,
     title
   })
+}
+
+export interface FileInfo {
+  file: string // 文件的名字
+  url: string // 文件的url
+}
+
+export interface NoteInfo {
+  name: string // 文件夹的名字
+  id: string // 文件夹的id
+  files: FileInfo[] // 文件夹下的文件
+}
+
+export async function apiGetNoteInfos (notebookID: string): Promise<NoteInfo[]> {
+  const { data } = await axios.get('/api/notebook/directory',
+    { params: { notebook: notebookID } })
+  return data
 }

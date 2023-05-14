@@ -23,5 +23,5 @@ export interface NotebookInfo {
 }
 
 export function getTags (tag?: string): string[] {
-  return !tag || tag === '' ? [] : tag.split(',')
+  return (tag == null) || tag === '' ? [] : tag.split(',')
 }

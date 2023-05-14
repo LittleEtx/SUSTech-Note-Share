@@ -95,9 +95,6 @@ export default {
   components: { Notebook, Plus },
   mounted () {
     this.getData()
-    setInterval(() => {
-      this.getData()
-    }, 100)
   },
   data () {
     return {
@@ -129,7 +126,7 @@ export default {
         ]
       },
       groupList: [
-        {groupID: '', groupName: '', groupDescription: '' }],
+        { groupID: '', groupName: '', groupDescription: '' }],
       ruleForm: {
         groupJoin: ''
       },
@@ -141,33 +138,34 @@ export default {
     }
   },
   computed: {
-    selectedGroup() {
+    selectedGroup () {
       return this.groupList.find(group => group.groupID === this.ruleForm.groupJoin)
     }
   },
   methods: {
-    getData(){
-      axios.get("http://10.32.58.153:8088/api/group/loadJoinedGroup").then(res => {
-        this.group = res.data;
-      });
-      axios.get("http://10.32.58.153:8088/api/group/loadEnjoinedGroup").then(res => {
-        this.groupList = res.data;
-      });
+    getData () {
+      axios.get('/api/group/loadJoinedGroup').then(res => {
+        this.group = res.data
+      })
+      axios.get('/api/group/loadEnjoinedGroup').then(res => {
+        this.groupList = res.data
+      })
     },
     createNote (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const d = new Date()
           this.form.createTime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
-          axios.post("http://10.32.58.153:8088/api/group/createGroup",{
+          axios.post('/api/group/createGroup', {
             groupName: this.form.groupName,
             groupDescription: this.form.groupDescription,
             createTime: this.form.createTime
           }).then(res => {
             ElMessage({
               message: res.data,
-              type: 'success',
+              type: 'success'
             })
+            this.getData()
           })
           this.createFormVisible = false
         } else {
@@ -181,15 +179,16 @@ export default {
         if (valid) {
           const d = new Date()
           this.form.createTime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
-          axios.post("http://10.32.58.153:8088/api/group/updateGroup",{
+          axios.post('/api/group/updateGroup', {
             groupID: this.form.groupID,
             groupName: this.form.groupName,
             groupDescription: this.form.groupDescription
           }).then(res => {
             ElMessage({
               message: res.data,
-              type: 'success',
+              type: 'success'
             })
+            this.getData()
           })
           this.editFormVisible = false
         } else {
@@ -202,13 +201,14 @@ export default {
       // 直接加入群组
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post("http://10.32.58.153:8088/api/group/joinGroup",{
+          axios.post('/api/group/joinGroup', {
             groupID: this.ruleForm.groupJoin
           }).then(res => {
             ElMessage({
               message: res.data,
-              type: 'success',
+              type: 'success'
             })
+            this.getData()
           })
           this.createFormVisible = false
         } else {
@@ -232,25 +232,27 @@ export default {
     },
     // 退出群组
     remove (id) {
-      axios.post("http://10.32.58.153:8088/api/group/quitGroup",{
+      axios.post('/group/quitGroup', {
         groupID: id
       }).then(res => {
         ElMessage.error(res.data)
+        this.getData()
       })
     },
-    //解散群组
-    disband(id) {
-      axios.post("http://10.32.58.153:8088/api/group/deleteGroup",{
+    // 解散群组
+    disband (id) {
+      axios.post('/api/group/deleteGroup', {
         groupID: id
       }).then(res => {
         ElMessage.error(res.data)
+        this.getData()
       })
     },
     handleClickNoteCard (note, event) {
       if (event.target.tagName === 'BUTTON') {
         return
       }
-      this.$router.push('/showTest/'+note.groupID)
+      this.$router.push('/showTest/' + note.groupID)
     },
     handleClickCreateCard () {
       this.form.groupName = ''

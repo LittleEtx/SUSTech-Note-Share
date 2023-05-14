@@ -38,7 +38,7 @@ interface Props {
   type: 'avatar' | 'cover'
   width: number
   height: number
-  originUrl?: string  // 原先的图片地址
+  originUrl?: string // 原先的图片地址
   showTip?: boolean
 }
 
