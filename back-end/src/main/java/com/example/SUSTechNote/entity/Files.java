@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "files")
-public class File {
+public class Files {
     @Id
     private String fileID;
     private String fileName;

@@ -18,4 +18,6 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 
     @Query(value = "select count(*) from notes where notebookid = ?1", nativeQuery = true)
     int findNotesByNotebookID(String notebookID);
+
+    Note findNoteByNoteID(String noteID);
 }
