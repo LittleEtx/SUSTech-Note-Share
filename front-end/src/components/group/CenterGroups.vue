@@ -105,35 +105,11 @@ export default {
       group: [
         {
           groupID: 1,
-          groupName: '高数',
-          createTime: '2022-05-07',
-          groupDescription: '这是该群组的描述',
-          groupOwnerID: 12112628,
-          groupOwnerName: '黄宇海'
-        },
-        {
-          groupID: 2,
-          groupName: '大物',
-          createTime: '2022-05-06',
-          groupDescription: '这是该群组的描述',
-          groupOwnerID: 12112628,
-          groupOwnerName: '杨子德'
-        },
-        {
-          groupID: 3,
-          groupName: '计网',
-          createTime: '2022-05-05',
+          groupName: '',
+          createTime: '',
           groupDescription: '',
-          groupOwnerID: 12112628,
-          groupOwnerName: '陈孙兵'
-        },
-        {
-          groupID: 4,
-          groupName: '计网',
-          createTime: '2022-05-05',
-          groupDescription: '这是该群组的描述',
-          groupOwnerID: 12112628,
-          groupOwnerName: '陈孙兵'
+          groupOwnerID: 1,
+          groupOwnerName: ''
         }
       ],
       activeName: 'creat',
@@ -144,8 +120,8 @@ export default {
         groupName: '',
         createTime: '',
         groupDescription: '',
-        groupOwnerID: 12112628,
-        groupOwnerName: '李田'
+        groupOwnerID: 1,
+        groupOwnerName: ''
       },
       rules: {
         groupName: [
@@ -153,10 +129,7 @@ export default {
         ]
       },
       groupList: [
-        {groupID: '', groupName: '高数', groupDescription: '这是高数的描述' },
-        {groupID: '', groupName: '大物', groupDescription: '这是大物的描述' },
-        {groupID: '', groupName: '计网', groupDescription: '这是计网的描述' },
-        {groupID: '', groupName: '离散', groupDescription: '这是离散的描述' }],
+        {groupID: '', groupName: '', groupDescription: '' }],
       ruleForm: {
         groupJoin: ''
       },
@@ -277,7 +250,7 @@ export default {
       if (event.target.tagName === 'BUTTON') {
         return
       }
-      this.$router.push('/showTest')
+      this.$router.push('/showTest/'+note.groupID)
     },
     handleClickCreateCard () {
       this.form.groupName = ''

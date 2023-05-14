@@ -5,19 +5,20 @@
         <div slot="header">
           <h3>
             <img src="../../assets/icon/icon_with_words_shadow.svg" alt="" style="width: 70px">
-            {{ group.name }}
+            {{ group.groupName }}
           </h3>
         </div>
         <div class="group-description">
-          {{ group.description }}
+          描述：{{ group.groupDescription }}
         </div>
         <hr>
         <div class="group-members" style=" overflow-y: auto;">
           <h4>成员</h4>
           <el-list-item v-for="(member, index) in group.members" :key="index">
             <el-link :underline="false" style="display:flex; align-items:center;">
-              <el-avatar :src="member.avatar" size="medium" style="margin-right: 10px; margin-top: 10px"></el-avatar>
-              <span style="margin-top: 10px">{{ member.nickname }}</span>
+              <el-avatar :src="'http://10.32.58.153:8088'+member.avatar" size="medium" style="margin-right: 10px; margin-top: 10px"></el-avatar>
+              <span v-if="group.groupOwnerID === member.userID" style="margin-top: 10px; font-weight: bold">{{ member.userName }}</span>
+              <span v-else style="margin-top: 10px">{{ member.userName }}</span>
             </el-link>
           </el-list-item>
         </div>
@@ -25,66 +26,85 @@
     </el-aside>
     <el-main class="note-main" style="padding: 20px; overflow-y: auto; max-height: 720px">
       <el-row>
-          <el-card v-for="(note, index) in group.notes" :key="index" shadow="hover" class="note-card" @click="handleClickNoteCard(note, $event)">
-            <div slot="header" class="note-header">
-              <h4>{{ note.title }}</h4>
-              <div class="note-time">
-                <el-icon><Clock /></el-icon>{{ note.time }}</div>
-            </div>
-            <div class="note-content">{{ note.content }}</div>
-            <div class="note-button">
-              <el-button type="text" @click.stop="toggleFavorite">
-                <el-icon v-if="isFavorite"><StarFilled /></el-icon>
-                <el-icon v-else><Star /></el-icon>
-                {{ isFavorite ? '取消收藏' : '收藏' }}
-              </el-button>
-            </div>
-          </el-card>
+        <el-space :size="20" wrap style="padding-left: 20px">
+          <div
+              v-for="(notebook, index) in group.notebookInfos"
+              :key="index"
+              style="position: relative"
+          >
+            <notebook-card :notebook="notebook"></notebook-card>
+            <el-icon type="info" class="more-icon">
+              <MoreFilled/>
+            </el-icon>
+          </div>
+        </el-space>
       </el-row>
     </el-main>
   </el-container>
 </template>
 
 <script>
+import axios from "axios";
+import { MoreFilled } from '@element-plus/icons-vue'
+import { useRoute } from 'vue-router'
+import {ElMessage} from "element-plus";
+import { getTags } from '@/scripts/interfaces'
+import NotebookCard from "@/components/NotebookCard.vue";
+
 export default {
+  components: {NotebookCard},
+  mounted () {
+    const route = useRoute()
+    this.group.groupID = route.params.groupID
+    this.getData()
+  },
   data() {
     return {
       isFavorite: false,
       group: {
-        name: '群组名称',
-        description: '群组描述',
+        groupID: '',
+        groupName: '群组名称',
+        groupDescription: '群组描述',
+        groupOwnerID: '',
         members: [
-          { nickname: '成员1', avatar: 'https://th.bing.com/th/id/OIP.KwjH2oGKJygdvunLigvPrQAAAA?w=204&h=204&c=7&r=0&o=5&dpr=1.2&pid=1.7' },
-          { nickname: '成员2', avatar: 'https://th.bing.com/th/id/OIP.bFDH0OIgQUse8WHLa26A1QAAAA?w=204&h=204&c=7&r=0&o=5&dpr=1.2&pid=1.7' },
-          { nickname: '成员3', avatar: 'https://th.bing.com/th/id/OIP.E2J-rMDr5CtTG3nLC2q8dQAAAA?w=204&h=204&c=7&r=0&o=5&dpr=1.2&pid=1.7' }
+          {userID: 1, userName: '成员1', avatar: ''}
         ],
-        notes: [
-          {
-            title: '笔记标题1',
-            content: '笔记概述1',
-            time: '2022-05-01'
-          },
-          {
-            title: '笔记标题2',
-            content: '笔记概述2',
-            time: '2022-05-02'
-          },
-          {
-            title: '笔记标题3',
-            content: '笔记概述3',
-            time: '2022-05-03'
-          }
+        notebookInfos: [
+          {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
+              starCount: '', directory: ''}
         ]
       }
     }
   },
   methods: {
+    getData(){
+      axios.post("http://10.32.58.153:8088/api/group/groupInfo",{
+        groupID: this.group.groupID
+      }).then(res => {
+        this.group.groupName = res.data.groupName
+        this.group.groupDescription = res.data.groupDescription
+        this.group.groupOwnerID = res.data.groupOwnerID
+      });
+      axios.post("http://10.32.58.153:8088/api/group/groupMembers",{
+        groupID: this.group.groupID
+      }).then(res => {
+        this.group.members = res.data
+      });
+      axios.post("http://10.32.58.153:8088/api/group/groupNotebooksInfo",{
+        groupID: this.group.groupID
+      }).then(res => {
+        this.group.notebookInfos = res.data
+        for (let i = 0; i < res.data.length; i++) {
+          this.group.notebookInfos[i].tags = getTags(res.data[i].tag)
+        }
+      })
+    },
     handleClickNoteCard (note, event) {
       // 处理点击卡片事件
       if (event.target.tagName === 'BUTTON') {
         return
       }
-      this.$router.push('/groupTest')
+      this.$router.push('/groupTest/')
     },
     toggleFavorite() {
       this.isFavorite = !this.isFavorite;
@@ -99,6 +119,12 @@ export default {
 </script>
 
 <style scoped>
+
+.more-icon {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
 .container {
   position: absolute;
   top: 0;
