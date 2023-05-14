@@ -4,6 +4,10 @@
       <el-card class="group-card" shadow="hover">
         <div slot="header">
           <h3>
+<!--            <el-button class="card-button" icon="el-icon-arrow-left" @click="goBack"></el-button>-->
+
+            <el-button class="card-button"  style="width: 40px" text @click="goBack">
+            <el-icon size="25px"><Back /></el-icon></el-button>
             <img src="../../assets/icon/icon_with_words_shadow.svg" alt="" style="width: 70px">
             {{ group.groupName }}
           </h3>
@@ -45,18 +49,21 @@
 
 <script>
 import axios from "axios";
-import { MoreFilled } from '@element-plus/icons-vue'
 import { useRoute } from 'vue-router'
-import {ElMessage} from "element-plus";
 import { getTags } from '@/scripts/interfaces'
 import NotebookCard from "@/components/NotebookCard.vue";
+import { Back } from '@element-plus/icons-vue'
+
 
 export default {
-  components: {NotebookCard},
+  components: {NotebookCard, Back},
   mounted () {
     const route = useRoute()
     this.group.groupID = route.params.groupID
     this.getData()
+    // setInterval(() => {
+    //   this.getData()
+    // }, 100)
   },
   data() {
     return {
@@ -70,8 +77,8 @@ export default {
           {userID: 1, userName: '成员1', avatar: ''}
         ],
         notebookInfos: [
-          {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
-              starCount: '', directory: ''}
+          // {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
+          //     starCount: '', directory: ''}
         ]
       }
     }
@@ -99,12 +106,16 @@ export default {
         }
       })
     },
-    handleClickNoteCard (note, event) {
-      // 处理点击卡片事件
-      if (event.target.tagName === 'BUTTON') {
-        return
-      }
-      this.$router.push('/groupTest/')
+    // handleClickNoteCard (note, event) {
+    //   // 处理点击卡片事件
+    //   if (event.target.tagName === 'BUTTON') {
+    //     return
+    //   }
+    //   this.$router.push('/groupTest/')
+    // },
+    goBack() {
+      // 处理返回逻辑
+      this.$router.back()
     },
     toggleFavorite() {
       this.isFavorite = !this.isFavorite;
@@ -141,6 +152,11 @@ export default {
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
+}
+.card-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 
 .group-description {
