@@ -53,4 +53,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Query(value = "select * from notebooks where notebookid = ?1", nativeQuery = true)
     Notebook findNotebookByNotebookID(String notebookID);
+
+    @Query(value = "select notebookid from notebooks where authorid = ?1", nativeQuery = true)
+    List<String> findNotebookIDByAuthorID(int userID);
 }

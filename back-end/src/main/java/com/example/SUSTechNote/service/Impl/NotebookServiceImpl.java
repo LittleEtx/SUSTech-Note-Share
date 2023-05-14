@@ -164,4 +164,9 @@ public class NotebookServiceImpl implements NotebookService {
         int authorID = notebookRepository.findAuthorIDByNotebookID(notebookID);
         return authorID == userID;
     }
+
+    @Override
+    public List<String> findNotebookIDByUserID(int userID) {
+        return notebookRepository.findNotebookIDByAuthorID(userID);
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,11 @@ public class NoteApp {
             int isPublic = jsonObject.getInteger("isPublic");
             //获取目前登录用户的id
             int userID = StpUtil.getLoginIdAsInt();
-            String noteID = noteBookID + "_" + (count + 1);
+            List<String> noteIDs = noteService.findNoteIDsByNotebookID(noteBookID);
+            Collections.sort(noteIDs);
+            String lastNoteID = noteIDs.get(noteIDs.size() - 1);
+            int lastNoteNum = Integer.parseInt(lastNoteID.substring(lastNoteID.lastIndexOf("_") + 1));
+            String noteID = noteBookID + "_" + (lastNoteNum + 1);
             String basePath = staticPathHelper.getStaticPath() + "/notebooks/" + userID + "/" + noteBookID + "/";
             String savePath = basePath + noteID;
             String realPath = savePath.substring(savePath.lastIndexOf("static"));

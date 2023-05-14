@@ -22,4 +22,6 @@ public interface NoteService {
     int findNotesCountByNotebookID(String notebookID);
 
     String getNoteNameByNoteID(String noteID);
+
+    List<String> findNoteIDsByNotebookID(String noteBookID);
 }

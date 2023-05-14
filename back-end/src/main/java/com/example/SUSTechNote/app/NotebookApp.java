@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,11 @@ public class NotebookApp {
             return ResponseEntity.badRequest().body("You have reached the maximum number of notebooks");
         }
         String basePath = staticPathHelper.getStaticPath() + "/notebooks/" + userID + "/";
-        String noteBookID = userID + "_" + (count + 1);
+        List<String> notebookIDs = notebookService.findNotebookIDByUserID(userID);
+        Collections.sort(notebookIDs);
+        String lastNotebookID = notebookIDs.get(notebookIDs.size() - 1);
+        int lastNotebookNum = Integer.parseInt(lastNotebookID.substring(lastNotebookID.lastIndexOf("_") + 1));
+        String noteBookID = userID + "_" + (lastNotebookNum + 1);
         String savePath = basePath + noteBookID;
         File folder = new File(savePath);
         if (!folder.exists()) {

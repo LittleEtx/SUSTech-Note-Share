@@ -3,6 +3,7 @@ package com.example.SUSTechNote.service;
 import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
+import com.example.SUSTechNote.interfaces.NotebookInterface;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,5 +30,5 @@ public interface GroupService {
 
     List<User> groupMembers(int groupID);
 
-    List<Notebook> groupNotebookInfo(int groupID);
+    List<NotebookInterface> groupNotebookInfo(int groupID);
 }

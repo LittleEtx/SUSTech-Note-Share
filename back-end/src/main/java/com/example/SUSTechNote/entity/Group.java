@@ -11,7 +11,9 @@ public class Group {
     private Integer GroupID;
     private String GroupName;
     private String GroupDescription;
-    private Integer GroupOwnerID;
+    @ManyToOne
+    @JoinColumn(name = "GroupOwnerID")
+    private User user;
     private String GroupOwnerName;
     private String createTime;
 
@@ -47,12 +49,20 @@ public class Group {
         GroupDescription = groupDescription;
     }
 
-    public Integer getGroupOwnerID() {
-        return GroupOwnerID;
+    public User getUser() {
+        return user;
     }
 
-    public void setGroupOwnerID(Integer groupOwnerID) {
-        GroupOwnerID = groupOwnerID;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Notebook> getNotebookList() {
+        return notebookList;
+    }
+
+    public void setNotebookList(List<Notebook> notebookList) {
+        this.notebookList = notebookList;
     }
 
     public String getGroupOwnerName() {

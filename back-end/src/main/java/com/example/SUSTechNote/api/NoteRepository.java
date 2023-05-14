@@ -21,4 +21,7 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 
     @Query(value = "select note_name from notes where noteid = ?1", nativeQuery = true)
     String findNoteNameByNoteID(String noteID);
+
+    @Query(value = "select noteid from notes where notebookid = ?1", nativeQuery = true)
+    List<String> findNoteIDsByNotebookID(String noteBookID);
 }

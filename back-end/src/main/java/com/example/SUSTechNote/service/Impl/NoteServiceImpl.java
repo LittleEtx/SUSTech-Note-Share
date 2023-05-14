@@ -83,4 +83,9 @@ public class NoteServiceImpl implements NoteService {
     public String getNoteNameByNoteID(String noteID) {
         return noteRepository.findNoteNameByNoteID(noteID);
     }
+
+    @Override
+    public List<String> findNoteIDsByNotebookID(String noteBookID) {
+        return noteRepository.findNoteIDsByNotebookID(noteBookID);
+    }
 }

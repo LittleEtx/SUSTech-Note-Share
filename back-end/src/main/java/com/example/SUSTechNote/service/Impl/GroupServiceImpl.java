@@ -7,6 +7,7 @@ import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.GroupService;
+import com.example.SUSTechNote.interfaces.NotebookInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void createGroup(int userID, String groupName, String groupDescription, String createTime, String groupOwnerName) {
         Group group = new Group();
-        group.setGroupOwnerID(userID);
+        User user = userRepository.findById(userID).get();
+        group.setUser(user);
         group.setGroupName(groupName);
         group.setGroupDescription(groupDescription);
         group.setCreateTime(createTime);
@@ -90,7 +92,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public String updateGroup(int userID, int groupID, String groupName, String groupDescription) {
         Group group = groupRepository.findById(groupID).get();
-        if (group.getGroupOwnerID() != userID) {
+        if (group.getUser().getUserID() != userID) {
             return "User {} is not the owner of group {}".substring(userID, groupID);
         } else {
             group.setGroupName(groupName);
@@ -117,13 +119,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Notebook> groupNotebookInfo(int groupID) {
+    public List<NotebookInterface> groupNotebookInfo(int groupID) {
         List<String> notebookIDs = groupRepository.findGroupNotebooksByGroupID(groupID);
         List<Notebook> notebooks = new ArrayList<>();
         for (String notebookID : notebookIDs) {
             Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
             notebooks.add(notebook);
         }
-        return notebooks;
+        return NotebookInterface.fromNotebooks(notebooks);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.SUSTechNote.app;
+package com.example.SUSTechNote.app.Interact;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
