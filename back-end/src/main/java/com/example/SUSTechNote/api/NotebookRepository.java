@@ -13,8 +13,8 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "update notebooks set status = ?1 where notebookid = ?2", nativeQuery = true)
-    void changeStatusByNotebookID(Integer status, String notebookID);
+    @Query(value = "delete from notebooks where notebookid = ?1", nativeQuery = true)
+    void deleteNotebook(String notebookID);
 
     @Query(value = "select count(*) from notebooks where authorid = ?1", nativeQuery = true)
     int findNotebookCountByAuthorID(int userID);
@@ -50,4 +50,10 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Query(value = "select authorid from notebooks where notebookid = ?1", nativeQuery = true)
     int findAuthorIDByNotebookID(String notebookID);
+
+    @Query(value = "select * from notebooks where notebookid = ?1", nativeQuery = true)
+    Notebook findNotebookByNotebookID(String notebookID);
+
+    @Query(value = "select notebookid from notebooks where authorid = ?1", nativeQuery = true)
+    List<String> findNotebookIDByAuthorID(int userID);
 }

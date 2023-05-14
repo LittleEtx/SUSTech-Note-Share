@@ -11,11 +11,9 @@ import java.util.List;
 public interface NotebookService {
     void addNotebook(String noteBookID, int userID, String directory, String savingPath, String title, String tag, String description, int isPublic);
 
-    void updateNotebook(String notebookID, String notebookName, String tag, String description);
+    boolean updateNotebook(String notebookID, String notebookName, String tag, String description);
 
-    Boolean checkNotebook(String notebookID);
-
-    void deleteNotebook(Integer status, String notebookID);
+    String deleteNotebook(String notebookID);
 
     Notebook getNotebookBasic(String notebookID);
 
@@ -31,4 +29,6 @@ public interface NotebookService {
     void renameDir(int userID, String oldName, String newName);
 
     boolean checkAuthority(int userID, String notebookID);
+
+    List<String> findNotebookIDByUserID(int userID);
 }

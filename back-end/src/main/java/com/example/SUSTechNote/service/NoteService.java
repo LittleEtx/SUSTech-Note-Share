@@ -15,9 +15,13 @@ public interface NoteService {
 
     int checkNote(String noteID);
 
-    void deleteNote(String noteID);
+    String deleteNote(String noteID);
 
     List<Note> findAllNote();
 
     int findNotesCountByNotebookID(String notebookID);
+
+    String getNoteNameByNoteID(String noteID);
+
+    List<String> findNoteIDsByNotebookID(String noteBookID);
 }

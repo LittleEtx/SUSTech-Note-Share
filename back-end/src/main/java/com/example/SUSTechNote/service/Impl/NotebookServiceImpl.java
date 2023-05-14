@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -48,7 +49,6 @@ public class NotebookServiceImpl implements NotebookService {
             notebook.setUpdateTime(now);
             notebook.setLikeNum(0);
             notebook.setStar(0);
-            notebook.setStatus(0);
             notebookRepository.save(notebook);
         } catch (Exception e) {
             logger.error("addNotebook error: " + e.getMessage());
@@ -56,43 +56,37 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public void updateNotebook(String notebookID, String notebookName, String tag, String description){
+    public boolean updateNotebook(String notebookID, String notebookName, String tag, String description){
+        var notebook = getNotebookBasic(notebookID);
         try {
-            notebookRepository.updateNotebook(notebookID, notebookName, tag, description);
+            notebookRepository.updateNotebook(
+                    notebookID,
+                    Objects.requireNonNullElse(notebookName, notebook.getNotebookName()),
+                    Objects.requireNonNullElse(tag, notebook.getTag()),
+                    Objects.requireNonNullElse(description, notebook.getDescription())
+            );
         } catch (Exception e) {
             logger.error("updateNotebook error: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
     @Override
-    public Boolean checkNotebook(String notebookID){
-        List<Notebook> notebooks = notebookRepository.findNotebooksByNotebookID(notebookID);
-        if (notebooks.size() == 1) {
-            Notebook notebook = notebooks.get(0);
-            if (notebook.getStatus() != 0) {
-                logger.error("checkNotebook error: " + notebookID + "'s status is not 0.");
-                return false;
-            }
-            return true;
-        } else if (notebooks.size() > 1) {
-            logger.error("checkNotebook error: " + notebookID + " has more than one record.");
-            return false;
-        } else {
-            logger.error("checkNotebook error: " + notebookID + " does not exist.");
-            return false;
-        }
-    }
-
-    @Override
-    public void deleteNotebook(Integer status, String notebookID){
-        if (checkNotebook(notebookID)){
-            notebookRepository.changeStatusByNotebookID(status, notebookID);
+    public String deleteNotebook(String notebookID){
+        try{
+            notebookRepository.deleteNotebook(notebookID);
+            return "Notebook deleted successfully.";
+        } catch (Exception e) {
+            logger.error("deleteNotebook error: " + e.getMessage());
+            return "deleteNotebook error: " + e.getMessage();
         }
     }
 
     @Override
     public Notebook getNotebookBasic(String notebookID) {
-        return notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+        var notebooks = notebookRepository.findNotebooksByNotebookID(notebookID);
+        return notebooks.size() == 1 ? notebooks.get(0) : null;
     }
 
 
@@ -169,5 +163,10 @@ public class NotebookServiceImpl implements NotebookService {
     public boolean checkAuthority(int userID, String notebookID) {
         int authorID = notebookRepository.findAuthorIDByNotebookID(notebookID);
         return authorID == userID;
+    }
+
+    @Override
+    public List<String> findNotebookIDByUserID(int userID) {
+        return notebookRepository.findNotebookIDByAuthorID(userID);
     }
 }

@@ -13,11 +13,17 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "update notes set status = 1 where noteid = ?1", nativeQuery = true)
+    @Query(value = "delete from notes where noteid = ?1;", nativeQuery = true)
     void deleteNotesByNoteID(String noteID);
 
     @Query(value = "select count(*) from notes where notebookid = ?1", nativeQuery = true)
     int findNotesByNotebookID(String notebookID);
 
     Note findNoteByNoteID(String noteID);
+
+    @Query(value = "select note_name from notes where noteid = ?1", nativeQuery = true)
+    String findNoteNameByNoteID(String noteID);
+
+    @Query(value = "select noteid from notes where notebookid = ?1", nativeQuery = true)
+    List<String> findNoteIDsByNotebookID(String noteBookID);
 }
