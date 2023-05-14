@@ -22,9 +22,6 @@ public class Notebook {
     private Integer isPublic;
     private Integer likeNum;
     private Integer star;
-    private Integer status;
-    private LocalDateTime removeTime;
-
     private Integer authorID;
 
     public String getNotebookName() {
@@ -96,22 +93,6 @@ public class Notebook {
 
     public void setStar(Integer star) {
         this.star = star;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getRemoveTime() {
-        return removeTime;
-    }
-
-    public void setRemoveTime(LocalDateTime removeTime) {
-        this.removeTime = removeTime;
     }
 
     public Integer getAuthorID() {

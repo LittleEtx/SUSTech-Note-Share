@@ -1,6 +1,8 @@
 package com.example.SUSTechNote.entity;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "my_groups")
 public class Group {
@@ -12,6 +14,14 @@ public class Group {
     private Integer GroupOwnerID;
     private String GroupOwnerName;
     private String createTime;
+
+    @ManyToMany
+    @JoinTable(
+            name = "group_notebook",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "notebook_id")
+    )
+    List<Notebook> notebookList;
 
     public Integer getGroupID() {
         return GroupID;

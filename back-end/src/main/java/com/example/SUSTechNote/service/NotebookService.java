@@ -13,9 +13,7 @@ public interface NotebookService {
 
     boolean updateNotebook(String notebookID, String notebookName, String tag, String description);
 
-    Boolean checkNotebook(String notebookID);
-
-    void deleteNotebook(Integer status, String notebookID);
+    String deleteNotebook(String notebookID);
 
     Notebook getNotebookBasic(String notebookID);
 

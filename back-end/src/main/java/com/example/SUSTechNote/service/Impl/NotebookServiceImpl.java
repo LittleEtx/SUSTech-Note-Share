@@ -7,7 +7,6 @@ import com.example.SUSTechNote.entity.Notebook;
 
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
-import com.mysql.cj.x.protobuf.MysqlxExpr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,6 @@ public class NotebookServiceImpl implements NotebookService {
             notebook.setUpdateTime(now);
             notebook.setLikeNum(0);
             notebook.setStar(0);
-            notebook.setStatus(0);
             notebookRepository.save(notebook);
         } catch (Exception e) {
             logger.error("addNotebook error: " + e.getMessage());
@@ -59,10 +57,6 @@ public class NotebookServiceImpl implements NotebookService {
 
     @Override
     public boolean updateNotebook(String notebookID, String notebookName, String tag, String description){
-        if (!checkNotebook(notebookID)) {
-            logger.trace("updateNotebook error: " + notebookID + " does not exist.");
-            return false;
-        }
         var notebook = getNotebookBasic(notebookID);
         try {
             notebookRepository.updateNotebook(
@@ -79,28 +73,13 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public Boolean checkNotebook(String notebookID){
-        List<Notebook> notebooks = notebookRepository.findNotebooksByNotebookID(notebookID);
-        if (notebooks.size() == 1) {
-            Notebook notebook = notebooks.get(0);
-            if (notebook.getStatus() != 0) {
-                logger.debug("checkNotebook error: " + notebookID + "'s status is not 0.");
-                return false;
-            }
-            return true;
-        } else if (notebooks.size() > 1) {
-            logger.error("checkNotebook error: " + notebookID + " has more than one record.");
-            return false;
-        } else {
-            logger.debug("checkNotebook error: " + notebookID + " does not exist.");
-            return false;
-        }
-    }
-
-    @Override
-    public void deleteNotebook(Integer status, String notebookID){
-        if (checkNotebook(notebookID)){
-            notebookRepository.changeStatusByNotebookID(status, notebookID);
+    public String deleteNotebook(String notebookID){
+        try{
+            notebookRepository.deleteNotebook(notebookID);
+            return "Notebook deleted successfully.";
+        } catch (Exception e) {
+            logger.error("deleteNotebook error: " + e.getMessage());
+            return "deleteNotebook error: " + e.getMessage();
         }
     }
 

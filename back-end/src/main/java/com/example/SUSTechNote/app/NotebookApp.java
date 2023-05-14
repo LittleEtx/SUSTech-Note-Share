@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
+import com.example.SUSTechNote.service.NoteService;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/notebook")
@@ -22,10 +25,12 @@ public class NotebookApp {
 
     private final Logger logger = LoggerFactory.getLogger(NotebookApp.class);
     private final NotebookService notebookService;
+    private final NoteService noteService;
     private final StaticPathHelper staticPathHelper;
 
-    public NotebookApp(NotebookService notebookService, StaticPathHelper staticPathHelper) {
+    public NotebookApp(NotebookService notebookService, NoteService noteService, StaticPathHelper staticPathHelper) {
         this.notebookService = notebookService;
+        this.noteService = noteService;
         this.staticPathHelper = staticPathHelper;
     }
 
@@ -139,14 +144,12 @@ public class NotebookApp {
     @SaCheckLogin
     @PostMapping("/delete")
     public ResponseEntity<?> deleteNotebook(@RequestBody JSONObject jsonObject){
-        int status = jsonObject.getInteger("status");
         String notebookID = jsonObject.getString("notebookID");
-        System.out.println(notebookID);
         Notebook notebook = notebookService.findNotebookByID(notebookID);
         if (StpUtil.getLoginIdAsInt() == notebook.getAuthorID()){
             try {
-                notebookService.deleteNotebook(status, notebookID);
-                return ResponseEntity.ok("Notebook deleted successfully");
+                String result = notebookService.deleteNotebook(notebookID);
+                return ResponseEntity.ok(result);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Notebook deletion failed");
             }
@@ -167,26 +170,34 @@ public class NotebookApp {
             String directory = basePath + subPath;
             String prePath = directory.substring(directory.lastIndexOf("static"))+"/";
             File file = new File(directory);
-            JSONObject jsonObject1 = traversal(file, new JSONObject(), prePath);
-            return ResponseEntity.ok(jsonObject1);
+            List<JSONObject> directories = traversal(file, prePath);
+            return ResponseEntity.ok(directories);
         }
     }
 
-    public JSONObject traversal(File file, JSONObject jsonObject, String prePath) {
+    public List<JSONObject> traversal(File file, String prePath) {
+        List<JSONObject> directories = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
         if (file.isDirectory()){
             File[] files = file.listFiles();
             if (files != null){
                 for (File f : files){
                     if (f.isDirectory()){
-                        JSONObject jsonObject1 = new JSONObject();
-                        jsonObject.put(f.getName(), traversal(f, jsonObject1, prePath+f.getName()+"/"));
+                        String noteID = f.getName();
+                        String noteName = noteService.getNoteNameByNoteID(noteID);
+                        jsonObject.put("directory", noteName);
+                        jsonObject.put("id", noteID);
+                        jsonObject.put("files", traversal(f, prePath+f.getName()+"/"));
+                        directories.add(jsonObject);
                     } else {
-                        jsonObject.put(f.getName(), prePath+f.getName());
+                        jsonObject.put("file", f.getName());
+                        jsonObject.put("url", prePath+f.getName());
+                        directories.add(jsonObject);
                     }
                 }
             }
         }
-        return jsonObject;
+        return directories;
     }
 
     public Boolean checkAuthority(String notebookID) {

@@ -57,8 +57,8 @@ public class NoteApp {
         }
     }
 
-    @PostMapping("/updatenote")
-    public int updatenote(Note note) {
+    @PostMapping("/updateNote")
+    public int updateNote(Note note) {
         return noteService.updateNote(note);
     }
 
@@ -67,15 +67,15 @@ public class NoteApp {
     public ResponseEntity<?> deleteNote(@RequestBody JSONObject jsonObject) {
         String noteID = jsonObject.getString("noteID");
         try {
-            noteService.deleteNote(noteID);
-            return ResponseEntity.ok("Note deleted successfully");
+            String result = noteService.deleteNote(noteID);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Note deletion failed \n" + e);
         }
     }
 
-    @GetMapping("/findAllnote")
-    public List<Note> findAllnote() {
+    @GetMapping("/findAllNote")
+    public List<Note> findAllNote() {
         return noteService.findAllNote();
     }
 }
