@@ -17,7 +17,9 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
     void deleteNotesByNoteID(String noteID);
 
     @Query(value = "select count(*) from notes where notebookid = ?1", nativeQuery = true)
-    int findNotesByNotebookID(String notebookID);
+    int findNoteCountByNotebookID(String notebookID);
+
+    List<Note> findNotesByNotebookID(String notebookID);
 
     Note findNoteByNoteID(String noteID);
 

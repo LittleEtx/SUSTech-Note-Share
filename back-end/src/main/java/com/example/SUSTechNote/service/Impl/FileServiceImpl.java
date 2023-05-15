@@ -6,7 +6,6 @@ import com.example.SUSTechNote.api.FileRepository;
 import com.example.SUSTechNote.api.NoteRepository;
 import com.example.SUSTechNote.entity.Files;
 import com.example.SUSTechNote.entity.Note;
-import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.service.FileService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
@@ -14,10 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -49,9 +46,9 @@ public class FileServiceImpl implements FileService {
             file.transferTo(new File(fileUrl));
             Note note = noteRepository.findNoteByNoteID(noteID);
             System.out.println(note);
-            int count = fileRepository.findfileCountBynote(note);
+            int count = fileRepository.findFileCountByNote(note.getNoteID());
             System.out.println(count);
-            String fileID = noteID + "_" + String.valueOf(count);
+            String fileID = noteID + "_" + count;
             addFile(fileID,fileName,fileUrl,noteID);
             return fileUrl;
         } catch (Exception e) {

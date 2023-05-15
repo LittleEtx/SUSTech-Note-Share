@@ -2,6 +2,7 @@ package com.example.SUSTechNote.app;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -167,44 +167,29 @@ public class NotebookApp {
     public ResponseEntity<?> getNotebookDirectory(
             @RequestParam("notebook") String notebookID
     ){
-        logger.trace("User " + StpUtil.getLoginId() + " get notebook directory: " + notebookID);
+        logger.trace("User " + StpUtil.getLoginId() + " get notebook directories: " + notebookID);
         Notebook notebook = notebookService.findNotebookByID(notebookID);
         if (notebook == null){
             return ResponseEntity.badRequest().body("Notebook does not exist");
-        } else {
-            String subPath = notebook.getSavePath().substring(notebook.getSavePath().lastIndexOf("/notebooks"));
-            String basePath = staticPathHelper.getStaticPath();
-            String directory = basePath + subPath;
-            String prePath = directory.substring(directory.lastIndexOf("static"))+"/";
-            File file = new File(directory);
-            List<JSONObject> directories = traversal(file, prePath);
-            return ResponseEntity.ok(directories);
         }
-    }
-
-    public List<JSONObject> traversal(File file, String prePath) {
-        List<JSONObject> directories = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject();
-        if (file.isDirectory()){
-            File[] files = file.listFiles();
-            if (files != null){
-                for (File f : files){
-                    if (f.isDirectory()){
-                        String noteID = f.getName();
-                        String noteName = noteService.getNoteNameByNoteID(noteID);
-                        jsonObject.put("directory", noteName);
-                        jsonObject.put("id", noteID);
-                        jsonObject.put("files", traversal(f, prePath+f.getName()+"/"));
-                        directories.add(jsonObject);
-                    } else {
-                        jsonObject.put("file", f.getName());
-                        jsonObject.put("url", prePath+f.getName());
-                        directories.add(jsonObject);
-                    }
-                }
+        var dirs = noteService.findNotesUnderNotebook(notebookID);
+        JSONArray result = new JSONArray();
+        for (var entry : dirs.entrySet()){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name", entry.getKey().getNoteName());
+            jsonObject.put("id", entry.getKey().getNoteID());
+            JSONArray files = new JSONArray();
+            for (var file : entry.getValue()){
+                JSONObject fileObject = new JSONObject();
+                fileObject.put("name", file.getFileName());
+                fileObject.put("id", file.getFileID());
+                fileObject.put("url", file.getFileUrl());
+                files.add(fileObject);
             }
+            jsonObject.put("files", files);
+            result.add(jsonObject);
         }
-        return directories;
+        return ResponseEntity.ok(result);
     }
 
     public Boolean checkAuthority(String notebookID) {

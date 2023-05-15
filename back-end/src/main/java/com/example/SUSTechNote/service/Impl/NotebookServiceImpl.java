@@ -92,16 +92,7 @@ public class NotebookServiceImpl implements NotebookService {
 
     @Override
     public List<Notebook> findNotebooks() {
-        int userID = StpUtil.getLoginIdAsInt(); //获取用户ID
-//        Map<String, List<Notebook>> directoryMap = new HashMap<>();
-//        for (Notebook notebook : notebooks) {
-//            String directory = notebook.getDirectory();
-//            if (directoryMap.containsKey(directory)) {
-//                directoryMap.get(directory).add(notebook);
-//            } else {
-//                directoryMap.put(directory, List.of(notebook));
-//            }
-//        }
+        int userID = StpUtil.getLoginIdAsInt();
         return notebookRepository.findNotebookByAuthorID(userID);
     }
 

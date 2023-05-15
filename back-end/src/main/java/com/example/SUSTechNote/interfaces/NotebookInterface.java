@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public   record NotebookInterface(
+public record NotebookInterface(
     String notebookID,
     int authorID,
     String title,
