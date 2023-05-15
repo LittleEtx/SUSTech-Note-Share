@@ -49,7 +49,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     void renameDir(int userID, String oldName, String newName);
 
     @Query(value = "select authorid from notebooks where notebookid = ?1", nativeQuery = true)
-    int findAuthorIDByNotebookID(String notebookID);
+    Integer findAuthorIDByNotebookID(String notebookID);
 
     @Query(value = "select * from notebooks where notebookid = ?1", nativeQuery = true)
     Notebook findNotebookByNotebookID(String notebookID);

@@ -1,4 +1,4 @@
-package com.example.SUSTechNote.app;
+package com.example.SUSTechNote.app.notebook;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
