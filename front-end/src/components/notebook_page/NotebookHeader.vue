@@ -22,7 +22,7 @@
       ref="titleInputRef"
       placeholder="请输入标题"
       @blur="updateTitle"
-      @keyup.enter="updateTitle"
+      @keyup.enter="onInputEnter"
       @keyup.esc="modifyTitle = false"
       :maxlength="40"
       show-word-limit
@@ -142,6 +142,10 @@ const updateTitle = async () => {
     loading.value = false
   }
   modifyTitle.value = false
+}
+
+const onInputEnter = (e: InputEvent) => {
+  (e.target as HTMLInputElement).blur()
 }
 
 // ------------ 更新简介 ----------------

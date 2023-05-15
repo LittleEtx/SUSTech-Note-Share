@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { NotebookInfo } from '@/scripts/interfaces'
+import type { FileInfo, NotebookInfo } from '@/scripts/interfaces'
 import { getTags } from '@/scripts/interfaces'
 
 export interface NewNotebookInfo {
@@ -73,19 +73,36 @@ export async function apiUpdateBasicInfo (
   })
 }
 
-export interface FileInfo {
-  file: string // 文件的名字
-  url: string // 文件的url
-}
-
 export interface NoteInfo {
   name: string // 文件夹的名字
   id: string // 文件夹的id
   files: FileInfo[] // 文件夹下的文件
 }
 
+/**
+ * 获取笔记本下的所有笔记和笔记中的文件
+ * @param notebookID
+ */
 export async function apiGetNoteInfos (notebookID: string): Promise<NoteInfo[]> {
   const { data } = await axios.get('/api/notebook/directory',
     { params: { notebook: notebookID } })
+  return data
+}
+
+/**
+ * 创建笔记
+ * @param notebookID 笔记本id
+ * @param name 笔记名字
+ * @param isPublic 是否公开
+ * @returns 笔记id
+ */
+export async function apiCreateNote (notebookID: string, name: string, isPublic: boolean): Promise<string> {
+  const { data } = await axios.post('/api/notebook/create_note', {}, {
+    params: {
+      notebook: notebookID,
+      name,
+      public: isPublic
+    }
+  })
   return data
 }
