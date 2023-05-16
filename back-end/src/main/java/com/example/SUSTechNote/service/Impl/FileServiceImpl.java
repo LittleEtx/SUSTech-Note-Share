@@ -65,7 +65,8 @@ public class FileServiceImpl implements FileService {
         file.transferTo(targetFile); // this method will automatically delete file if already exist
         String fileUrl = "/api/static" + relativePath;
 
-        fileRepository.save(new Files(fileID, fileName, fileUrl, relativePath, note));
+        fileRepository.save(new Files(fileID, fileName, fileUrl,
+                relativePath, file.getContentType(), note));
         logger.debug("add file " + fileName + " to "
                 + targetFile.getAbsolutePath() + " successfully, id=" + fileID);
         return fileID;

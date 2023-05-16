@@ -184,6 +184,7 @@ public class NotebookApp {
                 fileObject.put("name", file.getFileName());
                 fileObject.put("id", file.getFileID());
                 fileObject.put("url", file.getFileUrl());
+                fileObject.put("type", file.getContentType());
                 files.add(fileObject);
             }
             jsonObject.put("files", files);

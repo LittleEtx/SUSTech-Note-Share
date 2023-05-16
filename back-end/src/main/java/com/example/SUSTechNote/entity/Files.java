@@ -14,6 +14,7 @@ public class Files {
     private String savingPath;
     private Integer status;
     private LocalDateTime removeTime;
+    private String contentType;
 
     /**
      * 多对一关系，由多方维系关系
@@ -23,11 +24,13 @@ public class Files {
     @JoinColumn(name = "note_id")
     private Note note;
 
-    public Files(String fileID, String fileName, String fileUrl, String savingPath, Note note) {
+    public Files(String fileID, String fileName, String fileUrl,
+                 String savingPath, String contentType, Note note) {
         this.fileID = fileID;
         this.fileName = fileName;
         this.fileUrl = fileUrl;
         this.savingPath = savingPath;
+        this.contentType = contentType;
         this.note = note;
     }
 
@@ -87,5 +90,13 @@ public class Files {
     }
     public void setSavingPath(String savingPath) {
         this.savingPath = savingPath;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
