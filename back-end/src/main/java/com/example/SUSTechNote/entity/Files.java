@@ -11,6 +11,7 @@ public class Files {
     private String fileID;
     private String fileName;
     private String fileUrl;
+    private String savingPath;
     private Integer status;
     private LocalDateTime removeTime;
 
@@ -21,6 +22,17 @@ public class Files {
     @ManyToOne
     @JoinColumn(name = "note_id")
     private Note note;
+
+    public Files(String fileID, String fileName, String fileUrl, String savingPath, Note note) {
+        this.fileID = fileID;
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
+        this.savingPath = savingPath;
+        this.note = note;
+    }
+
+    public Files() {
+    }
 
     public String getFileID() {
         return fileID;
@@ -68,5 +80,12 @@ public class Files {
 
     public void setNote(Note note) {
         this.note = note;
+    }
+
+    public String getSavingPath() {
+        return savingPath;
+    }
+    public void setSavingPath(String savingPath) {
+        this.savingPath = savingPath;
     }
 }

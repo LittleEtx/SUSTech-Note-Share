@@ -19,7 +19,13 @@ public interface FileService {
      */
     String uploadFile(String noteID, String fileName, MultipartFile file, String originID) throws IOException;
 
-    void deleteFile(String noteID,String fileName);
+    /**
+     * 删除文件
+     * @param fileID 文件ID
+     * @return 是否成功
+     * @throws com.example.SUSTechNote.exception.FileNotExistException 文件不存在
+     */
+    boolean deleteFile(String fileID);
 
     void renameFile(String noteID,String fileName,String newName);
 

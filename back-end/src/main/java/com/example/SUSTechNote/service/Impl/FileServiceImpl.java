@@ -5,6 +5,7 @@ import com.example.SUSTechNote.api.FileRepository;
 import com.example.SUSTechNote.api.NoteRepository;
 import com.example.SUSTechNote.entity.Files;
 import com.example.SUSTechNote.entity.Note;
+import com.example.SUSTechNote.exception.FileNotExistException;
 import com.example.SUSTechNote.exception.ModifyNotAuthoredException;
 import com.example.SUSTechNote.exception.NoteNotExistException;
 import com.example.SUSTechNote.service.FileService;
@@ -42,9 +43,12 @@ public class FileServiceImpl implements FileService {
         checkAuthority(noteID);
         Note note = noteRepository.findNoteByNoteID(noteID);
         if (fileID == null || "".equals(fileID)) {
+            var files = fileRepository.findFilesByNote_NoteID(noteID);
+            int lastFileNum = files.stream()
+                .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
+                .max(Integer::compareTo).orElse(0);
             // 新建文件，生成新的文件ID
-            int count = fileRepository.findFileCountByNote(note.getNoteID());
-            fileID = noteID + "_" + count;
+            fileID = noteID + "_" + (lastFileNum + 1);
         }
         // 若笔记的文件夹不存在，则创建
         File noteFile = new File(staticPathHelper.getStaticPath(), note.getSavingPath());
@@ -59,42 +63,34 @@ public class FileServiceImpl implements FileService {
         File targetFile = new File(noteFile, fileID);
         file.transferTo(targetFile); // this method will automatically delete file if already exist
         String fileUrl = "/api/static" + relativePath;
-        addFile(fileID,fileName,fileUrl,noteID);
+
+        fileRepository.save(new Files(fileID, fileName, fileUrl, relativePath, note));
         logger.debug("add file " + fileName + " to "
                 + targetFile.getAbsolutePath() + " successfully, id=" + fileID);
         return fileID;
     }
 
-    private void addFile(String fileID, String fileName, String fileUrl,String noteID){
-        try {
-            Note note = noteRepository.findNoteByNoteID(noteID);
-            if (note != null){
-                Files file = new Files();
-                file.setFileUrl(fileUrl);
-                file.setFileName(fileName);
-                file.setFileID(fileID);
-                file.setNote(note);
-                fileRepository.save(file);
-            }
-        } catch (Exception e) {
-            logger.error("addFile error: " + e.getMessage());
-        }
-    }
     @Override
-    public void deleteFile(String noteID,String fileName){
-        try {
-            Note note = noteRepository.findNoteByNoteID(noteID);
-            Files fileDatabase = fileRepository.findFilesByNoteAndFileName(note,fileName);
-            if (checkFileExistByNoteAndFileInDatabase(note,fileDatabase)){
-                File file = new File(fileDatabase.getFileUrl());
-                if (file.delete()) {
-                    logger.info("file deleted successfully");
-                } else {
-                    logger.error("file delete failed");
-                }
-            }
-        } catch (Exception e) {
-            logger.error("find note error: " + e.getMessage());
+    public boolean deleteFile(String fileID){
+        Files file = fileRepository.findFilesByFileID(fileID);
+        if (file == null){
+            throw new FileNotExistException("file not found");
+        }
+        Note note = file.getNote();
+        checkAuthority(note);
+        File filePath = new File(staticPathHelper.getStaticPath(), file.getSavingPath());
+        if (!filePath.exists() || !filePath.isFile()) {
+            logger.error("file not found, clean record in database");
+            fileRepository.delete(file);
+            return false;
+        }
+        if (filePath.delete()) {
+            logger.info("file deleted successfully");
+            fileRepository.delete(file);
+            return true;
+        } else {
+            logger.error("file delete failed");
+            return false;
         }
     }
 
@@ -152,6 +148,9 @@ public class FileServiceImpl implements FileService {
         if (note == null) {
             throw new NoteNotExistException("note not found");
         }
+        checkAuthority(note);
+    }
+    public void checkAuthority(Note note) {
         String notebookID = note.getNotebookID();
         if (!notebookService.checkAuthority(StpUtil.getLoginIdAsInt(), notebookID)) {
             throw new ModifyNotAuthoredException("user has no authority to modify this note");

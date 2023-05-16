@@ -14,4 +14,7 @@ public interface FileRepository extends JpaRepository<Files, Integer> {
     Files findFilesByNoteAndFileName(Note note, String fileName);
 
     List<Files> findFilesByNote(Note note);
+
+    List<Files> findFilesByNote_NoteID(String noteID);
+    Files findFilesByFileID(String fileID);
 }
