@@ -19,13 +19,13 @@
         <hr>
         <div class="group-members" style=" overflow-y: auto;">
           <h4>成员</h4>
-          <div v-for="(member, index) in group.members" :key="index" >
-            <el-link :underline="false">
-              <el-avatar :src="member.avatar === null ? defaultCover : member.avatar" style="margin-right: 10px; margin-top: 10px"></el-avatar>
+          <div v-for="(member, index) in group.members" :key="index">
+            <el-link :underline="false" style="display: block; text-align: left;">
+              <el-avatar :src="member.avatar === null ? defaultCover : member.avatar" style="margin-right: 10px; margin-top: 10px;"></el-avatar>
               <el-tooltip :content="member.userName" :effect="tooltipEffect">
                 <span class="ellipsis" v-if="group.groupOwnerID === member.userID"
-                      style="margin-top: 10px; font-weight: bold">{{ member.userName }}</span>
-                <span class="ellipsis" v-else style="margin-top: 10px">{{ member.userName }}</span>
+                      style="margin-top: 10px; font-weight: bold;">{{ member.userName }}</span>
+                <span class="ellipsis" v-else style="margin-top: 10px;">{{ member.userName }}</span>
               </el-tooltip>
             </el-link>
           </div>
@@ -115,13 +115,13 @@ export default {
         }
       })
     },
-    // handleClickNoteCard (note, event) {
-    //   // 处理点击卡片事件
-    //   if (event.target.tagName === 'BUTTON') {
-    //     return
-    //   }
-    //   this.$router.push('/groupTest/')
-    // },
+    getPositionStyle(index) {
+      const topOffset = index * 50; // 根据需要调整偏移量
+      return {
+        position: 'absolute',
+        top: `${topOffset}px`
+      };
+    },
     goBack () {
       // 处理返回逻辑
       this.$router.back()
