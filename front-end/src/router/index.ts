@@ -5,7 +5,7 @@ import HomePage from '@/pages/HomePage.vue'
 import PersonalCenterPage from '@/pages/PersonalCenterPage.vue'
 import group from '@/components/group/CenterGroups.vue'
 import groupShow from '@/components/group/GroupShow.vue'
-// import test from '@/components/group/test.vue'
+import test from '@/components/group/test.vue'
 import NotebookPage from '@/pages/NotebookPage.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 
@@ -50,6 +50,10 @@ export const router = createRouter({
     {
       path: '/showTest/:groupID',
       component: groupShow
+    },
+    {
+      path: '/test',
+      component: test
     }
   ]
 })

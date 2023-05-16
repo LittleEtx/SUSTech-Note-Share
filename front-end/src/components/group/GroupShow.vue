@@ -2,10 +2,8 @@
     <el-container class="container">
     <el-aside width="300px" style="padding: 20px">
       <el-card class="group-card" shadow="hover">
-        <template #header>
+        <div slot="header">
           <h3>
-            <!--            <el-button class="card-button" icon="el-icon-arrow-left" @click="goBack"></el-button>-->
-
             <el-button class="card-button" text @click="goBack">
               <el-icon size="25px">
                 <Back/>
@@ -14,19 +12,21 @@
             <img :src="SUSTechLogo" alt="" style="width: 70px">
             {{ group.groupName }}
           </h3>
-        </template>
+        </div>
         <div class="group-description">
           描述：{{ group.groupDescription }}
         </div>
         <hr>
-        <div class="group-members">
+        <div class="group-members" style=" overflow-y: auto;">
           <h4>成员</h4>
-          <div v-for="(member, index) in group.members" :key="index">
-            <el-link :underline="false" style="display:flex; align-items:center;">
-              <el-avatar :src="member.avatar" style="margin-right: 10px; margin-top: 10px"></el-avatar>
-              <span v-if="group.groupOwnerID === member.userID"
-                    style="margin-top: 10px; font-weight: bold">{{ member.userName }}</span>
-              <span v-else style="margin-top: 10px">{{ member.userName }}</span>
+          <div v-for="(member, index) in group.members" :key="index" >
+            <el-link :underline="false">
+              <el-avatar :src="member.avatar === null ? defaultCover : member.avatar" style="margin-right: 10px; margin-top: 10px"></el-avatar>
+              <el-tooltip :content="member.userName" :effect="tooltipEffect">
+                <span class="ellipsis" v-if="group.groupOwnerID === member.userID"
+                      style="margin-top: 10px; font-weight: bold">{{ member.userName }}</span>
+                <span class="ellipsis" v-else style="margin-top: 10px">{{ member.userName }}</span>
+              </el-tooltip>
             </el-link>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default {
   computed: {
     SUSTechLogo () {
       return SUSTechLogo
-    }
+    },
   },
   mounted () {
     const route = useRoute()
@@ -73,22 +73,25 @@ export default {
   },
   data () {
     return {
+      defaultCover: 'https://th.bing.com/th/id/OIP.KwjH2oGKJygdvunLigvPrQAAAA?w=204&h=204&c=7&r=0&o=5&dpr=1.2&pid=1.7',
       isFavorite: false,
+      tooltipEffect: 'light',
       group: {
         groupID: '',
         groupName: '群组名称',
         groupDescription: '群组描述',
         groupOwnerID: '',
         members: [
-          { userID: 1, userName: '成员1', avatar: '' }
+          { userID: 1, userName: '这是一个非常长的名字', avatar: '' }
         ],
         notebookInfos: [
-          // {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
-          //     starCount: '', directory: ''}
+          {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
+              starCount: '', directory: ''}
         ]
       }
     }
   },
+
   methods: {
     getData () {
       axios.post('/api/group/groupInfo', {
@@ -136,6 +139,13 @@ export default {
 </script>
 
 <style scoped>
+.ellipsis {
+  display: inline-block;
+  max-width: 100px; /* 根据实际情况设置最大宽度 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .container {
   position: absolute;
@@ -153,11 +163,13 @@ export default {
   border-radius: 5px;
   position: relative;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /*padding: 15px;*/
   padding: 20px;
+  height: 90%;
 }
 .card-button {
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 0;
 }
 
@@ -169,6 +181,8 @@ export default {
 }
 
 .group-members {
+  height: 400px;
+  max-height: 400px;
   overflow-y: auto;
   background-color: #fff;
   border-radius: 5px;
