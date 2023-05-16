@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "notebooks")
@@ -23,6 +24,18 @@ public class Notebook {
     private Integer likeNum;
     private Integer star;
     private Integer authorID;
+
+    @ManyToMany
+    @JoinTable(name = "notebook_share_user",
+            joinColumns = @JoinColumn(name = "notebookID"),
+            inverseJoinColumns = @JoinColumn(name = "userID"))
+    private List<User> users;
+
+    @ManyToMany
+    @JoinTable(name = "notebook_share_group",
+            joinColumns = @JoinColumn(name = "notebookID"),
+            inverseJoinColumns = @JoinColumn(name = "groupID"))
+    private List<Group> groups;
 
     public String getNotebookName() {
         return notebookName;

@@ -3,6 +3,7 @@ package com.example.SUSTechNote.service.Impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.example.SUSTechNote.api.NotebookRepository;
 
+import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 
 import com.example.SUSTechNote.service.NotebookService;
@@ -91,8 +92,7 @@ public class NotebookServiceImpl implements NotebookService {
 
 
     @Override
-    public List<Notebook> findNotebooks() {
-        int userID = StpUtil.getLoginIdAsInt();
+    public List<Notebook> findNotebooks(int userID) {
         return notebookRepository.findNotebookByAuthorID(userID);
     }
 
@@ -159,5 +159,20 @@ public class NotebookServiceImpl implements NotebookService {
     @Override
     public List<String> findNotebookIDByUserID(int userID) {
         return notebookRepository.findNotebookIDByAuthorID(userID);
+    }
+
+    @Override
+    public List<Notebook> findSharedNotebooks(int userID) {
+        try {
+            return notebookRepository.findSharedNotebooksByUserID(userID);
+        } catch (Exception e) {
+            logger.error("findSharedNotebooks error: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Group> getSharedGroups(String notebookID) {
+        return notebookRepository.getSharedGroups(notebookID);
     }
 }

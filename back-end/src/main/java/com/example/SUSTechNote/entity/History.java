@@ -9,7 +9,10 @@ public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer historyID;
-    private Integer userID;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     private String notebookID;
     private LocalDateTime visitTime;
 
@@ -21,14 +24,13 @@ public class History {
         this.historyID = historyID;
     }
 
-    public Integer getUserID() {
-        return userID;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserID(Integer userID) {
-        this.userID = userID;
+    public void setUser(User user) {
+        this.user = user;
     }
-
     public String getNotebookID() {
         return notebookID;
     }

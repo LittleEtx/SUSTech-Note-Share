@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.service.Impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.api.GroupRepository;
 import com.example.SUSTechNote.api.NotebookRepository;
 import com.example.SUSTechNote.api.UserRepository;
@@ -8,8 +9,6 @@ import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.GroupService;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,8 +16,6 @@ import java.util.List;
 
 @Service
 public class GroupServiceImpl implements GroupService {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -31,7 +28,30 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> loadJoinedGroup(int userID) {
+    public List<JSONObject> loadJoinedGroup(int userID) {
+        List<JSONObject> groups = new ArrayList<>();
+        List<Integer> groupIDs = groupRepository.findGroupIDByUserID(userID);
+        for (Integer groupID : groupIDs) {
+            Group group = groupRepository.findById(groupID).get();
+            JSONObject jsonObject = convertGroup2JsonObject(group);
+            groups.add(jsonObject);
+        }
+        return groups;
+    }
+
+    JSONObject convertGroup2JsonObject(Group group) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("groupID", group.getGroupID());
+        jsonObject.put("groupName", group.getGroupName());
+        jsonObject.put("groupDescription", group.getGroupDescription());
+        jsonObject.put("createTime", group.getCreateTime());
+        jsonObject.put("groupOwnerName", group.getGroupOwnerName());
+        jsonObject.put("groupOwnerID", group.getUser().getUserID());
+        return jsonObject;
+    }
+
+    @Override
+    public List<Group> loadJoinedGroup2(int userID) {
         List<Group> groups = new ArrayList<>();
         List<Integer> groupIDs = groupRepository.findGroupIDByUserID(userID);
         for (Integer groupID : groupIDs) {
@@ -61,16 +81,21 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> loadEnjoinedGroup(int userID) {
-        List<Group> joinedGroups = loadJoinedGroup(userID);
+    public List<JSONObject> loadEnjoinedGroup(int userID) {
+        List<Group> joinedGroups = loadJoinedGroup2(userID);
         List<Group> allGroups = groupRepository.findAll();
         List<Group> enjoinedGroups = new ArrayList<>();
+        List<JSONObject> groups = new ArrayList<>();
         for (Group group : allGroups) {
             if (!joinedGroups.contains(group)) {
                 enjoinedGroups.add(group);
             }
         }
-        return enjoinedGroups;
+        for (Group group : enjoinedGroups) {
+            JSONObject jsonObject = convertGroup2JsonObject(group);
+            groups.add(jsonObject);
+        }
+        return groups;
     }
 
     @Override

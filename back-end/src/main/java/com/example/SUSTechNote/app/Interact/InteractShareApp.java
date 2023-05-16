@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app.Interact;
 
+import com.example.SUSTechNote.service.NotebookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,14 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("/interact/share")
 public class InteractShareApp {
 
+    private final NotebookService notebookService;
+
+    public InteractShareApp(NotebookService notebookService) {
+        this.notebookService = notebookService;
+    }
+
     /**
      * 获取笔记本的分享用户列表
      * @param notebookID 笔记本ID
      */
     @GetMapping("/get-shared-users")
-    public ResponseEntity<?> getShareUsers(
-            @RequestParam("notebook") String notebookID
-    ){
+    public ResponseEntity<?> getShareUsers(@RequestParam("notebook") String notebookID){
         //TODO
         return null;
     }
@@ -26,11 +31,12 @@ public class InteractShareApp {
      * @param notebookID 笔记本ID
      */
     @GetMapping("/get-shared-groups")
-    public ResponseEntity<?> getShareGroups(
-            @RequestParam("notebook") String notebookID
-    ){
-        //TODO
-        return null;
+    public ResponseEntity<?> getShareGroups(@RequestParam("notebook") String notebookID){
+        try {
+            return ResponseEntity.ok().body(notebookService.getSharedGroups(notebookID));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /**
