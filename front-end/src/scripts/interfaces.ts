@@ -31,3 +31,9 @@ export interface FileInfo {
   name: string // 文件名
   url: string // 文件URL
 }
+
+export interface NoteInfo {
+  name: string // 文件夹的名字
+  id: string // 文件夹的id
+  files: FileInfo[] // 文件夹下的文件
+}
