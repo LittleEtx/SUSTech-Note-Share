@@ -37,8 +37,9 @@ public class FileServiceImpl implements FileService {
         this.notebookService = notebookService;
     }
 
+    // 需加入同步锁防止同时上传多个文件时出现文件ID重复的情况
     @Override
-    public String uploadFile(String noteID, String fileName,
+    public synchronized String uploadFile(String noteID, String fileName,
                              MultipartFile file, String fileID) throws IOException {
         checkAuthority(noteID);
         Note note = noteRepository.findNoteByNoteID(noteID);
@@ -111,28 +112,6 @@ public class FileServiceImpl implements FileService {
             }
         }catch (Exception e) {
             logger.error("addNotebook error: " + e.getMessage());
-        }
-    }
-
-
-    public boolean checkFileExistByNoteAndFileInDatabase(Note note, Files fileDatabase) {
-        if (note != null) {
-            if (fileDatabase != null) {
-                String fileUrl = fileDatabase.getFileUrl();
-                File file = new File(fileUrl);
-                if (file.exists()) {
-                    return true;
-                } else {
-                    logger.error("file does not exist");
-                    return false;
-                }
-            } else {
-                logger.error("file not in database");
-                return false;
-            }
-        } else {
-            logger.error("note not found");
-            return false;
         }
     }
 
