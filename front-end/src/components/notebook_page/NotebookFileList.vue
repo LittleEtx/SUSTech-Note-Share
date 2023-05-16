@@ -1,6 +1,10 @@
 <template>
 <div>
-  <upload-files :note="selectedNote!" v-model="showUploadDialog"></upload-files>
+  <upload-files
+    :note="selectedNote!"
+    v-model="showUploadDialog"
+    @finish-upload="onFinishUpload"
+  ></upload-files>
   <el-menu
     ref="menuRef"
     unique-opened
@@ -35,9 +39,8 @@
     <el-sub-menu v-for="note in notes" :key="note.id" :index="note.id">
       <template #title>
         <span class="text-truncated">
-          <el-icon>
-            <Folder/>
-          </el-icon>
+          <el-icon v-if="note.files.length != 0"><Folder/></el-icon>
+          <el-icon v-else><FolderOpened/></el-icon>
           {{ note.name }}
         </span>
       </template>
@@ -61,7 +64,7 @@
 
 <script setup lang="ts">
 import { apiCreateNote, apiGetNoteInfos } from '@/scripts/API_Notebook'
-import { Folder, Plus, Upload } from '@element-plus/icons-vue'
+import { Folder, FolderOpened, Plus, Upload } from '@element-plus/icons-vue'
 import { ElInput, ElMenu } from 'element-plus'
 import { nextTick, onBeforeMount, ref, watch } from 'vue'
 import type { FileInfo, NoteInfo } from '@/scripts/interfaces'
@@ -95,17 +98,24 @@ const loading = ref(false)
 // ============ notes ===============
 const notes = ref<NoteInfo[]>([])
 watch(() => props.notebookId, async () => {
+  loading.value = true
   await updateNotesInfo()
+  loading.value = false
 })
 onBeforeMount(async () => {
+  loading.value = true
   await updateNotesInfo()
+  loading.value = false
 })
 const updateNotesInfo = async () => {
   if (!props.notebookId) {
     return
   }
   const infos = await apiGetNoteInfos(props.notebookId)
-  infos.sort((a, b) => a.name.localeCompare(b.name))
+  infos.sort((a, b) => {
+    const r = a.name.localeCompare(b.name)
+    return r === 0 ? a.id.localeCompare(b.id) : r
+  })
   notes.value = infos
 }
 
@@ -131,8 +141,8 @@ const createNote = async () => {
     true
   )
   await updateNotesInfo()
-  showCreateNote.value = false
   loading.value = false
+  showCreateNote.value = false
   await nextTick(() => {
     menuRef.value.open(noteID)
   })
@@ -154,6 +164,14 @@ const onClickCreateFile = (note: NoteInfo) => {
   showUploadDialog.value = true
   selectedNote.value = note
 }
+const onFinishUpload = async () => {
+  loading.value = true
+  await updateNotesInfo()
+  loading.value = false
+  showUploadDialog.value = false
+}
+
+// TODO:文件移动、重命名、删除；笔记重命名、删除
 
 </script>
 

@@ -30,6 +30,7 @@ export interface FileInfo {
   id: string // 文件ID
   name: string // 文件名
   url: string // 文件URL
+  type: string // 文件类型
 }
 
 export interface NoteInfo {

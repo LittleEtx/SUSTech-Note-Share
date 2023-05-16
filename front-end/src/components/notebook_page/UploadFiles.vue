@@ -31,7 +31,7 @@
       <el-button @click="cancelUpload" style="width: 30%">取消</el-button>
       <el-button
         type="primary"
-        @click="showDialog = false"
+        @click="confirmUpload"
         style="width: 30%"
       >确定
       </el-button>
@@ -63,6 +63,8 @@ const showDialog = computed({
 
 interface Emit {
   (e: 'update:modelValue', value: boolean): void
+
+  (e: 'finishUpload'): void
 }
 
 const emit = defineEmits<Emit>()
@@ -85,7 +87,6 @@ const uploadFile: UploadProps['httpRequest'] = async (params) => {
 }
 
 const handleRemove: UploadProps['onRemove'] = async (file: UploadFile) => {
-  console.log('handle remove on file: ' + file.name + ' under ' + file.status)
   if (file.status === 'ready') {
     return // 移除未上传的文件：不用做处理
   }
@@ -117,6 +118,11 @@ const cancelUpload = async () => {
     const file = uploadFiles.value[0]
     uploadRef.value?.handleRemove(file)
   }
+  showDialog.value = false
+}
+
+const confirmUpload = () => {
+  emit('finishUpload')
   showDialog.value = false
 }
 </script>

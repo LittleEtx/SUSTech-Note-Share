@@ -45,11 +45,29 @@
           </el-tabs>
         </div>
       </div>
-      <notebook-file-list
-        :can-modify="canModify"
-        :notebook-id="notebook?.notebookID"
-        style="width: 200px"
-      ></notebook-file-list>
+      <div class="common-layout">
+        <el-container style="height: 700px">
+          <el-aside width="200px">
+            <el-scrollbar>
+              <notebook-file-list
+                :can-modify="canModify"
+                :notebook-id="notebook?.notebookID"
+                @on-select-file="file => onSelectFile(file)"
+              ></notebook-file-list>
+            </el-scrollbar>
+          </el-aside>
+          <el-container>
+            <el-header>
+              <h4>{{ currentFile?.name }}</h4>
+            </el-header>
+            <el-main>
+              <file-display :file="currentFile">
+
+              </file-display>
+            </el-main>
+          </el-container>
+        </el-container>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +77,7 @@ import { computed, onBeforeMount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import MainHeader from '@/components/MainHeader.vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
-import type { NotebookInfo } from '@/scripts/interfaces'
+import type { FileInfo, NotebookInfo } from '@/scripts/interfaces'
 import { apiGetBasicInfo, apiUploadNotebookCover } from '@/scripts/API_Notebook'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import { ChatLineSquare, Collection, Setting } from '@element-plus/icons-vue'
@@ -67,6 +85,7 @@ import { useStore } from '@/store/store'
 import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
 import ImgUploader from '@/components/ImgUploader.vue'
 import NotebookFileList from '@/components/notebook_page/NotebookFileList.vue'
+import FileDisplay from '@/components/notebook_page/FileDisplay.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -117,6 +136,10 @@ const onUploadCover = async (file: File) => {
   loadingCover.value = false
 }
 
+const currentFile = ref<FileInfo>()
+const onSelectFile = (file: FileInfo) => {
+  currentFile.value = file
+}
 </script>
 
 <style scoped>
