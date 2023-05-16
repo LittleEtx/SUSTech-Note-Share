@@ -1,10 +1,8 @@
 package com.example.SUSTechNote.service;
 
-import com.example.SUSTechNote.entity.Files;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.io.IOException;
 
 @Service
@@ -28,5 +26,7 @@ public interface FileService {
     boolean deleteFile(String fileID);
 
     void renameFile(String noteID,String fileName,String newName);
+
+    boolean moveFile(String fileID, String noteID);
 
 }

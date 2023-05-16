@@ -41,15 +41,16 @@ public class FileServiceImpl implements FileService {
     @Override
     public synchronized String uploadFile(String noteID, String fileName,
                              MultipartFile file, String fileID) throws IOException {
-        checkAuthority(noteID);
+//        checkAuthority(noteID);
         Note note = noteRepository.findNoteByNoteID(noteID);
         if (fileID == null || "".equals(fileID)) {
-            var files = fileRepository.findFilesByNote_NoteID(noteID);
+            var notebookID = note.getNotebookID();
+            var files = fileRepository.findFilesByNotebook(notebookID);
             int lastFileNum = files.stream()
                 .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
                 .max(Integer::compareTo).orElse(0);
             // 新建文件，生成新的文件ID
-            fileID = noteID + "_" + (lastFileNum + 1);
+            fileID = notebookID + "_" + (lastFileNum + 1);
         }
         // 若笔记的文件夹不存在，则创建
         File noteFile = new File(staticPathHelper.getStaticPath(), note.getSavingPath());
@@ -114,6 +115,42 @@ public class FileServiceImpl implements FileService {
         }catch (Exception e) {
             logger.error("addNotebook error: " + e.getMessage());
         }
+    }
+
+
+    // 需加入同步锁防止同时移动多个文件时出现文件ID重复的情况
+    @Override
+    public synchronized boolean moveFile(String fileID, String noteID){
+        Files file = fileRepository.findFilesByFileID(fileID);
+        if (file == null){
+            throw new FileNotExistException("file not found");
+        }
+        Note note = noteRepository.findNoteByNoteID(noteID);
+//        checkAuthority(note);
+
+        //判断目标位置是否已存在同名文件
+        String destinationPath = staticPathHelper.getStaticPath() + note.getSavingPath() + "/" + fileID;
+        System.out.println(destinationPath);
+        File destinationFile = new File(destinationPath);
+        if (destinationFile.exists()){
+            logger.error("file existed in target note");
+//            return false;
+        }
+        File originFile = new File(staticPathHelper.getStaticPath(), file.getSavingPath());
+        System.out.println(originFile.getAbsolutePath());
+        logger.debug("rename file " + originFile.getAbsolutePath() + " to " + destinationFile.getAbsolutePath());
+        if(originFile.renameTo(destinationFile)){
+            //更新数据库
+            file.setFileUrl("/api/static" + destinationPath);
+            file.setNote(note);
+            file.setSavingPath(destinationPath);
+            fileRepository.save(file);
+            return true;
+        }else {
+            logger.error("file move failed");
+            return false;
+        }
+
     }
 
     /**

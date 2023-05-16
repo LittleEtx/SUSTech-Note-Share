@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface FileRepository extends JpaRepository<Files, Integer> {
-    @Query(value = "select count(*) from files where note_id = ?1", nativeQuery = true)
-    int findFileCountByNote(String noteID);
+    @Query(value = "select * from files where note_id in (select noteid from notes where notes.notebookid = ?1)", nativeQuery = true)
+    List<Files> findFilesByNotebook(String notebookID);
 
     Files findFilesByNoteAndFileName(Note note, String fileName);
 
