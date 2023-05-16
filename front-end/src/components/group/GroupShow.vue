@@ -21,7 +21,7 @@
           <h4>成员</h4>
           <div v-for="(member, index) in group.members" :key="index">
             <el-link :underline="false" style="display: block; text-align: left;">
-              <el-avatar :src="member.avatar === null ? defaultCover : member.avatar" style="margin-right: 10px; margin-top: 10px;"></el-avatar>
+              <user-avatar :src="member.avatar" style="margin-right: 10px; margin-top: 10px;"></user-avatar>
               <el-tooltip :content="member.userName" :effect="tooltipEffect">
                 <span class="ellipsis" v-if="group.groupOwnerID === member.userID"
                       style="margin-top: 10px; font-weight: bold;">{{ member.userName }}</span>
@@ -55,9 +55,11 @@ import { getTags } from '@/scripts/interfaces'
 import NotebookCard from '@/components/NotebookCard.vue'
 import { Back } from '@element-plus/icons-vue'
 import SUSTechLogo from '@/assets/icon/icon_with_words_shadow.svg'
+import UserAvatar from '@/components/UserAvatar.vue'
+
 
 export default {
-  components: { NotebookCard, Back },
+  components: { NotebookCard, Back, UserAvatar },
   computed: {
     SUSTechLogo () {
       return SUSTechLogo
