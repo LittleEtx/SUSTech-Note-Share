@@ -13,8 +13,8 @@
       <div class="note-content">描述信息：{{ note.groupDescription }}</div>
       <div class="note-creator">群主：{{ note.groupOwnerName }}</div>
       <div class="note-footer">
-        <el-button v-if="nowUser === note.groupOwnerID" type="success" @click.stop="edit(note)">编辑</el-button>
-        <el-button v-if="nowUser === note.groupOwnerID" type="danger" @click.stop="disband(note.groupID)">解散</el-button>
+        <el-button v-if="$store.state.userInfo.userID === note.groupOwnerID" type="success" @click.stop="edit(note)">编辑</el-button>
+        <el-button v-if="$store.state.userInfo.userID === note.groupOwnerID" type="danger" @click.stop="disband(note.groupID)">解散</el-button>
         <el-button v-else type="danger" @click.stop="remove(note.groupID)">退出</el-button>
       </div>
     </el-card>
@@ -89,16 +89,20 @@
 import { Notebook, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
+import { store } from '@/store/store'
+
 // 打开页面时从后端读取存在的群组并做过滤，然后保存到groupList中；
 // 读取当前用户加入的群组(群组名称、描述信息、创建日期)
 export default {
   components: { Notebook, Plus },
   mounted () {
+    this.nowUser = this.$store.state.userInfo.userID
+    console.log(this.nowUser)
     this.getData()
   },
   data () {
     return {
-      nowUser: 12112628,
+      nowUser: '',
       group: [
         {
           groupID: 1,
@@ -232,7 +236,7 @@ export default {
     },
     // 退出群组
     remove (id) {
-      axios.post('/group/quitGroup', {
+      axios.post('/api/group/quitGroup', {
         groupID: id
       }).then(res => {
         ElMessage.error(res.data)
