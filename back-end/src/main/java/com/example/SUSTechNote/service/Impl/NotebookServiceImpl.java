@@ -3,9 +3,10 @@ package com.example.SUSTechNote.service.Impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.example.SUSTechNote.api.NotebookRepository;
 
-import com.example.SUSTechNote.entity.Group;
+import com.example.SUSTechNote.api.UserRepository;
 import com.example.SUSTechNote.entity.Notebook;
 
+import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
@@ -26,11 +27,12 @@ public class NotebookServiceImpl implements NotebookService {
 
     private final Logger logger = LoggerFactory.getLogger(NotebookServiceImpl.class);
     private final NotebookRepository notebookRepository;
-
+    private final UserRepository userRepository;
     private final StaticPathHelper staticPathHelper;
 
-    public NotebookServiceImpl(NotebookRepository notebookRepository, StaticPathHelper staticPathHelper) {
+    public NotebookServiceImpl(NotebookRepository notebookRepository, UserRepository userRepository, StaticPathHelper staticPathHelper) {
         this.notebookRepository = notebookRepository;
+        this.userRepository = userRepository;
         this.staticPathHelper = staticPathHelper;
     }
     
@@ -172,7 +174,20 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public List<Group> getSharedGroups(String notebookID) {
-        return notebookRepository.getSharedGroups(notebookID);
+    public void shareToUser(String notebookID, String userID) {
+        try {
+            Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+            User newUser = userRepository.findUserByUserID(Integer.parseInt(userID));
+            List<User> users = notebook.getUsers();
+            users.add(newUser);
+            notebook.setUsers(users);
+            notebookRepository.save(notebook);
+            notebookRepository.shareToUser(notebookID, userID);
+        } catch (Exception e) {
+            logger.error("shareToUser error: " + e.getMessage());
+            throw e;
+        }
     }
+
+
 }

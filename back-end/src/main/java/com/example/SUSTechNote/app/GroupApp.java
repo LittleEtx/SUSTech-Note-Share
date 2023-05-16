@@ -2,7 +2,6 @@ package com.example.SUSTechNote.app;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.service.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,21 +22,18 @@ public class GroupApp {
     @GetMapping("/loadJoinedGroup")
     public ResponseEntity<?> loadJoinedGroup() {
         int userID = StpUtil.getLoginIdAsInt();
-//        int userID = 12112628;
         return ResponseEntity.ok(groupService.loadJoinedGroup(userID));
     }
 
     @GetMapping("/loadEnjoinedGroup")
     public ResponseEntity<?> loadEnjoinedGroup() {
         int userID = StpUtil.getLoginIdAsInt();
-//        int userID = 12112628;
         return ResponseEntity.ok(groupService.loadEnjoinedGroup(userID));
     }
 
     @PostMapping("/createGroup")
     public ResponseEntity<?> createGroup(@RequestBody JSONObject jsonObject) {
         int userID = StpUtil.getLoginIdAsInt();
-//        int userID = 12112628;
         String groupName = jsonObject.getString("groupName");
         String groupDescription = jsonObject.getString("groupDescription");
         String createTime = jsonObject.getString("createTime");
@@ -55,7 +51,6 @@ public class GroupApp {
     @PostMapping("/joinGroup")
     public ResponseEntity<?> joinGroup(@RequestBody JSONObject jsonObject) {
         int userID = StpUtil.getLoginIdAsInt();
-//        int userID = 12112628;
         int groupID = jsonObject.getInteger("groupID");
         try {
             groupService.joinGroup(userID, groupID);
@@ -69,7 +64,6 @@ public class GroupApp {
     @PostMapping("/updateGroup")
     public ResponseEntity<?> updateGroup(@RequestBody JSONObject jsonObject) {
       int userID = StpUtil.getLoginIdAsInt();
-//        int userID = 12112628;
         int groupID = jsonObject.getInteger("groupID");
         String groupName = jsonObject.getString("groupName");
         String groupDescription = jsonObject.getString("groupDescription");
@@ -85,7 +79,6 @@ public class GroupApp {
     @PostMapping("/quitGroup")
     public ResponseEntity<?> quitGroup(@RequestBody JSONObject jsonObject) {
         int userID = StpUtil.getLoginIdAsInt();
-//        int userID = 12112628;
         int groupID = jsonObject.getInteger("groupID");
         try {
             groupService.quitGroup(userID, groupID);
@@ -99,7 +92,6 @@ public class GroupApp {
     @PostMapping("/deleteGroup")
     public ResponseEntity<?> deleteGroup(@RequestBody JSONObject jsonObject) {
         int userID = StpUtil.getLoginIdAsInt();
-//        int userID = 12112628;
         int groupID = jsonObject.getInteger("groupID");
         try {
             groupService.deleteGroup(userID, groupID);
@@ -114,7 +106,7 @@ public class GroupApp {
     public ResponseEntity<?> groupInfo(@RequestBody JSONObject jsonObject) {
         int groupID = jsonObject.getInteger("groupID");
         try {
-            Group group = groupService.groupInfo(groupID);
+            JSONObject group = groupService.groupInfo(groupID);
             return ResponseEntity.ok(group);
         } catch (Exception e) {
             logger.error(e.getMessage());

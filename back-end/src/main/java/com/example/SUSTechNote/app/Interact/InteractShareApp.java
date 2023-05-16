@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app.Interact;
 
+import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.service.NotebookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +23,12 @@ public class InteractShareApp {
      */
     @GetMapping("/get-shared-users")
     public ResponseEntity<?> getShareUsers(@RequestParam("notebook") String notebookID){
-        //TODO
-        return null;
+        try {
+            Notebook notebook = notebookService.findNotebookByID(notebookID);
+            return ResponseEntity.ok().body(notebook.getUsers());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /**
@@ -33,7 +38,8 @@ public class InteractShareApp {
     @GetMapping("/get-shared-groups")
     public ResponseEntity<?> getShareGroups(@RequestParam("notebook") String notebookID){
         try {
-            return ResponseEntity.ok().body(notebookService.getSharedGroups(notebookID));
+            Notebook notebook = notebookService.findNotebookByID(notebookID);
+            return ResponseEntity.ok().body(notebook.getGroups());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -45,12 +51,13 @@ public class InteractShareApp {
      * @param userID 用户ID
      */
     @PostMapping("/share-to-user")
-    public ResponseEntity<?> shareToUser(
-            @RequestParam("notebook") String notebookID,
-            @RequestParam("target") String userID
-    ){
-        //TODO
-        return null;
+    public ResponseEntity<?> shareToUser(@RequestParam("notebook") String notebookID, @RequestParam("target") String userID){
+        try {
+            notebookService.shareToUser(notebookID, userID);
+            return ResponseEntity.ok().body("分享成功");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /**

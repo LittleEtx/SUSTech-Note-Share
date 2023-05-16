@@ -38,17 +38,29 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public JSONObject getHistory(int userID) {
-        JSONObject jsonObject = new JSONObject();
+    public List<JSONObject> getHistory(int userID) {
+        List<JSONObject> jsonObjectList = new ArrayList<>();
         List<History> histories = historyRepository.getHistory(userID);
-        List<Notebook> notebooks = new ArrayList<>();
         for (History history : histories) {
+            LocalDateTime visitTime = history.getVisitTime();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("historyID", history.getHistoryID());
+            jsonObject.put("notebookID", history.getNotebookID());
+            jsonObject.put("visitTime", history.getVisitTime());
+            jsonObject.put("userID", history.getUser().getUserID());
             Notebook notebook = notebookRepository.findNotebookByNotebookID(history.getNotebookID());
-            notebooks.add(notebook);
+            jsonObject.put("notebookName", notebook.getNotebookName());
+            jsonObject.put("notebookDescription", notebook.getDescription());
+            jsonObject.put("authorID", notebook.getAuthorID());
+            jsonObject.put("cover", notebook.getCover());
+            jsonObject.put("directory", notebook.getDirectory());
+            jsonObject.put("isPublic", notebook.getIsPublic());
+            jsonObject.put("likeNum", notebook.getLikeNum());
+            jsonObject.put("star", notebook.getStar());
+            jsonObject.put("tag", notebook.getTag());
+            jsonObjectList.add(jsonObject);
         }
-        jsonObject.put("histories", histories);
-        jsonObject.put("notebooks", notebooks);
-        return jsonObject;
+        return jsonObjectList;
     }
 
     @Override

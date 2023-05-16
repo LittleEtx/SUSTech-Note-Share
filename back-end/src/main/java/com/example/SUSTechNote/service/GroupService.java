@@ -2,7 +2,6 @@ package com.example.SUSTechNote.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Group;
-import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +27,9 @@ public interface GroupService {
 
     String updateGroup(int userID, int groupID, String groupName, String groupDescription);
 
-    Group groupInfo(int groupID);
+    JSONObject groupInfo(int groupID);
 
-    List<User> groupMembers(int groupID);
+    List<JSONObject> groupMembers(int groupID);
 
     List<NotebookInterface> groupNotebookInfo(int groupID);
 }

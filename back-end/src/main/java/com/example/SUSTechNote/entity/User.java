@@ -177,4 +177,12 @@ public class User {
     public void setGroupList(List<Group> groupList) {
         this.groupList = groupList;
     }
+
+    public List<Course> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(List<Course> courseList) {
+        this.courseList = courseList;
+    }
 }

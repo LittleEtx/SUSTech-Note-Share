@@ -12,7 +12,7 @@ public class Group {
     private String GroupName;
     private String GroupDescription;
     @ManyToOne
-    @JoinColumn(name = "GroupOwnerID")
+    @JoinColumn(name = "group_ownerid")
     private User user;
     private String GroupOwnerName;
     private String createTime;

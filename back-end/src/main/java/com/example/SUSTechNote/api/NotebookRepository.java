@@ -68,4 +68,9 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
             "where groupid in " +
             "(select groupid from notebook_share_group where notebookid = ?1) ", nativeQuery = true)
     List<Group> getSharedGroups(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into notebook_share_user values (?1, ?2)", nativeQuery = true)
+    void shareToUser(String notebookID, String userID);
 }

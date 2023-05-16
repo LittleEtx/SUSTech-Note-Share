@@ -128,17 +128,22 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group groupInfo(int groupID) {
-        return groupRepository.findById(groupID).get();
+    public JSONObject groupInfo(int groupID) {
+        Group group = groupRepository.findById(groupID).get();
+        return convertGroup2JsonObject(group);
     }
 
     @Override
-    public List<User> groupMembers(int groupID) {
+    public List<JSONObject> groupMembers(int groupID) {
         List<Integer> userIDs = groupRepository.findGroupMembers(groupID);
-        List<User> users = new ArrayList<>();
+        List<JSONObject> users = new ArrayList<>();
         for (Integer userID : userIDs) {
             User user = userRepository.findUserByUserID(userID);
-            users.add(user);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userID", user.getUserID());
+            jsonObject.put("userName", user.getUserName());
+            jsonObject.put("avatar", user.getAvatar());
+            users.add(jsonObject);
         }
         return users;
     }

@@ -1,6 +1,5 @@
 package com.example.SUSTechNote.service;
 
-import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,5 +34,5 @@ public interface NotebookService {
 
     List<Notebook> findSharedNotebooks(int userID);
 
-    List<Group> getSharedGroups(String notebookID);
+    void shareToUser(String notebookID, String userID);
 }
