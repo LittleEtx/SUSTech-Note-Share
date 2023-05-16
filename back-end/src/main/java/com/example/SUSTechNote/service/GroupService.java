@@ -1,7 +1,7 @@
 package com.example.SUSTechNote.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Group;
-import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
 import org.springframework.stereotype.Service;
@@ -10,13 +10,15 @@ import java.util.List;
 
 @Service
 public interface GroupService {
-    List<Group> loadJoinedGroup(int userID);
+    List<JSONObject> loadJoinedGroup(int userID);
+
+    List<Group> loadJoinedGroup2(int userID);
 
     String findUserNameByUserID(int userID);
 
     void createGroup(int userID, String groupName, String groupDescription, String createTime, String groupOwnerName);
 
-    List<Group> loadEnjoinedGroup(int userID);
+    List<JSONObject> loadEnjoinedGroup(int userID);
 
     void joinGroup(int userID, int groupID);
 

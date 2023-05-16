@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.api;
 
+import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,4 +57,15 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Query(value = "select notebookid from notebooks where authorid = ?1", nativeQuery = true)
     List<String> findNotebookIDByAuthorID(int userID);
+
+    @Query(value = "select * from notebooks " +
+            "where notebookid in " +
+            "(select notebookid from notebook_share_user where userid = ?1) " +
+            "and remove_time is null", nativeQuery = true)
+    List<Notebook> findSharedNotebooksByUserID(int userID);
+
+    @Query(value = "select * from my_groups " +
+            "where groupid in " +
+            "(select groupid from notebook_share_group where notebookid = ?1) ", nativeQuery = true)
+    List<Group> getSharedGroups(String notebookID);
 }

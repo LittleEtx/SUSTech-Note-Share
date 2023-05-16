@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.service;
 
+import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,7 @@ public interface NotebookService {
 
     Notebook getNotebookBasic(String notebookID);
 
-    List<Notebook> findNotebooks();
+    List<Notebook> findNotebooks(int userID);
 
     Notebook findNotebookByID(String notebookID);
 
@@ -31,4 +32,8 @@ public interface NotebookService {
     boolean checkAuthority(int userID, String notebookID);
 
     List<String> findNotebookIDByUserID(int userID);
+
+    List<Notebook> findSharedNotebooks(int userID);
+
+    List<Group> getSharedGroups(String notebookID);
 }

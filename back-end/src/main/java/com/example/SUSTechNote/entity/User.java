@@ -121,7 +121,7 @@ public class User {
 
     public void setPermission(String permission) {
         this.permission = permission;
-    };
+    }
 
     public LocalDateTime getUpdateTime() {
         return updateTime;
@@ -152,5 +152,29 @@ public class User {
 
     public void setBirth(Date birth) {
         this.birth = birth;
+    }
+
+    public List<Notebook> getLikeNotebookList() {
+        return likeNotebookList;
+    }
+
+    public void setLikeNotebookList(List<Notebook> likeNotebookList) {
+        this.likeNotebookList = likeNotebookList;
+    }
+
+    public List<Notebook> getStarNotebookList() {
+        return starNotebookList;
+    }
+
+    public void setStarNotebookList(List<Notebook> starNotebookList) {
+        this.starNotebookList = starNotebookList;
+    }
+
+    public List<Group> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<Group> groupList) {
+        this.groupList = groupList;
     }
 }
