@@ -1,11 +1,9 @@
 package com.example.SUSTechNote.app.notebook;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.example.SUSTechNote.exception.FileNotExistException;
 import com.example.SUSTechNote.exception.ModifyNotAuthoredException;
 import com.example.SUSTechNote.exception.NoteNotExistException;
 import com.example.SUSTechNote.service.FileService;
-import com.example.SUSTechNote.service.NotebookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +56,25 @@ public class FileApp {
                 return ResponseEntity.badRequest().body("Failed to delete file!");
             }
         } catch (FileNotExistException e) {
+            return ResponseEntity.badRequest().body("Note not exist");
+        } catch (ModifyNotAuthoredException e) {
+            return ResponseEntity.badRequest().body("Not authorized to modify this note");
+        }
+    }
+
+    @PostMapping("move_file")
+    public ResponseEntity<?> moveFile(
+            @RequestParam("fileID") String fileID,
+            @RequestParam("noteID") String noteID
+    ){
+        logger.debug("move file: " + fileID + " to note: " + noteID);
+        try {
+            if (fileService.moveFile(fileID,noteID)){
+                return ResponseEntity.ok("File moved");
+            }else {
+                return ResponseEntity.badRequest().body("Failed to move file!");
+            }
+        }catch (FileNotExistException e) {
             return ResponseEntity.badRequest().body("Note not exist");
         } catch (ModifyNotAuthoredException e) {
             return ResponseEntity.badRequest().body("Not authorized to modify this note");

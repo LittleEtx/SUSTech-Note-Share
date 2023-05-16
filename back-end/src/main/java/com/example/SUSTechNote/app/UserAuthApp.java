@@ -150,7 +150,7 @@ public class UserAuthApp {
         if (SaTempUtil.getTimeout(token) < 0) {
             return ResponseEntity.badRequest().body("Invalid token");
         }
-        if (password == null || password.length() <= 6) {
+        if (password == null || password.length() < 6) {
             return ResponseEntity.badRequest().body("Invalid password");
         }
         String emailValue = SaTempUtil.parseToken(token,String.class);
