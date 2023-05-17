@@ -101,19 +101,39 @@ export async function apiCreateNote (notebookID: string, name: string, isPublic:
   return data
 }
 
-export async function apiUploadFile (noteID: string, file: File, fileID?: string): Promise<string> {
+/**
+ * 上传文件至笔记
+ * @param noteID 笔记id
+ * @param file 文件
+ */
+export async function apiUploadFile (noteID: string, file: File): Promise<string> {
   const formData = new FormData()
   formData.append('file', file)
   formData.append('name', file.name)
   const { data } = await axios.post('/api/notebook/upload-file', formData, {
     params: {
-      note: noteID,
-      origin: fileID
+      note: noteID
     }
   })
   return data
 }
 
+/**
+ * 更新文件
+ * @param fileID 需要覆盖的文件id
+ * @param file 文件
+ */
+export async function apiUpdateFile (fileID: string, file: Blob): Promise<void> {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('id', fileID)
+  await axios.post('/api/notebook/update-file', formData)
+}
+
+/**
+ * 删除文件
+ * @param fileID
+ */
 export async function apiDeleteFile (fileID: string): Promise<void> {
   await axios.delete('/api/notebook/delete-file', {
     params: {

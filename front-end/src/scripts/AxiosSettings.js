@@ -9,7 +9,7 @@ const onResponseSuccess = response => {
 
 const onResponseError = async err => {
   const status = err.status || err.response.status
-  if (status === 401 || status === 403) {
+  if (status === 401) {
     // not logged in, remove login token
     console.error('[axios-global]invalid token')
     Cookies.remove('satoken')
