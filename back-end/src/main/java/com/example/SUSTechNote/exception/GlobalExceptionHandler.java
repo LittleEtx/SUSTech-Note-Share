@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -32,6 +33,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> ioException(IOException e) {
         return ResponseEntity.internalServerError()
                 .body("An error happens in the server: " + e.getMessage());
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<?> fileNotFoundHandler() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not exist");
+    }
+
+    @ExceptionHandler(NoteNotExistException.class)
+    public ResponseEntity<?> noteNotExistHandler() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Note not exist");
+    }
+
+    @ExceptionHandler(ModifyNotAuthoredException.class)
+    public ResponseEntity<?> expHandler() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not the author of this note");
     }
 
 }

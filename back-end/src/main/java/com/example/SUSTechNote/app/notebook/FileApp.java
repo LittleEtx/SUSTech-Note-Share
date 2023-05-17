@@ -1,8 +1,5 @@
 package com.example.SUSTechNote.app.notebook;
 
-import com.example.SUSTechNote.exception.FileNotExistException;
-import com.example.SUSTechNote.exception.ModifyNotAuthoredException;
-import com.example.SUSTechNote.exception.NoteNotExistException;
 import com.example.SUSTechNote.service.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,21 +23,32 @@ public class FileApp {
     @PostMapping("upload-file")
     public ResponseEntity<?> uploadFile(
             @RequestParam("note") String noteID,
-            @RequestParam(name = "origin", defaultValue = "") String originFileID,
             @RequestParam("file") MultipartFile file,
             @RequestParam("name") String fileName
     ) {
         logger.debug("upload file: " + fileName + " to note: " + noteID);
         try {
-            String id = fileService.uploadFile(noteID,fileName,file,originFileID);
+            String id = fileService.uploadFile(noteID, fileName, file);
             return ResponseEntity.ok(id);
-        } catch (NoteNotExistException e) {
-            return ResponseEntity.badRequest().body("Note not exist");
-        } catch (ModifyNotAuthoredException e) {
-            return ResponseEntity.badRequest().body("Not authorized to modify this note");
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("File upload failed");
+        }
+    }
+
+    /**
+     * 更新一个已有文件
+     */
+    @PostMapping("update-file")
+    public ResponseEntity<?> updateFile(
+            @RequestParam("id") String fileID,
+            @RequestParam("file") MultipartFile file
+    ) {
+        logger.debug("update file: " + fileID);
+        if (fileService.updateFile(file, fileID)) {
+            return ResponseEntity.ok("File updated");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to update file!");
         }
     }
 
@@ -49,16 +57,10 @@ public class FileApp {
             @RequestParam("file") String fileID
     ) {
         logger.debug("delete file: " + fileID);
-        try {
-            if (fileService.deleteFile(fileID)) {
-                return ResponseEntity.ok("File deleted");
-            } else {
-                return ResponseEntity.badRequest().body("Failed to delete file!");
-            }
-        } catch (FileNotExistException e) {
-            return ResponseEntity.badRequest().body("Note not exist");
-        } catch (ModifyNotAuthoredException e) {
-            return ResponseEntity.badRequest().body("Not authorized to modify this note");
+        if (fileService.deleteFile(fileID)) {
+            return ResponseEntity.ok("File deleted");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to delete file!");
         }
     }
 
@@ -68,16 +70,10 @@ public class FileApp {
             @RequestParam("noteID") String noteID
     ){
         logger.debug("move file: " + fileID + " to note: " + noteID);
-        try {
-            if (fileService.moveFile(fileID,noteID)){
-                return ResponseEntity.ok("File moved");
-            }else {
-                return ResponseEntity.badRequest().body("Failed to move file!");
-            }
-        }catch (FileNotExistException e) {
-            return ResponseEntity.badRequest().body("Note not exist");
-        } catch (ModifyNotAuthoredException e) {
-            return ResponseEntity.badRequest().body("Not authorized to modify this note");
+        if (fileService.moveFile(fileID,noteID)){
+            return ResponseEntity.ok("File moved");
+        }else {
+            return ResponseEntity.badRequest().body("Failed to move file!");
         }
     }
 }

@@ -40,18 +40,16 @@ public class FileServiceImpl implements FileService {
     // 需加入同步锁防止同时上传多个文件时出现文件ID重复的情况
     @Override
     public synchronized String uploadFile(String noteID, String fileName,
-                             MultipartFile file, String fileID) throws IOException {
-//        checkAuthority(noteID);
-        Note note = noteRepository.findNoteByNoteID(noteID);
-        if (fileID == null || "".equals(fileID)) {
-            var notebookID = note.getNotebookID();
-            var files = fileRepository.findFilesByNotebook(notebookID);
-            int lastFileNum = files.stream()
-                .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
-                .max(Integer::compareTo).orElse(0);
-            // 新建文件，生成新的文件ID
-            fileID = notebookID + "_" + (lastFileNum + 1);
-        }
+                             MultipartFile file) throws IOException {
+        Note note = checkNoteAuthority(noteID);
+        var notebookID = note.getNotebookID();
+        var files = fileRepository.findFilesByNotebook(notebookID);
+        int lastFileNum = files.stream()
+            .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
+            .max(Integer::compareTo).orElse(0);
+        // 新建文件，生成新的文件ID
+        String fileID = notebookID + "_" + (lastFileNum + 1);
+
         // 若笔记的文件夹不存在，则创建
         File noteFile = new File(staticPathHelper.getStaticPath(), note.getSavingPath());
         if (!noteFile.exists()) {
@@ -74,13 +72,21 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean deleteFile(String fileID){
-        Files file = fileRepository.findFilesByFileID(fileID);
-        if (file == null){
-            throw new FileNotExistException("file not found");
+    public boolean updateFile(MultipartFile file, String fileID) {
+        var fileInfo = checkFileAuthority(fileID);
+        var targetFile = new File(staticPathHelper.getStaticPath(), fileInfo.getSavingPath());
+        try {
+            file.transferTo(targetFile);
+        } catch (IOException e) {
+            logger.warn("update file failed: " + e.getMessage());
+            return false;
         }
-        Note note = file.getNote();
-        checkAuthority(note);
+        return true;
+    }
+
+    @Override
+    public boolean deleteFile(String fileID){
+        Files file = checkFileAuthority(fileID);
         File filePath = new File(staticPathHelper.getStaticPath(), file.getSavingPath());
         if (!filePath.exists() || !filePath.isFile()) {
             logger.error("file not found, clean record in database");
@@ -158,19 +164,31 @@ public class FileServiceImpl implements FileService {
      * @param noteID the note ID
      * @throws NoteNotExistException if the note does not exist
      * @throws ModifyNotAuthoredException if the user has no authority to modify the note
+     * @return the note been authorized
      */
-    public void checkAuthority(String noteID)
+    public Note checkNoteAuthority(String noteID)
             throws NoteNotExistException, ModifyNotAuthoredException {
         Note note = noteRepository.findNoteByNoteID(noteID);
         if (note == null) {
             throw new NoteNotExistException("note not found");
         }
-        checkAuthority(note);
+        checkNoteAuthority(note);
+        return note;
     }
-    public void checkAuthority(Note note) {
+    public void checkNoteAuthority(Note note) {
         String notebookID = note.getNotebookID();
         if (!notebookService.checkAuthority(StpUtil.getLoginIdAsInt(), notebookID)) {
             throw new ModifyNotAuthoredException("user has no authority to modify this note");
         }
+    }
+
+    public Files checkFileAuthority(String fileID)
+            throws FileNotExistException, ModifyNotAuthoredException {
+        Files file = fileRepository.findFilesByFileID(fileID);
+        if (file == null) {
+            throw new FileNotExistException("file not found");
+        }
+        checkNoteAuthority(file.getNote());
+        return file;
     }
 }
