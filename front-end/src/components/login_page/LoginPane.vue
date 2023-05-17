@@ -55,7 +55,7 @@ export default {
   data () {
     return {
       loading: false,
-      activeName: 'email',
+      activeName: 'code',
       rememberMe: false
     }
   },

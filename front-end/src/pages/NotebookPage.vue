@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="common-layout">
-        <el-container style="height: 700px">
+        <el-container style="height: 90vh">
           <el-aside width="200px">
             <el-scrollbar>
               <notebook-file-list
@@ -58,11 +58,12 @@
           </el-aside>
           <el-container>
             <el-header>
-              <h4>{{ currentFile?.name }}</h4>
+              <h4 class="text-truncated" style="width: 70%">{{ currentFile?.name }}</h4>
             </el-header>
             <el-main>
-              <file-display :file="currentFile">
-
+              <file-display
+                :file="currentFile"
+                :can-modify="canModify">
               </file-display>
             </el-main>
           </el-container>
@@ -149,4 +150,11 @@ const onSelectFile = (file: FileInfo) => {
   margin-top: 40px;
 }
 
+.text-truncated {
+  display: inline-block;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 </style>
