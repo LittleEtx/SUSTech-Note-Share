@@ -26,7 +26,7 @@ public interface FileService {
      */
     boolean deleteFile(String fileID);
 
-    void renameFile(String noteID,String fileName,String newName);
+    void renameFile(String fileID, String newName);
 
     boolean moveFile(String fileID, String noteID);
 

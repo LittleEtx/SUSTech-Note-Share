@@ -76,4 +76,18 @@ public class FileApp {
             return ResponseEntity.badRequest().body("Failed to move file!");
         }
     }
+
+    @PostMapping("rename_file")
+    public ResponseEntity<?> renameFile(
+            @RequestParam("fileID") String fileID,
+            @RequestParam("newName") String newName
+    ){
+        logger.debug("rename file: " + fileID + " to new name: " + newName);
+        try {
+            fileService.renameFile(fileID,newName);
+            return ResponseEntity.ok("File renamed");
+        }catch (ModifyNotAuthoredException e) {
+            return ResponseEntity.badRequest().body("Not authorized to modify this file");
+        }
+    }
 }

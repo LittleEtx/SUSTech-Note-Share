@@ -104,23 +104,15 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void renameFile(String noteID, String fileName, String newName){
-        try {
-            Note note = noteRepository.findNoteByNoteID(noteID);
-            if (note != null){
-                Files file = fileRepository.findFilesByNoteAndFileName(note,fileName);
-                if (file != null){
-                    file.setFileName(newName);
-                    fileRepository.save(file);
-                }else {
-                    logger.error("file not found");
-                }
-            }else {
-                logger.error("note not found");
-            }
-        }catch (Exception e) {
-            logger.error("addNotebook error: " + e.getMessage());
+    public void renameFile(String fileID, String newName){
+        Files file = fileRepository.findFilesByFileID(fileID);
+        if (file == null){
+            throw new FileNotExistException("file not found");
         }
+        Note note = file.getNote();
+        checkAuthority(note);
+        file.setFileName(newName);
+        fileRepository.save(file);
     }
 
 
@@ -132,7 +124,7 @@ public class FileServiceImpl implements FileService {
             throw new FileNotExistException("file not found");
         }
         Note note = noteRepository.findNoteByNoteID(noteID);
-//        checkAuthority(note);
+        checkAuthority(note);
 
         //判断目标位置是否已存在同名文件
         String destinationPath = staticPathHelper.getStaticPath() + note.getSavingPath() + "/" + fileID;
