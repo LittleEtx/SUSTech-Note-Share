@@ -15,8 +15,8 @@ import java.io.IOException;
 public class FileApp {
     private final Logger logger = LoggerFactory.getLogger(FileApp.class);
 
-    private final FileService fileService;
 
+    private final FileService fileService;
     public FileApp(FileService fileService) {
         this.fileService = fileService;
     }
@@ -65,10 +65,10 @@ public class FileApp {
         }
     }
 
-    @PostMapping("move_file")
+    @PostMapping("move-file")
     public ResponseEntity<?> moveFile(
-            @RequestParam("fileID") String fileID,
-            @RequestParam("noteID") String noteID
+            @RequestParam("file") String fileID,
+            @RequestParam("note") String noteID
     ){
         logger.debug("move file: " + fileID + " to note: " + noteID);
         if (fileService.moveFile(fileID,noteID)){
@@ -78,10 +78,10 @@ public class FileApp {
         }
     }
 
-    @PostMapping("rename_file")
+    @PostMapping("rename-file")
     public ResponseEntity<?> renameFile(
-            @RequestParam("fileID") String fileID,
-            @RequestParam("newName") String newName
+            @RequestParam("file") String fileID,
+            @RequestParam("name") String newName
     ){
         logger.debug("rename file: " + fileID + " to new name: " + newName);
         try {

@@ -114,29 +114,28 @@ public class FileServiceImpl implements FileService {
     // 需加入同步锁防止同时移动多个文件时出现文件ID重复的情况
     @Override
     public synchronized boolean moveFile(String fileID, String noteID){
-        Files file = fileRepository.findFilesByFileID(fileID);
-        if (file == null){
-            throw new FileNotExistException("file not found");
+        Files file = checkFileAuthority(fileID);
+        Note note = checkNoteAuthority(noteID);
+        var relativeSavingPath = note.getSavingPath() + "/" + fileID;
+        if (relativeSavingPath.equals(file.getSavingPath())) {
+            logger.trace("move file to itself");
+            return true;
         }
-        Note note = noteRepository.findNoteByNoteID(noteID);
-        checkNoteAuthority(note);
 
         //判断目标位置是否已存在同名文件
-        String destinationPath = staticPathHelper.getStaticPath() + note.getSavingPath() + "/" + fileID;
-        System.out.println(destinationPath);
-        File destinationFile = new File(destinationPath);
+        File originFile = new File(staticPathHelper.getStaticPath(), file.getSavingPath());
+        File destinationFile = new File(staticPathHelper.getStaticPath(), relativeSavingPath);
         if (destinationFile.exists()){
             logger.error("file existed in target note");
-//            return false;
+            return false;
         }
-        File originFile = new File(staticPathHelper.getStaticPath(), file.getSavingPath());
-        System.out.println(originFile.getAbsolutePath());
+        System.out.println();
         logger.debug("rename file " + originFile.getAbsolutePath() + " to " + destinationFile.getAbsolutePath());
         if(originFile.renameTo(destinationFile)){
             //更新数据库
-            file.setFileUrl("/api/static" + destinationPath);
+            file.setFileUrl("/api/static" + relativeSavingPath);
             file.setNote(note);
-            file.setSavingPath(destinationPath);
+            file.setSavingPath(relativeSavingPath);
             fileRepository.save(file);
             return true;
         }else {
