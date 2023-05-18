@@ -42,7 +42,6 @@ public class HistoryServiceImpl implements HistoryService {
         List<JSONObject> jsonObjectList = new ArrayList<>();
         List<History> histories = historyRepository.getHistory(userID);
         for (History history : histories) {
-            LocalDateTime visitTime = history.getVisitTime();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("historyID", history.getHistoryID());
             jsonObject.put("notebookID", history.getNotebookID());

@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "comment")
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer commentID;
+    private String commentID;
     private String commentContent;
     @ManyToOne
     @JoinColumn(name = "notebook_id")
@@ -19,11 +18,11 @@ public class Comment {
     private User user;
     private LocalDateTime commentTime;
 
-    public Integer getCommentID() {
+    public String getCommentID() {
         return commentID;
     }
 
-    public void setCommentID(Integer commentID) {
+    public void setCommentID(String commentID) {
         this.commentID = commentID;
     }
 
