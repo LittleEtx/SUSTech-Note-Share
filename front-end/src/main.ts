@@ -10,16 +10,12 @@ import { key, store } from './store/store'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
 
-import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
-
 /* eslint-disable no-new */
 const app = createApp(App)
 
 app.use(ElementPlus)
 app.use(router)
 app.use(store, key)
-app.use(mavonEditor)
 
 // 全局导入所有的 ElementPlus 图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
