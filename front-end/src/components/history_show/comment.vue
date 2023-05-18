@@ -3,6 +3,19 @@
     <h2>评论区</h2>
     <form @submit.prevent="addComment" class="comment-form">
       <!-- 表单内容 -->
+      <div class="form-group">
+        <label for="author">作者</label>
+        <input type="text" id="author" v-model="newComment.author" required>
+      </div>
+      <div class="form-group">
+        <label for="comment">评论</label>
+        <textarea id="comment" v-model="newComment.text" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="avatar">头像</label>
+        <input type="text" id="avatar" v-model="newComment.avatar" placeholder="https://example.com/avatar.png">
+      </div>
+      <button type="submit">提交评论</button>
     </form>
 
     <ul>
