@@ -52,11 +52,17 @@ public class NotebookApp {
         }
         String basePath = staticPathHelper.getStaticPath() + "/notebooks/" + userID + "/";
         List<String> notebookIDs = notebookService.findNotebookIDByUserID(userID);
-        Collections.sort(notebookIDs);
-        String lastNotebookID = notebookIDs.get(notebookIDs.size() - 1);
-        int lastNotebookNum = Integer.parseInt(lastNotebookID.substring(lastNotebookID.lastIndexOf("_") + 1));
-        String noteBookID = userID + "_" + (lastNotebookNum + 1);
-        String savePath = basePath + noteBookID;
+        String newNoteBookID;
+        if (notebookIDs.size() > 0) {
+            Collections.sort(notebookIDs);
+            String lastNotebookID = notebookIDs.get(notebookIDs.size() - 1);
+            int lastNotebookNum = Integer.parseInt(lastNotebookID.substring(lastNotebookID.lastIndexOf("_") + 1));
+            newNoteBookID = userID + "_" + (lastNotebookNum + 1);
+        } else {
+            newNoteBookID = userID + "_1";
+        }
+
+        String savePath = basePath + newNoteBookID;
         File folder = new File(savePath);
         if (!folder.exists()) {
             logger.info("create noteBook folder: " + folder.getAbsolutePath());
@@ -81,13 +87,13 @@ public class NotebookApp {
                     .body("Title and directory cannot be empty");
         }
         try {
-            notebookService.addNotebook(noteBookID, userID,
+            notebookService.addNotebook(newNoteBookID, userID,
                     directory, realPath, title, tag, description, isPublic ? 1 : 0);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Notebook creation failed");
         }
-        logger.info("user " + userID + " created notebook " + noteBookID);
-        return ResponseEntity.ok(noteBookID);
+        logger.info("user " + userID + " created notebook " + newNoteBookID);
+        return ResponseEntity.ok(newNoteBookID);
     }
 
     /**

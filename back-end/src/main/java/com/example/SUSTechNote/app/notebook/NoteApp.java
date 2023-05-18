@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -42,11 +43,17 @@ public class NoteApp {
         int userID = StpUtil.getLoginIdAsInt();
         authorityService.checkNotebookAuthority(notebookID);
         List<String> noteIDs = noteService.findNoteIDsByNotebookID(notebookID);
-        int lastNoteNum = noteIDs.stream()
-                .map(id -> Integer.parseInt(id.substring(id.lastIndexOf("_") + 1)))
-                .max(Integer::compareTo).orElse(0);
-        String noteID = notebookID + "_" + (lastNoteNum + 1);
-        String relativePath = "/notebooks/" + userID + "/" + notebookID + "/" + noteID;
+        String newNoteID;
+        if (noteIDs.size() > 0) {
+            Collections.sort(noteIDs);
+            String lastNoteID = noteIDs.get(noteIDs.size() - 1);
+            int lastNoteNum = Integer.parseInt(lastNoteID.substring(lastNoteID.lastIndexOf("_") + 1));
+            newNoteID = notebookID + "_" + (lastNoteNum + 1);
+        } else {
+            newNoteID = notebookID + "_1";
+        }
+
+        String relativePath = "/notebooks/" + userID + "/" + notebookID + "/" + newNoteID;
         String savePath = staticPathHelper.getStaticPath() + relativePath;
         File folder = new File(savePath);
         if (!folder.exists()) {
@@ -57,11 +64,11 @@ public class NoteApp {
             }
         }
         try {
-            noteService.addNote(noteID, userID, notebookID, relativePath, name, isPublic ? 1 : 0);
+            noteService.addNote(newNoteID, userID, notebookID, relativePath, name, isPublic ? 1 : 0);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Note creation failed");
         }
-        return ResponseEntity.ok(noteID);
+        return ResponseEntity.ok(newNoteID);
 
     }
 

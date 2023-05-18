@@ -1,9 +1,11 @@
 package com.example.SUSTechNote.service.Impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.example.SUSTechNote.api.GroupRepository;
 import com.example.SUSTechNote.api.NotebookRepository;
 
 import com.example.SUSTechNote.api.UserRepository;
+import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 
 import com.example.SUSTechNote.entity.User;
@@ -28,11 +30,13 @@ public class NotebookServiceImpl implements NotebookService {
     private final Logger logger = LoggerFactory.getLogger(NotebookServiceImpl.class);
     private final NotebookRepository notebookRepository;
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final StaticPathHelper staticPathHelper;
 
-    public NotebookServiceImpl(NotebookRepository notebookRepository, UserRepository userRepository, StaticPathHelper staticPathHelper) {
+    public NotebookServiceImpl(NotebookRepository notebookRepository, UserRepository userRepository, GroupRepository groupRepository, StaticPathHelper staticPathHelper) {
         this.notebookRepository = notebookRepository;
         this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
         this.staticPathHelper = staticPathHelper;
     }
     
@@ -163,18 +167,152 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public void shareToUser(String notebookID, String userID) {
+    public boolean ifLike(String notebookID) {
+        int userID = StpUtil.getLoginIdAsInt();
+        List<String> notebookIDs = notebookRepository.findLikeNotebookIDByUserID(userID, notebookID);
+        return notebookIDs.size() == 1;
+    }
+
+    @Override
+    public boolean likeNotebook(String notebookID) {
+        int userID = StpUtil.getLoginIdAsInt();
         try {
-            Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
-            User newUser = userRepository.findUserByUserID(Integer.parseInt(userID));
-            List<User> users = notebook.getUsers();
-            users.add(newUser);
-            notebook.setUsers(users);
-            notebookRepository.save(notebook);
-            notebookRepository.shareToUser(notebookID, userID);
+            notebookRepository.likeNotebook(notebookID, userID);
+            notebookRepository.addLikeCount(notebookID);
+            return true;
         } catch (Exception e) {
-            logger.error("shareToUser error: " + e.getMessage());
+            logger.error("likeNotebook error: " + e.getMessage());
             throw e;
+        }
+    }
+
+    @Override
+    public String setNotebookPrivate(String notebookID) {
+        int userID = StpUtil.getLoginIdAsInt();
+        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
+        if(userID != ownerID) {
+            return "You are not the owner of this notebook.";
+        } else {
+            try {
+                notebookRepository.clearLikeAndStarAndSetPrivate(notebookID);
+                notebookRepository.removeLikeUser(notebookID);
+                notebookRepository.removeStarUser(notebookID);
+                notebookRepository.removeReply(notebookID);
+                notebookRepository.removeComment(notebookID);
+                return "Set success!";
+            } catch (Exception e) {
+                logger.error("setNotebookPrivate error: " + e.getMessage());
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public String setNotebookPublic(String notebookID) {
+        int userID = StpUtil.getLoginIdAsInt();
+        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
+        if (userID != ownerID) {
+            return "You are not the owner of this notebook.";
+        } else {
+            try {
+                notebookRepository.setPublic(notebookID);
+                return "Set success!";
+            } catch (Exception e) {
+                logger.error("setNotebookPublic error: " + e.getMessage());
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public String shareToUser(String notebookID, String userID) {
+        int userIDInt = StpUtil.getLoginIdAsInt();
+        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
+        if (userIDInt != ownerID) {
+            return "You are not the owner of this notebook.";
+        } else {
+            try {
+                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+                User newUser = userRepository.findUserByUserID(Integer.parseInt(userID));
+                List<User> users = notebook.getUsers();
+                users.add(newUser);
+                notebook.setUsers(users);
+                notebookRepository.save(notebook);
+                notebookRepository.shareToUser(notebookID, userID);
+                return "Share successfully.";
+            } catch (Exception e) {
+                logger.error("shareToUser error: " + e.getMessage());
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public String shareToGroup(String notebookID, int groupID) {
+        int userIDInt = StpUtil.getLoginIdAsInt();
+        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
+        if (userIDInt != ownerID) {
+            return "You are not the owner of this notebook.";
+        } else {
+            try {
+                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+                Group newGroup = groupRepository.findGroupByGroupID(groupID);
+                List<Group> groups = notebook.getGroups();
+                groups.add(newGroup);
+                notebook.setGroups(groups);
+                notebookRepository.save(notebook);
+                notebookRepository.shareToGroup(notebookID, groupID);
+                return "Share successfully.";
+            } catch (Exception e) {
+                logger.error("shareToUser error: " + e.getMessage());
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public String cancelUserShare(String notebookID, int userID) {
+        int userIDInt = StpUtil.getLoginIdAsInt();
+        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
+        if (userIDInt != ownerID) {
+            return "You are not the owner of this notebook.";
+        } else {
+            try {
+                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+                User userToRemove = userRepository.findUserByUserID(userID);
+                List<User> users = notebook.getUsers();
+                users.remove(userToRemove);
+                notebook.setUsers(users);
+                notebookRepository.save(notebook);
+                notebookRepository.cancelUserShare(notebookID, userID);
+                return "Cancel successfully.";
+            } catch (Exception e) {
+                logger.error("Cancel fail." + e.getMessage());
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public String cancelGroupShare(String notebookID, int groupID) {
+        int userIDInt = StpUtil.getLoginIdAsInt();
+        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
+        if (userIDInt != ownerID) {
+            return "You are not the owner of this notebook.";
+        } else {
+            try {
+                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
+                Group groupToRemove = groupRepository.findGroupByGroupID(groupID);
+                List<Group> groups = notebook.getGroups();
+                groups.remove(groupToRemove);
+                notebook.setGroups(groups);
+                notebookRepository.save(notebook);
+                notebookRepository.cancelGroupShare(notebookID, groupID);
+                return "Cancel successfully.";
+            } catch (Exception e) {
+                logger.error("Cancel fail." + e.getMessage());
+                throw e;
+            }
         }
     }
 
