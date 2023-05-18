@@ -3,8 +3,8 @@ package com.example.SUSTechNote.app.notebook;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Note;
+import com.example.SUSTechNote.service.Impl.AuthorityService;
 import com.example.SUSTechNote.service.NoteService;
-import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +19,12 @@ import java.util.List;
 public class NoteApp {
     private final Logger logger = LoggerFactory.getLogger(NoteApp.class);
     private final NoteService noteService;
-    private final NotebookService notebookService;
+    private final AuthorityService authorityService;
     private final StaticPathHelper staticPathHelper;
 
-    public NoteApp(NoteService noteService, NotebookService notebookService, StaticPathHelper staticPathHelper) {
+    public NoteApp(NoteService noteService, AuthorityService authorityService, StaticPathHelper staticPathHelper) {
         this.noteService = noteService;
-        this.notebookService = notebookService;
+        this.authorityService = authorityService;
         this.staticPathHelper = staticPathHelper;
     }
 
@@ -41,9 +41,7 @@ public class NoteApp {
         }
         //获取目前登录用户的id
         int userID = StpUtil.getLoginIdAsInt();
-        if (!notebookService.checkAuthority(userID, notebookID)) {
-            return ResponseEntity.badRequest().body("You are not authored to modify the notebook!");
-        }
+        authorityService.checkNotebookAuthority(notebookID);
         List<String> noteIDs = noteService.findNoteIDsByNotebookID(notebookID);
         int lastNoteNum = noteIDs.stream()
                 .map(id -> Integer.parseInt(id.substring(id.lastIndexOf("_") + 1)))
@@ -68,20 +66,26 @@ public class NoteApp {
 
     }
 
-    @PostMapping("/updateNote")
-    public int updateNote(Note note) {
-        return noteService.updateNote(note);
-    }
-
-
-    @PostMapping ("/note/delete")
-    public ResponseEntity<?> deleteNote(@RequestBody JSONObject jsonObject) {
-        String noteID = jsonObject.getString("noteID");
+    @PostMapping ("/delete-note")
+    public ResponseEntity<?> deleteNote(@RequestParam("note") String noteID) {
         try {
             String result = noteService.deleteNote(noteID);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Note deletion failed \n" + e);
+        }
+    }
+
+    @PostMapping("/rename-note")
+    public ResponseEntity<?> renameDir(
+            @RequestParam("note") String notebookID,
+            @RequestParam("name") String newName
+    ) {
+        try {
+            noteService.renameNote(notebookID, newName);
+            return ResponseEntity.ok("Directory renamed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Directory rename failed" + e);
         }
     }
 

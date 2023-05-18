@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
+import com.example.SUSTechNote.service.Impl.AuthorityService;
 import com.example.SUSTechNote.service.NoteService;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
@@ -28,11 +29,13 @@ public class NotebookApp {
     private final NotebookService notebookService;
     private final NoteService noteService;
     private final StaticPathHelper staticPathHelper;
+    private final AuthorityService authorityService;
 
-    public NotebookApp(NotebookService notebookService, NoteService noteService, StaticPathHelper staticPathHelper) {
+    public NotebookApp(NotebookService notebookService, NoteService noteService, StaticPathHelper staticPathHelper, AuthorityService authorityService) {
         this.notebookService = notebookService;
         this.noteService = noteService;
         this.staticPathHelper = staticPathHelper;
+        this.authorityService = authorityService;
     }
 
     /**
@@ -104,15 +107,12 @@ public class NotebookApp {
 
     @PostMapping("/upload_cover")
     public ResponseEntity<?> uploadCover(@RequestParam("cover")MultipartFile cover, @RequestParam("notebookID") String notebookID){
-        if (checkAuthority(notebookID)) {
-            try {
-                String url = notebookService.uploadCover(notebookID, cover);
-                return ResponseEntity.ok("Cover uploaded successfully \n" + url);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Cover upload failed \n" + e);
-            }
-        } else {
-            return ResponseEntity.badRequest().body("You have no authority to upload cover");
+        authorityService.checkNotebookAuthority(notebookID);
+        try {
+            String url = notebookService.uploadCover(notebookID, cover);
+            return ResponseEntity.ok("Cover uploaded successfully \n" + url);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Cover upload failed \n" + e);
         }
     }
 
@@ -122,27 +122,11 @@ public class NotebookApp {
         String title = jsonObject.getString("title");
         String tag = jsonObject.getString("tag");
         String description = jsonObject.getString("description");
-        if (!checkAuthority(notebookID)) {
-            return ResponseEntity.badRequest().body("You have no authority to update this notebook");
-        }
-        try {
-            notebookService.updateNotebook(notebookID, title, tag, description);
+        authorityService.checkNotebookAuthority(notebookID);
+        if (notebookService.updateNotebook(notebookID, title, tag, description)) {
             return ResponseEntity.ok("Notebook updated successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Notebook update failed" + e);
-        }
-    }
-
-    @PostMapping("/rename_dir")
-    public ResponseEntity<?> renameDir(@RequestBody JSONObject jsonObject) {
-        String oldName = jsonObject.getString("old_name");
-        String newName = jsonObject.getString("new_name");
-        int userID = StpUtil.getLoginIdAsInt(); //获取用户ID
-        try {
-            notebookService.renameDir(userID, oldName, newName);
-            return ResponseEntity.ok("Directory renamed successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Directory rename failed" + e);
+        } else {
+            return ResponseEntity.badRequest().body("Notebook update failed");
         }
     }
 
@@ -191,10 +175,5 @@ public class NotebookApp {
             result.add(jsonObject);
         }
         return ResponseEntity.ok(result);
-    }
-
-    public Boolean checkAuthority(String notebookID) {
-        int userID = StpUtil.getLoginIdAsInt(); //获取用户ID
-        return notebookService.checkAuthority(userID, notebookID);
     }
 }

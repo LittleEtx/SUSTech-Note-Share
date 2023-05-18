@@ -19,9 +19,11 @@ public class NoteServiceImpl implements NoteService {
     private final Logger logger = LoggerFactory.getLogger(NoteServiceImpl.class);
     private final NoteRepository noteRepository;
     private final FileRepository fileRepository;
-    public NoteServiceImpl(NoteRepository NoteRepository, FileRepository fileRepository) {
+    private final AuthorityService authorityService;
+    public NoteServiceImpl(NoteRepository NoteRepository, FileRepository fileRepository, AuthorityService authorityService) {
         this.noteRepository = NoteRepository;
         this.fileRepository = fileRepository;
+        this.authorityService = authorityService;
     }
 
     @Override
@@ -51,30 +53,6 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public int updateNote(Note Note){
-        if (checkNote(Note.getNoteID()) == 1 ){
-            noteRepository.save(Note);
-            return 1;
-        }
-        if (checkNote(Note.getNoteID()) == 400){
-            return 400;
-        }
-        return 0;
-    }
-
-    @Override
-    public int checkNote(String NoteID){
-        List<Note> Notes =noteRepository.findNotesByNoteID(NoteID);
-        if (Notes.size() == 1) {
-            return 1;
-        } else if (Notes.size() > 1) {
-            return 400;
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
     public String deleteNote(String NoteID){
         try {
             noteRepository.deleteNotesByNoteID(NoteID);
@@ -96,8 +74,10 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public String getNoteNameByNoteID(String noteID) {
-        return noteRepository.findNoteNameByNoteID(noteID);
+    public void renameNote(String noteID, String name) {
+        var note = authorityService.checkNoteAuthority(noteID);
+        note.setNoteName(name);
+        noteRepository.save(note);
     }
 
     @Override

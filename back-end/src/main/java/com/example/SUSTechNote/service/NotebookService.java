@@ -26,9 +26,6 @@ public interface NotebookService {
 
     String uploadCover(String notebookID, MultipartFile cover) throws IOException;
 
-    void renameDir(int userID, String oldName, String newName);
-
-    boolean checkAuthority(int userID, String notebookID);
 
     List<String> findNotebookIDByUserID(int userID);
 
