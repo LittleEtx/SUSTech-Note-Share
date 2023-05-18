@@ -6,10 +6,12 @@ import com.example.SUSTechNote.entity.Files;
 import com.example.SUSTechNote.entity.Note;
 import com.example.SUSTechNote.service.FileService;
 import com.example.SUSTechNote.service.NoteService;
+import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +24,18 @@ public class NoteServiceImpl implements NoteService {
     private final FileRepository fileRepository;
     private final AuthorityService authorityService;
     private final FileService fileService;
+    private final StaticPathHelper staticPathHelper;
     public NoteServiceImpl(
             NoteRepository NoteRepository,
             FileRepository fileRepository,
             AuthorityService authorityService,
-            FileService fileService
-    ) {
+            FileService fileService,
+            StaticPathHelper staticPathHelper) {
         this.noteRepository = NoteRepository;
         this.fileRepository = fileRepository;
         this.authorityService = authorityService;
         this.fileService = fileService;
+        this.staticPathHelper = staticPathHelper;
     }
 
     @Override
@@ -62,17 +66,24 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public boolean deleteNote(String noteID, String target){
-        authorityService.checkNoteAuthority(noteID);
+        var note = authorityService.checkNoteAuthority(noteID);
+        var files = fileRepository.findFilesByNote_NoteID(noteID);
         if (target != null) {
             logger.debug("transfer files from " + noteID + " to " + target);
-            var files = fileRepository.findFilesByNote_NoteID(noteID);
             for (var file : files) {
                 fileService.moveFile(file.getFileID(), target);
+            }
+        } else {
+            logger.debug("delete files from " + noteID);
+            for (var file : files) {
+                fileService.deleteFile(file.getFileID());
             }
         }
         try {
             noteRepository.deleteNotesByNoteID(noteID);
-            return true;
+            // 删除文件夹
+            File file = new File(staticPathHelper.getStaticPath(), note.getSavingPath());
+            return file.delete();
         } catch (Exception e) {
             logger.error("deleteNote error: " + e.getMessage());
             e.printStackTrace();

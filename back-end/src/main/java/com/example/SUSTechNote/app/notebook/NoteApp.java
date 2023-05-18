@@ -77,6 +77,7 @@ public class NoteApp {
             @RequestParam("note") String noteID,
             @RequestParam(value = "target", required = false) String target
     ) {
+        logger.info("delete note: " + noteID);
         if (noteService.deleteNote(noteID, target)) {
             return ResponseEntity.ok("Note deleted successfully");
         } else {
@@ -89,6 +90,7 @@ public class NoteApp {
             @RequestParam("note") String notebookID,
             @RequestParam("name") String newName
     ) {
+        logger.info("rename note: " + notebookID + " to " + newName);
         try {
             noteService.renameNote(notebookID, newName);
             return ResponseEntity.ok("Directory renamed successfully");
