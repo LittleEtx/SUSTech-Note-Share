@@ -319,14 +319,12 @@ const editNoteInfo = ref<{
   noteID: string
 }>()
 
-const fileOriginNoteID = ref('')
 const editFile = (file: FileInfo, note: NoteInfo) => {
   editNoteInfo.value = {
     name: file.name,
     id: file.id,
     noteID: note.id
   }
-  fileOriginNoteID.value = note.id
   showEditFileInfo.value = true
 }
 
@@ -336,9 +334,6 @@ const submitEditFileInfo = async () => {
   await apiRenameFile(editNoteInfo.value!.id, editNoteInfo.value!.name)
   await apiMoveFile(editNoteInfo.value!.id, editNoteInfo.value!.noteID)
   await updateNotesInfo()
-  await nextTick(() => {
-    menuRef.value.open(fileOriginNoteID.value)
-  })
   loading.value = false
 }
 
