@@ -4,6 +4,7 @@ import com.example.SUSTechNote.api.FileRepository;
 import com.example.SUSTechNote.api.NoteRepository;
 import com.example.SUSTechNote.entity.Files;
 import com.example.SUSTechNote.entity.Note;
+import com.example.SUSTechNote.service.FileService;
 import com.example.SUSTechNote.service.NoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,17 @@ public class NoteServiceImpl implements NoteService {
     private final NoteRepository noteRepository;
     private final FileRepository fileRepository;
     private final AuthorityService authorityService;
-    public NoteServiceImpl(NoteRepository NoteRepository, FileRepository fileRepository, AuthorityService authorityService) {
+    private final FileService fileService;
+    public NoteServiceImpl(
+            NoteRepository NoteRepository,
+            FileRepository fileRepository,
+            AuthorityService authorityService,
+            FileService fileService
+    ) {
         this.noteRepository = NoteRepository;
         this.fileRepository = fileRepository;
         this.authorityService = authorityService;
+        this.fileService = fileService;
     }
 
     @Override
@@ -53,13 +61,22 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public String deleteNote(String NoteID){
+    public boolean deleteNote(String noteID, String target){
+        authorityService.checkNoteAuthority(noteID);
+        if (target != null) {
+            logger.debug("transfer files from " + noteID + " to " + target);
+            var files = fileRepository.findFilesByNote_NoteID(noteID);
+            for (var file : files) {
+                fileService.moveFile(file.getFileID(), target);
+            }
+        }
         try {
-            noteRepository.deleteNotesByNoteID(NoteID);
-            return "Note deleted successfully";
+            noteRepository.deleteNotesByNoteID(noteID);
+            return true;
         } catch (Exception e) {
             logger.error("deleteNote error: " + e.getMessage());
-            return "Note deleted failed\n" + e.getMessage() + "\n";
+            e.printStackTrace();
+            return false;
         }
     }
 

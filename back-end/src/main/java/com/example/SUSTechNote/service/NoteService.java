@@ -14,7 +14,7 @@ public interface NoteService {
 
     void addNote(String noteID, int userID, String noteBookID, String realPath, String title, int isPublic);
 
-    String deleteNote(String noteID);
+    boolean deleteNote(String noteID, String target);
 
     List<Note> findAllNote();
 

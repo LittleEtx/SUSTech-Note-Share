@@ -1,7 +1,6 @@
 package com.example.SUSTechNote.app.notebook;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Note;
 import com.example.SUSTechNote.service.Impl.AuthorityService;
 import com.example.SUSTechNote.service.NoteService;
@@ -66,13 +65,15 @@ public class NoteApp {
 
     }
 
-    @PostMapping ("/delete-note")
-    public ResponseEntity<?> deleteNote(@RequestParam("note") String noteID) {
-        try {
-            String result = noteService.deleteNote(noteID);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Note deletion failed \n" + e);
+    @DeleteMapping ("/delete-note")
+    public ResponseEntity<?> deleteNote(
+            @RequestParam("note") String noteID,
+            @RequestParam(value = "target", required = false) String target
+    ) {
+        if (noteService.deleteNote(noteID, target)) {
+            return ResponseEntity.ok("Note deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Note deletion failed");
         }
     }
 
