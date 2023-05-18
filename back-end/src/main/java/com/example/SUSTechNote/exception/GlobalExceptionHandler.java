@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
                 .body("An error happens in the server: " + e.getMessage());
     }
 
-    @ExceptionHandler(FileNotFoundException.class)
+    @ExceptionHandler(FileNotExistException.class)
     public ResponseEntity<?> fileNotFoundHandler() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not exist");
     }

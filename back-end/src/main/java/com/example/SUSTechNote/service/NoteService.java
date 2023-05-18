@@ -14,17 +14,13 @@ public interface NoteService {
 
     void addNote(String noteID, int userID, String noteBookID, String realPath, String title, int isPublic);
 
-    int updateNote(Note note);
-
-    int checkNote(String noteID);
-
-    String deleteNote(String noteID);
+    boolean deleteNote(String noteID, String target);
 
     List<Note> findAllNote();
 
     int findNotesCountByNotebookID(String notebookID);
 
-    String getNoteNameByNoteID(String noteID);
+    void renameNote(String noteID, String name);
 
     List<String> findNoteIDsByNotebookID(String noteBookID);
 }

@@ -4,6 +4,7 @@ import com.example.SUSTechNote.api.FileRepository;
 import com.example.SUSTechNote.api.NoteRepository;
 import com.example.SUSTechNote.entity.Files;
 import com.example.SUSTechNote.entity.Note;
+import com.example.SUSTechNote.service.FileService;
 import com.example.SUSTechNote.service.NoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,18 @@ public class NoteServiceImpl implements NoteService {
     private final Logger logger = LoggerFactory.getLogger(NoteServiceImpl.class);
     private final NoteRepository noteRepository;
     private final FileRepository fileRepository;
-    public NoteServiceImpl(NoteRepository NoteRepository, FileRepository fileRepository) {
+    private final AuthorityService authorityService;
+    private final FileService fileService;
+    public NoteServiceImpl(
+            NoteRepository NoteRepository,
+            FileRepository fileRepository,
+            AuthorityService authorityService,
+            FileService fileService
+    ) {
         this.noteRepository = NoteRepository;
         this.fileRepository = fileRepository;
+        this.authorityService = authorityService;
+        this.fileService = fileService;
     }
 
     @Override
@@ -51,37 +61,22 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public int updateNote(Note Note){
-        if (checkNote(Note.getNoteID()) == 1 ){
-            noteRepository.save(Note);
-            return 1;
+    public boolean deleteNote(String noteID, String target){
+        authorityService.checkNoteAuthority(noteID);
+        if (target != null) {
+            logger.debug("transfer files from " + noteID + " to " + target);
+            var files = fileRepository.findFilesByNote_NoteID(noteID);
+            for (var file : files) {
+                fileService.moveFile(file.getFileID(), target);
+            }
         }
-        if (checkNote(Note.getNoteID()) == 400){
-            return 400;
-        }
-        return 0;
-    }
-
-    @Override
-    public int checkNote(String NoteID){
-        List<Note> Notes =noteRepository.findNotesByNoteID(NoteID);
-        if (Notes.size() == 1) {
-            return 1;
-        } else if (Notes.size() > 1) {
-            return 400;
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public String deleteNote(String NoteID){
         try {
-            noteRepository.deleteNotesByNoteID(NoteID);
-            return "Note deleted successfully";
+            noteRepository.deleteNotesByNoteID(noteID);
+            return true;
         } catch (Exception e) {
             logger.error("deleteNote error: " + e.getMessage());
-            return "Note deleted failed\n" + e.getMessage() + "\n";
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -96,8 +91,10 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public String getNoteNameByNoteID(String noteID) {
-        return noteRepository.findNoteNameByNoteID(noteID);
+    public void renameNote(String noteID, String name) {
+        var note = authorityService.checkNoteAuthority(noteID);
+        note.setNoteName(name);
+        noteRepository.save(note);
     }
 
     @Override
