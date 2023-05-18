@@ -81,9 +81,6 @@ watch(
 )
 
 const reloadFile = async (file: FileInfo) => {
-  const response = await fetch(file.url)
-  const blob = await response.blob()
-  const fileText = await blob.text()
   const uri = file.id + '/' + file.name
   if (monaco.editor.getModel(monaco.Uri.file(uri))) {
     // 如果存在该model了，直接使用
@@ -91,6 +88,9 @@ const reloadFile = async (file: FileInfo) => {
     monacoEditor.setModel(model)
     return
   }
+  const response = await fetch(file.url)
+  const blob = await response.blob()
+  const fileText = await blob.text()
   const model = monaco.editor.createModel(fileText,
     undefined, monaco.Uri.file(uri))// 根据文件名字自动选择语言
   monacoEditor.setModel(model)

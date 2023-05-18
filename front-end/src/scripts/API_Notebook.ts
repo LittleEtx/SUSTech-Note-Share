@@ -141,3 +141,31 @@ export async function apiDeleteFile (fileID: string): Promise<void> {
     }
   })
 }
+
+/**
+ * 重命名文件
+ * @param fileID 文件id
+ * @param newName 新的文件名
+ */
+export async function apiRenameFile (fileID: string, newName: string): Promise<void> {
+  await axios.post('/api/notebook/rename-file', {}, {
+    params: {
+      file: fileID,
+      name: newName
+    }
+  })
+}
+
+/**
+ * 移动文件
+ * @param fileID 文件ID
+ * @param newNoteID 新的笔记ID
+ */
+export async function apiMoveFile (fileID: string, newNoteID: string): Promise<void> {
+  await axios.post('/api/notebook/move-file', {}, {
+    params: {
+      file: fileID,
+      note: newNoteID
+    }
+  })
+}
