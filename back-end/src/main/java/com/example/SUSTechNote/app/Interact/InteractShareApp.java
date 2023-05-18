@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app.Interact;
 
+import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.service.NotebookService;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController("/interact/share")
 public class InteractShareApp {
@@ -39,7 +42,12 @@ public class InteractShareApp {
     public ResponseEntity<?> getShareGroups(@RequestParam("notebook") String notebookID){
         try {
             Notebook notebook = notebookService.findNotebookByID(notebookID);
-            return ResponseEntity.ok().body(notebook.getGroups());
+            List<Group> groups = notebook.getGroups();
+            for (Group group : groups) {
+                group.setUser(null);
+                group.setNotebookList(null);
+            }
+            return ResponseEntity.ok().body(groups);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -53,10 +61,10 @@ public class InteractShareApp {
     @PostMapping("/share-to-user")
     public ResponseEntity<?> shareToUser(@RequestParam("notebook") String notebookID, @RequestParam("target") String userID){
         try {
-            notebookService.shareToUser(notebookID, userID);
-            return ResponseEntity.ok().body("分享成功");
+            String result = notebookService.shareToUser(notebookID, userID);
+            return ResponseEntity.ok().body(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Share fail"+e.getMessage());
         }
     }
 
@@ -66,10 +74,14 @@ public class InteractShareApp {
     @PostMapping("/share-to-group")
     public ResponseEntity<?> shareToGroup(
             @RequestParam("notebook") String notebookID,
-            @RequestParam("target") String groupID
+            @RequestParam("target") int groupID
     ){
-        //TODO
-        return null;
+        try {
+            String result = notebookService.shareToGroup(notebookID, groupID);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Share fail"+e.getMessage());
+        }
     }
 
     /**
@@ -78,10 +90,14 @@ public class InteractShareApp {
     @PostMapping("/cancel-user-share")
     public ResponseEntity<?> cancelUserShare(
             @RequestParam("notebook") String notebookID,
-            @RequestParam("target") String userID
+            @RequestParam("target") int userID
     ){
-        //TODO
-        return null;
+        try {
+            String result = notebookService.cancelUserShare(notebookID, userID);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Cancel fail"+e.getMessage());
+        }
     }
 
     /**
@@ -90,11 +106,14 @@ public class InteractShareApp {
     @PostMapping("/cancel-group-share")
     public ResponseEntity<?> cancelGroupShare(
             @RequestParam("notebook") String notebookID,
-            @RequestParam("target") String groupID
+            @RequestParam("target") int groupID
     ){
-        //TODO
-        return null;
+        try {
+            String result = notebookService.cancelGroupShare(notebookID, groupID);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Cancel fail"+e.getMessage());
+        }
     }
-
 
 }

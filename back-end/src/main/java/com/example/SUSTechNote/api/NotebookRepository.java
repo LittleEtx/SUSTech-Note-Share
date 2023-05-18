@@ -73,4 +73,62 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Transactional
     @Query(value = "insert into notebook_share_user values (?1, ?2)", nativeQuery = true)
     void shareToUser(String notebookID, String userID);
+
+    @Query(value = "select notebook_id from user_like_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
+    List<String> findLikeNotebookIDByUserID(int userID, String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into user_like_notebook(notebook_id, user_id) values (?1, ?2)", nativeQuery = true)
+    void likeNotebook(String notebookID, int userID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update notebooks set like_num = like_num+1 where notebookid = ?1", nativeQuery = true)
+    void addLikeCount(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update notebooks set like_num = 0, star = 0, is_public = 0 where notebookid = ?1", nativeQuery = true)
+    void clearLikeAndStarAndSetPrivate(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_like_notebook where notebook_id = ?1", nativeQuery = true)
+    void removeLikeUser(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_star_notebook where notebook_id = ?1", nativeQuery = true)
+    void removeStarUser(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from reply where comment_id in (select commentid from comment where notebook_id = ?1)", nativeQuery = true)
+    void removeReply(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from comment where notebook_id = ?1", nativeQuery = true)
+    void removeComment(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update notebooks set is_public = 1 where notebookid = ?1", nativeQuery = true)
+    void setPublic(String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into notebook_share_group(notebookid, groupid) value (?1, ?2)", nativeQuery = true)
+    void shareToGroup(String notebookID, int groupID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from notebook_share_user where notebookid = ?1 and userid = ?2", nativeQuery = true)
+    void cancelUserShare(String notebookID, int userID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from notebook_share_group where notebookid = ?1 and groupid = ?2", nativeQuery = true)
+    void cancelGroupShare(String notebookID, int groupID);
 }

@@ -34,5 +34,19 @@ public interface NotebookService {
 
     List<Notebook> findSharedNotebooks(int userID);
 
-    void shareToUser(String notebookID, String userID);
+    String shareToUser(String notebookID, String userID);
+
+    boolean ifLike(String notebookID);
+
+    boolean likeNotebook(String notebookID);
+
+    String setNotebookPrivate(String notebookID);
+
+    String setNotebookPublic(String notebookID);
+
+    String shareToGroup(String notebookID, int groupID);
+
+    String cancelUserShare(String notebookID, int userID);
+
+    String cancelGroupShare(String notebookID, int groupID);
 }

@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app.Interact;
 
+import com.example.SUSTechNote.service.NotebookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,13 +10,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("/interact")
 public class InteractApp {
 
+    private final NotebookService notebookService;
+
+    public InteractApp(NotebookService notebookService) {
+        this.notebookService = notebookService;
+    }
+
+
     /**
      * 获取用户最近的点赞列表
      */
-    @GetMapping("/get-like-list")
-    public ResponseEntity<?> getLikeList(){
-        //TODO
-        return null;
+    @GetMapping("/if-like")
+    public ResponseEntity<?> getIfLike(@RequestParam String notebookID){
+        try {
+            boolean result = notebookService.ifLike(notebookID);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /**
@@ -25,8 +37,12 @@ public class InteractApp {
     public ResponseEntity<?> likeNotebook(
             @RequestParam("id") String notebookID
     ){
-        //TODO
-        return null;
+        try {
+            boolean result = notebookService.likeNotebook(notebookID);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("false\n"+e.getMessage());
+        }
     }
 
     /**
@@ -36,8 +52,12 @@ public class InteractApp {
     public ResponseEntity<?> setNotebookPublic(
             @RequestParam("id") String notebookID
     ){
-        //TODO
-        return null;
+        try {
+            String result = notebookService.setNotebookPublic(notebookID);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("setNotebookPublic error: "+e.getMessage());
+        }
     }
 
     /**
@@ -50,8 +70,12 @@ public class InteractApp {
     public ResponseEntity<?> setNotebookPrivate(
             @RequestParam("id") String notebookID
     ){
-        //TODO
-        return null;
+        try {
+            String result = notebookService.setNotebookPrivate(notebookID);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Fail\n"+e.getMessage());
+        }
     }
 
 
