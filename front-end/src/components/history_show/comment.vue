@@ -72,6 +72,8 @@
 
 <script>
 import { ChatDotSquare} from '@element-plus/icons-vue'
+import {store} from "@/store/store";
+import axios from "axios";
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
@@ -98,6 +100,12 @@ const clickoutside = {
   },
 };
 export default {
+  pros:{
+    notebookID:{
+      type: String,
+      required: true
+    }
+  },
   name:'ArticleComment',
   components: { ChatDotSquare },
   data(){
@@ -225,16 +233,12 @@ export default {
         let input =  document.getElementById('replyInput')
         let timeNow = new Date().getTime();
         let time= this.dateStr(timeNow);
-        a.name= this.myName
-        a.comment =this.replyComment
-        a.headImg = this.myHeader
-        a.time = time
-        a.commentNum = 0
-        a.like = 0
-        this.comments.push(a)
-        this.replyComment = ''
-        input.innerHTML = '';
-
+        a.userID= store.state.userInfo.userID
+        axios.post('/api/interact/comments/comment?notebookID='+this.notebookID, {
+          comment: input
+        }).then(res => {
+        })
+      }
       }
     },
     sendCommentReply(i,j){
@@ -290,8 +294,7 @@ export default {
         return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
       }
     }
-  },
-}
+  }
 </script>
 
 <style lang="stylus" scoped>
