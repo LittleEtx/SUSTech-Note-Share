@@ -1,30 +1,68 @@
 <template>
   <el-timeline>
-    <el-timeline-item v-for="commit in commits" :key="commit.id" :timestamp="commit.timestamp" placement="top">
-      <el-card>
-        <h4>{{ commit.title }}</h4>
-        <p>{{ commit.author }} committed {{ commit.timestamp }} </p>
+    <el-timeline-item v-for="commit in commits" :key="commit.id" :timestamp="commit.visitTime" placement="top">
+      <el-card :body-style="{ padding: '0px' }">
+        <img
+            :src=commit.cover
+            class="image"
+            @click="$router.push(`/notebook/${commit.notebookID}`)"
+        />
+        <div style="padding: 14px">
+          <p>{{commit.notebookName}}</p>
+          <p>{{commit.author}}</p>
+        </div>
       </el-card>
     </el-timeline-item>
   </el-timeline>
 </template>
+
+
 <script>
+import {store} from '@/store/store'
+import axios from "axios";
+import {getTags} from "@/scripts/interfaces";
 export default {
   name: 'HistoryShow',
   mounted() {
-    const userId = this.$route.params.userId;
-    console.log(`User ID is: ${userId}`);
+    // this.makeDat()
+    this.getData()
     // You can use the userId variable here to fetch data for that specific user
   },
   data() {
     return {
-      commits: [
-        { id: 1, title: 'Update Github template', author: 'Tom', timestamp: '2018/4/12 20:46' },
-        { id: 2, title: 'Update Github template', author: 'Tom', timestamp: '2018/4/3 20:46' },
-        { id: 3, title: 'Update Github template', author: 'Tom', timestamp: '2018/4/2 20:46' }
-      ]
+      commits: [],
+
     };
+  },
+  methods:{
+    getData () {
+      console.log(this.commits)
+      axios.get('/api/history/getHistory', {
+        userID: store.state.userInfo.userID
+      }).then(res => {
+        this.commits = res.data
+        console.log(this.commits)
+        for (let i = 0; i < res.data.length; i++) {
+          axios.get('/api/user/get-info', {
+
+          }).then(op => {
+            console.log(op)
+           this.commits[i].author = op.data.userName
+          })
+        }
+      })
+      console.log(this.commits)
+    },
+    makeDat () {
+      axios.post('/api/history/createHistory', {
+        userID: '12011508',
+        notebookID: '12112628_1',
+        visitTime: '2023-05-15 23:30:00'
+      }).then(res => {
+      })
+    }
   }
+
 }
 </script>
 <style scoped>

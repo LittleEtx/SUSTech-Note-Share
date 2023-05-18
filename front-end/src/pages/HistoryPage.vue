@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="header">
+<!--    <div class="header">-->
       <main-header></main-header>
-    </div>
-    <HistoryShow></HistoryShow>
-<!--    <comment></comment>-->
+<!--    </div>-->
+<!--    <HistoryShow></HistoryShow>-->
+    <comment></comment>
   </div>
 </template>
 

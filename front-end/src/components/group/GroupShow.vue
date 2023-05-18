@@ -83,7 +83,7 @@ export default {
           { userID: 1, userName: '成员1', avatar: '' }
         ],
         notebookInfos: [
-          // {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
+          // {notebookID: '', title: '', tag: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
           //     starCount: '', directory: ''}
         ]
       }
