@@ -3,12 +3,13 @@
     <div v-for="(item,i) in comments" :key="i" class="author-title reply-father">
       <el-avatar class="header-img" :size="40" :src="item.headImg"></el-avatar>
       <div class="author-info">
-        <span class="author-name">{{item.name}}</span>
+        <el-tooltip :content="item.name" :effect="tooltipEffect">
+          <span class="author-name">{{item.name}}</span>
+        </el-tooltip>
         <span class="author-time">{{item.time}}</span>
       </div>
       <div class="icon-btn">
         <span><el-icon><ChatDotSquare /></el-icon>{{item.commentNum}}</span>
-        <el-icon><Star /></el-icon>{{item.like}}
       </div>
       <div class="talk-box">
         <p>
@@ -19,12 +20,13 @@
         <div v-for="(reply,j) in item.reply" :key="j" class="author-title">
           <el-avatar class="header-img" :size="40" :src="reply.fromHeadImg"></el-avatar>
           <div class="author-info">
-            <span class="author-name">{{reply.from}}</span>
+            <el-tooltip :content="reply.from" :effect="tooltipEffect">
+              <span class="author-name">{{reply.from}}</span>
+            </el-tooltip>
             <span class="author-time">{{reply.time}}</span>
           </div>
           <div class="icon-btn">
             <span><el-icon><ChatDotSquare /></el-icon>{{reply.commentNum}}</span>
-            <span><el-icon><Star /></el-icon>{{reply.like}}</span>
           </div>
           <div class="talk-box">
             <p>
@@ -39,14 +41,15 @@
 </template>
 
 <script>
-import { ChatDotSquare, Star} from '@element-plus/icons-vue'
+import { ChatDotSquare} from '@element-plus/icons-vue'
 
 export default {
-  components: { ChatDotSquare, Star },
+  components: { ChatDotSquare },
   name:'ArticleComment',
   data(){
     return{
       btnShow: false,
+      tooltipEffect: 'light',
       index:'0',
       replyComment:'',
       myName:'Lana Del Rey',
@@ -62,7 +65,6 @@ export default {
           comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
           time:'2019年9月16日 18:43',
           commentNum:2,
-          like:15,
           inputShow:false,
           reply:[
             {
@@ -74,7 +76,6 @@ export default {
               comment:'我很喜欢你的新专辑！！',
               time:'2019年9月16日 18:43',
               commentNum:1,
-              like:15,
               inputShow:false
             },
             {
@@ -86,7 +87,6 @@ export default {
               comment:'别忘记宣传我们的合作单曲啊',
               time:'2019年9月16日 18:43',
               commentNum:0,
-              like:5,
               inputShow:false
 
             }
@@ -158,6 +158,7 @@ export default {
     >span
       display block
       overflow hidden
+      cursor pointer
       white-space nowrap
       text-overflow ellipsis
     .author-name
