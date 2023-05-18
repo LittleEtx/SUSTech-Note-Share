@@ -1,5 +1,21 @@
 <template>
   <div>
+    <div class="head">
+      <!-- 评论区域如果当前用户有头像则显示头像,没有则显示默认头像 -->
+      <img src="https://ae01.alicdn.com/kf/Hf6c0b4a7428b4edf866a9fbab75568e6U.jpg" alt="" />
+      <!-- 评论框 -->
+      <input
+          type="text"
+          placeholder="请输入评论 . . ."
+          ref="input"
+          @focus="obtain"
+          @blur="lose"
+          v-model="firstComments"
+          @keyup.enter="sumbit"
+      />
+      <!-- 发布按钮 -->
+      <button @click="sumbit">发表评论</button>
+    </div>
     <div v-for="(item,i) in comments" :key="i" class="author-title reply-father">
       <el-avatar class="header-img" :size="40" :src="item.headImg"></el-avatar>
       <div class="author-info">
@@ -102,6 +118,55 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.head {
+  background-color: rgb(248, 248, 248);
+  position: relative;
+  height: 75px;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+.head img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  left: 13px;
+}
+/* 评论框 */
+.head input {
+  position: absolute;
+  top: 13px;
+  left: 80px;
+  height: 45px;
+  border-radius: 5px;
+  outline: none;
+  width: 80%;
+  font-size: 20px;
+  padding: 0 20px;
+  border: 2px solid #f8f8f8;
+}
+/* 发布评论按钮 */
+.head button {
+  position: absolute;
+  top: 13px;
+  right: 20px;
+  width: 120px;
+  height: 48px;
+  border: 0;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+  background-color: rgb(118, 211, 248);
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+/* 鼠标经过字体加粗 */
+.head button:hover {
+  font-weight: 600;
+}
+
 .my-reply
   padding 10px
   background-color #fafbfc
