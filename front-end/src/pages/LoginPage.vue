@@ -39,6 +39,7 @@ import { Download, HomeFilled } from '@element-plus/icons-vue'
 import LoginPane from '@/components/login_page/LoginPane.vue'
 import { router } from '@/router'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_words_shadow.svg'
+import { downloadFile } from '@/scripts/Utils'
 
 export default {
   components: { LoginPane },
@@ -77,11 +78,7 @@ export default {
       this.isShowBox = !this.isShowBox
     },
     downloadBackground () {
-      const a = document.createElement('a') // 生成一个a元素
-      const event = new MouseEvent('click') // 创建一个单击事件
-      a.download = 'background.png' // 设置图片名称
-      a.href = this.backgroundUrl // 将生成的URL设置为a.href属性
-      a.dispatchEvent(event) // 触发a的单击事件
+      downloadFile(this.backgroundUrl, 'background.png')
     }
   }
 }

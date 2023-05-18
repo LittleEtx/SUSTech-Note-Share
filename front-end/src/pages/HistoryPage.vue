@@ -11,7 +11,7 @@
 <script>
 import MainHeader from '../components/MainHeader.vue'
 import HistoryShow from '../components/history_show/HistoryShow.vue'
-import comment from '@/components/history_show/comment.vue'
+import comment from '@/components/history_show/NotebookComment.vue'
 
 export default {
   name: 'HistoryPage',

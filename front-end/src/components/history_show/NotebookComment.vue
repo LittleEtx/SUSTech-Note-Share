@@ -71,7 +71,10 @@
 </template>
 
 <script>
-import { ChatDotSquare} from '@element-plus/icons-vue'
+import { ChatDotSquare } from '@element-plus/icons-vue'
+import { store } from '@/store/store'
+import axios from 'axios'
+
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
@@ -98,13 +101,18 @@ const clickoutside = {
   },
 };
 export default {
-  name:'ArticleComment',
+  props: {
+    notebookId: {
+      type: String,
+      required: true
+    }
+  },
   components: { ChatDotSquare },
-  data(){
-    return{
+  data () {
+    return {
       btnShow: false,
-      index:'0',
-      replyComment:'',
+      index: '0',
+      replyComment: '',
       myName:'Lana Del Rey',
       myHeader:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
       myId:19870621,
@@ -225,16 +233,12 @@ export default {
         let input =  document.getElementById('replyInput')
         let timeNow = new Date().getTime();
         let time= this.dateStr(timeNow);
-        a.name= this.myName
-        a.comment =this.replyComment
-        a.headImg = this.myHeader
-        a.time = time
-        a.commentNum = 0
-        a.like = 0
-        this.comments.push(a)
-        this.replyComment = ''
-        input.innerHTML = '';
-
+        a.userID= store.state.userInfo.userID
+        axios.post('/api/interact/comments/comment?notebookID='+this.notebookID, {
+          comment: input
+        }).then(res => {
+        })
+      }
       }
     },
     sendCommentReply(i,j){
@@ -290,8 +294,7 @@ export default {
         return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate();
       }
     }
-  },
-}
+  }
 </script>
 
 <style lang="stylus" scoped>
