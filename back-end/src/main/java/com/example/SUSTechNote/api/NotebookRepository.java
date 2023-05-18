@@ -3,11 +3,14 @@ package com.example.SUSTechNote.api;
 import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Map;
 
 public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     List<Notebook> findNotebooksByNotebookID(String notebookID);
@@ -73,6 +76,9 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Transactional
     @Query(value = "insert into notebook_share_user values (?1, ?2)", nativeQuery = true)
     void shareToUser(String notebookID, String userID);
+
+    @Query(value = "SELECT notebook_name,tag,update_time,authorid,cover,description,is_public,like_num,star,directory,notebookid FROM notebooks WHERE (notebook_name LIKE ?1 OR tag LIKE ?1 or description LIKE ?1) and is_public = 1 ORDER BY notebook_name DESC", nativeQuery = true)
+    Page<Map<String,Object>> searchPublicNotebookWithLimit(String keyword, Pageable pageable);
 
     @Query(value = "select notebook_id from user_like_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
     List<String> findLikeNotebookIDByUserID(int userID, String notebookID);
