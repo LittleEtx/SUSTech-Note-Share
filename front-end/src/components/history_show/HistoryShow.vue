@@ -16,25 +16,24 @@
   </el-timeline>
 </template>
 
-
 <script>
-import {store} from '@/store/store'
-import axios from "axios";
-import {getTags} from "@/scripts/interfaces";
+import { store } from '@/store/store'
+import axios from 'axios'
+
 export default {
   name: 'HistoryShow',
-  mounted() {
+  mounted () {
     // this.makeDat()
     this.getData()
     // You can use the userId variable here to fetch data for that specific user
   },
-  data() {
+  data () {
     return {
-      commits: [],
+      commits: []
 
-    };
+    }
   },
-  methods:{
+  methods: {
     getData () {
       console.log(this.commits)
       axios.get('/api/history/getHistory', {
@@ -47,7 +46,7 @@ export default {
 
           }).then(op => {
             console.log(op)
-           this.commits[i].author = op.data.userName
+            this.commits[i].author = op.data.userName
           })
         }
       })

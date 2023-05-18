@@ -71,7 +71,7 @@
             <el-radio-group v-model="userInfo.gender" size="small">
               <el-radio border :label="1">男</el-radio>
               <el-radio border :label="0">女</el-radio>
-              <el-radio border :label="null">保密</el-radio>
+              <el-radio border :label="-1">保密</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="生日">

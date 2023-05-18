@@ -62,7 +62,7 @@ export default {
   computed: {
     SUSTechLogo () {
       return SUSTechLogo
-    },
+    }
   },
   mounted () {
     const route = useRoute()
@@ -86,8 +86,19 @@ export default {
           { userID: 1, userName: '这是一个非常长的名字', avatar: '' }
         ],
         notebookInfos: [
-          {notebookID: '', title: '', tags: '', updateTime: '', authorID: '', cover: '', description: '', isPublic: '', likeCount: '',
-            starCount: '', directory: ''}
+          {
+            notebookID: '',
+            title: '',
+            tags: '',
+            updateTime: '',
+            authorID: '',
+            cover: '',
+            description: '',
+            isPublic: '',
+            likeCount: '',
+            starCount: '',
+            directory: ''
+          }
         ]
       }
     }
@@ -116,12 +127,12 @@ export default {
         }
       })
     },
-    getPositionStyle(index) {
-      const topOffset = index * 50; // 根据需要调整偏移量
+    getPositionStyle (index) {
+      const topOffset = index * 50 // 根据需要调整偏移量
       return {
         position: 'absolute',
-        top: `${topOffset}px`
-      };
+        top: `${ topOffset }px`
+      }
     },
     goBack () {
       // 处理返回逻辑
