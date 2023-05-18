@@ -71,9 +71,10 @@
 </template>
 
 <script>
-import { ChatDotSquare} from '@element-plus/icons-vue'
-import {store} from "@/store/store";
-import axios from "axios";
+import { ChatDotSquare } from '@element-plus/icons-vue'
+import { store } from '@/store/store'
+import axios from 'axios'
+
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
@@ -100,19 +101,18 @@ const clickoutside = {
   },
 };
 export default {
-  pros:{
-    notebookID:{
+  props: {
+    notebookId: {
       type: String,
       required: true
     }
   },
-  name:'ArticleComment',
   components: { ChatDotSquare },
-  data(){
-    return{
+  data () {
+    return {
       btnShow: false,
-      index:'0',
-      replyComment:'',
+      index: '0',
+      replyComment: '',
       myName:'Lana Del Rey',
       myHeader:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
       myId:19870621,

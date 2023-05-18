@@ -45,7 +45,7 @@
           </el-tabs>
         </div>
       </div>
-      <div class="common-layout">
+      <div class="common-layout" v-if="activeSlot === 'note'">
         <el-container style="height: 90vh">
           <el-aside width="200px">
             <el-scrollbar>
@@ -69,6 +69,9 @@
           </el-container>
         </el-container>
       </div>
+      <div v-else-if="activeSlot === 'comments'">
+        <notebook-comment :notebook-id="notebookID"></notebook-comment>
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +90,7 @@ import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
 import ImgUploader from '@/components/ImgUploader.vue'
 import NotebookFileList from '@/components/notebook_page/NotebookFileList.vue'
 import FileDisplay from '@/components/notebook_page/FileDisplay.vue'
+import NotebookComment from '@/components/history_show/NotebookComment.vue'
 
 const route = useRoute()
 const store = useStore()
