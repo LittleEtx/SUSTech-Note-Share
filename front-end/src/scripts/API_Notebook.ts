@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { NotebookInfo } from '@/scripts/interfaces'
+import type { NotebookInfo, NoteInfo } from '@/scripts/interfaces'
 import { getTags } from '@/scripts/interfaces'
 
 export interface NewNotebookInfo {
@@ -73,19 +73,71 @@ export async function apiUpdateBasicInfo (
   })
 }
 
-export interface FileInfo {
-  file: string // 文件的名字
-  url: string // 文件的url
-}
-
-export interface NoteInfo {
-  name: string // 文件夹的名字
-  id: string // 文件夹的id
-  files: FileInfo[] // 文件夹下的文件
-}
-
+/**
+ * 获取笔记本下的所有笔记和笔记中的文件
+ * @param notebookID
+ */
 export async function apiGetNoteInfos (notebookID: string): Promise<NoteInfo[]> {
   const { data } = await axios.get('/api/notebook/directory',
     { params: { notebook: notebookID } })
   return data
+}
+
+/**
+ * 创建笔记
+ * @param notebookID 笔记本id
+ * @param name 笔记名字
+ * @param isPublic 是否公开
+ * @returns 笔记id
+ */
+export async function apiCreateNote (notebookID: string, name: string, isPublic: boolean): Promise<string> {
+  const { data } = await axios.post('/api/notebook/create_note', {}, {
+    params: {
+      notebook: notebookID,
+      name,
+      public: isPublic
+    }
+  })
+  return data
+}
+
+/**
+ * 上传文件至笔记
+ * @param noteID 笔记id
+ * @param file 文件
+ */
+export async function apiUploadFile (noteID: string, file: File): Promise<string> {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('name', file.name)
+  const { data } = await axios.post('/api/notebook/upload-file', formData, {
+    params: {
+      note: noteID
+    }
+  })
+  return data
+}
+
+/**
+ * 更新文件
+ * @param fileID 需要覆盖的文件id
+ * @param file 文件
+ */
+export async function apiUpdateFile (fileID: string, file: Blob): Promise<void> {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('id', fileID)
+  await axios.post('/api/notebook/update-file', formData)
+}
+
+/**
+ * 删除文件
+ * @param fileID
+ */
+export async function apiDeleteFile (fileID: string): Promise<void> {
+  await axios.delete('/api/notebook/delete-file', {
+    params: {
+      file: fileID
+    }
+  })
 }

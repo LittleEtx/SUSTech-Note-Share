@@ -8,7 +8,7 @@ import groupShow from '@/components/group/GroupShow.vue'
 // import test from '@/components/group/test.vue'
 import NotebookPage from '@/pages/NotebookPage.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
-import HistoryPage from "@/pages/HistoryPage.vue";
+import HistoryPage from '@/pages/HistoryPage.vue'
 
 export const router = createRouter({
   history: createWebHashHistory(), // 暂时使用Hash模式，线上部署时再改成History模式

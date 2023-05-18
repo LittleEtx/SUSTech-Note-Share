@@ -45,9 +45,30 @@
           </el-tabs>
         </div>
       </div>
-      <notebook-file-list :notes="noteInfos">
-
-      </notebook-file-list>
+      <div class="common-layout">
+        <el-container style="height: 90vh">
+          <el-aside width="200px">
+            <el-scrollbar>
+              <notebook-file-list
+                :can-modify="canModify"
+                :notebook-id="notebook?.notebookID"
+                @on-select-file="file => onSelectFile(file)"
+              ></notebook-file-list>
+            </el-scrollbar>
+          </el-aside>
+          <el-container>
+            <el-header>
+              <h4 class="text-truncated" style="width: 70%">{{ currentFile?.name }}</h4>
+            </el-header>
+            <el-main>
+              <file-display
+                :file="currentFile"
+                :can-modify="canModify">
+              </file-display>
+            </el-main>
+          </el-container>
+        </el-container>
+      </div>
     </div>
   </div>
 </template>
@@ -57,20 +78,20 @@ import { computed, onBeforeMount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import MainHeader from '@/components/MainHeader.vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
-import type { NotebookInfo } from '@/scripts/interfaces'
-import { apiGetBasicInfo, apiGetNoteInfos, apiUploadNotebookCover, NoteInfo } from '@/scripts/API_Notebook'
+import type { FileInfo, NotebookInfo } from '@/scripts/interfaces'
+import { apiGetBasicInfo, apiUploadNotebookCover } from '@/scripts/API_Notebook'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import { ChatLineSquare, Collection, Setting } from '@element-plus/icons-vue'
 import { useStore } from '@/store/store'
 import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
 import ImgUploader from '@/components/ImgUploader.vue'
 import NotebookFileList from '@/components/notebook_page/NotebookFileList.vue'
+import FileDisplay from '@/components/notebook_page/FileDisplay.vue'
 
 const route = useRoute()
 const store = useStore()
 
 const notebook = ref<NotebookInfo>()
-const noteInfos = ref<NoteInfo[]>([])
 const show404 = ref(false)
 const activeSlot = ref('note')
 const canModify = ref(false)
@@ -86,7 +107,6 @@ const notebookCover = computed(() => {
 const getNotebookInfo = async (notebookID: string) => {
   try {
     notebook.value = await apiGetBasicInfo(notebookID)
-    noteInfos.value = await apiGetNoteInfos(notebookID)
     canModify.value = notebook.value?.authorID === store.state.userInfo?.userID
     show404.value = false
   } catch (e) {
@@ -99,13 +119,13 @@ const getNotebookInfo = async (notebookID: string) => {
 
 watch(
   () => route.params.notebookID,
-  (newID) => {
-    getNotebookInfo(newID as string)
+  async (newID) => {
+    await getNotebookInfo(newID as string)
   }
 )
 
-onBeforeMount(() => {
-  getNotebookInfo(notebookID.value)
+onBeforeMount(async () => {
+  await getNotebookInfo(notebookID.value)
 })
 
 // 上传封面
@@ -117,6 +137,10 @@ const onUploadCover = async (file: File) => {
   loadingCover.value = false
 }
 
+const currentFile = ref<FileInfo>()
+const onSelectFile = (file: FileInfo) => {
+  currentFile.value = file
+}
 </script>
 
 <style scoped>
@@ -126,4 +150,11 @@ const onUploadCover = async (file: File) => {
   margin-top: 40px;
 }
 
+.text-truncated {
+  display: inline-block;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 </style>

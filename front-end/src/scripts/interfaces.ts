@@ -25,3 +25,16 @@ export interface NotebookInfo {
 export function getTags (tag?: string): string[] {
   return (tag == null) || tag === '' ? [] : tag.split(',')
 }
+
+export interface FileInfo {
+  id: string // 文件ID
+  name: string // 文件名
+  url: string // 文件URL
+  type: string // 文件类型
+}
+
+export interface NoteInfo {
+  name: string // 文件夹的名字
+  id: string // 文件夹的id
+  files: FileInfo[] // 文件夹下的文件
+}
