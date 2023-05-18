@@ -14,8 +14,36 @@
       <div class="note-creator">群主：{{ note.groupOwnerName }}</div>
       <div class="note-footer">
         <el-button v-if="$store.state.userInfo.userID === note.groupOwnerID" type="success" @click.stop="edit(note)">编辑</el-button>
-        <el-button v-if="$store.state.userInfo.userID === note.groupOwnerID" type="danger" @click.stop="disband(note.groupID)">解散</el-button>
-        <el-button v-else type="danger" @click.stop="remove(note.groupID)">退出</el-button>
+<!--        <el-button v-if="$store.state.userInfo.userID === note.groupOwnerID" type="danger" @click.stop="disband(note.groupID)">解散</el-button>-->
+<!--        <el-button v-else type="danger" @click.stop="remove(note.groupID)">退出</el-button>-->
+        <el-popconfirm
+            v-if="$store.state.userInfo.userID === note.groupOwnerID"
+            confirm-button-text="是"
+            cancel-button-text="否"
+            icon-color="#ff0000"
+            :icon="BellFilled"
+            title="是否解散该群组?"
+            @confirm.stop="disband(note.groupID)"
+            @cancel.stop="cancelEvent"
+        >
+          <template #reference>
+            <el-button type="danger">解散</el-button>
+          </template>
+        </el-popconfirm>
+        <el-popconfirm
+            v-else
+            confirm-button-text="是"
+            cancel-button-text="否"
+            icon-color="#ff0000"
+            :icon="BellFilled"
+            title="是否退出该群组?"
+            @confirm.stop="remove(note.groupID)"
+            @cancel.stop="cancelEvent"
+        >
+          <template #reference>
+            <el-button type="danger">退出</el-button>
+          </template>
+        </el-popconfirm>
       </div>
     </el-card>
     <el-dialog
@@ -78,7 +106,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="editNote('form')">编辑</el-button>
-          <el-button @click="resetForm()">重置</el-button>
+          <el-button @click="resetForm1('form')">重置</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -86,7 +114,7 @@
 </template>
 
 <script>
-import { Notebook, Plus } from '@element-plus/icons-vue'
+import { Notebook, Plus, BellFilled  } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
 import { store } from '@/store/store'
@@ -97,7 +125,6 @@ export default {
   components: { Notebook, Plus },
   mounted () {
     this.nowUser = this.$store.state.userInfo.userID
-    console.log(this.nowUser)
     this.getData()
   },
   data () {
@@ -144,8 +171,11 @@ export default {
   computed: {
     selectedGroup () {
       return this.groupList.find(group => group.groupID === this.ruleForm.groupJoin)
+    },
+    BellFilled () {
+      return BellFilled
     }
-  },
+    },
   methods: {
     getData () {
       axios.get('/api/group/loadJoinedGroup').then(res => {
@@ -154,6 +184,9 @@ export default {
       axios.get('/api/group/loadEnjoinedGroup').then(res => {
         this.groupList = res.data
       })
+    },
+    cancelEvent () {
+      console.log('operation cancel!')
     },
     createNote (formName) {
       this.$refs[formName].validate((valid) => {
@@ -225,6 +258,9 @@ export default {
       this.form.groupName = ''
       this.form.groupDescription = ''
     },
+    resetForm1 (formName) {
+      this.$refs[formName].resetFields()
+    },
     cancelForm () {
       this.form.groupName = ''
       this.form.groupDescription = ''
@@ -253,7 +289,11 @@ export default {
       })
     },
     handleClickNoteCard (note, event) {
+      console.log(event.target.tagName)
       if (event.target.tagName === 'BUTTON') {
+        return
+      }
+      if (event.target.tagName === 'SPAN') {
         return
       }
       this.$router.push('/showTest/' + note.groupID)
