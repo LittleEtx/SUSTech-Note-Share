@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app.notebook;
 
+import com.example.SUSTechNote.exception.ModifyNotAuthoredException;
 import com.example.SUSTechNote.service.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
