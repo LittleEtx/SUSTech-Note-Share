@@ -115,12 +115,13 @@
 </template>
 
 <script setup lang="ts">
-import { apiCreateNote, apiGetNoteInfos, apiMoveFile, apiRenameFile } from '@/scripts/API_Notebook'
+import { apiCreateNote, apiDeleteFile, apiGetNoteInfos, apiMoveFile, apiRenameFile } from '@/scripts/API_Notebook'
 import { Delete, Download, Edit, Folder, FolderOpened, Plus, Upload } from '@element-plus/icons-vue'
-import { ElForm, ElInput, ElMenu } from 'element-plus'
+import { ElDialog, ElForm, ElInput, ElMenu, ElMessageBox } from 'element-plus'
 import { nextTick, onBeforeMount, ref, watch } from 'vue'
 import type { FileInfo, NoteInfo } from '@/scripts/interfaces'
 import UploadFiles from '@/components/notebook_page/UploadFiles.vue'
+import { downloadFile as download } from '@/scripts/Utils'
 
 interface Props {
   canModify: boolean
@@ -147,7 +148,7 @@ const onSelect = (index: string) => {
 const menuRef = ref<InstanceType<typeof ElMenu>>(null)
 const loading = ref(false)
 
-// ============ notes ===============
+// ============ 更新列表信息 ===============
 const notes = ref<NoteInfo[]>([])
 watch(() => props.notebookId, async () => {
   loading.value = true
@@ -223,13 +224,29 @@ const onFinishUpload = async () => {
   showUploadDialog.value = false
 }
 
-// TODO:文件移动、重命名、删除；笔记重命名、删除
+// =============文件信息修改=================
 const showEditFileInfo = ref(false)
 const deleteFile = async (file: FileInfo) => {
-  console.log('delete file', file)
+  try {
+    await ElMessageBox.confirm('确定删除此文件？该文件将被永久移除', '删除文件', {
+      confirmButtonText: '确定',
+      confirmButtonClass: 'el-button--danger',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--default',
+      type: 'warning'
+    })
+  } catch (e) {
+    // 取消
+    return
+  }
+  // 确认
+  loading.value = true
+  await apiDeleteFile(file.id)
+  await updateNotesInfo()
+  loading.value = false
 }
-const downloadFile = async (file: FileInfo) => {
-  console.log('download file', file)
+const downloadFile = (file: FileInfo) => {
+  download(file.url, file.name)
 }
 
 const editNoteInfo = ref<{
