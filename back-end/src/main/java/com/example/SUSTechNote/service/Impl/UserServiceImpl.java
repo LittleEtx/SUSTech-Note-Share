@@ -9,12 +9,16 @@ import com.example.SUSTechNote.service.UserService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -181,6 +185,15 @@ public class UserServiceImpl implements UserService {
         logger.info("user " + userID + " update avatar url to: " + url);
         userRepository.updateAvatar(url, userID);
         return url;
+    }
+
+
+    @Override
+    public List<Map<String,Object>> searchUsersWithLimit(String key, int limit){
+        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "user_name"));
+        key = "%" + key + "%";
+        Page<Map<String,Object>> users = userRepository.searchUsersWithLimit(key,pageRequest);
+        return users.getContent();
     }
 
 }

@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 
 @Service
 public interface NotebookService {
@@ -49,4 +51,5 @@ public interface NotebookService {
     String cancelUserShare(String notebookID, int userID);
 
     String cancelGroupShare(String notebookID, int groupID);
+    List<Map<String,Object>> searchPublicNotebookWithLimit(String key, int limit);
 }
