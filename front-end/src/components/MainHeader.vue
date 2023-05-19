@@ -17,17 +17,25 @@
     <el-col :span="3">
       <el-popover placement="bottom-start" trigger="hover" width="200px">
         <template #reference>
-          <user-avatar class="avatar" :size="40"></user-avatar>
+          <user-avatar
+            class="avatar" :size="40"
+            :avatar-url="$store.state.userInfo.avatar"
+            :user-id="$store.state.userInfo.userID"
+          ></user-avatar>
         </template>
         <template #default>
           <div class="pop-out">
             <!-- 个人信息展示  -->
             <div style="display: flex; justify-content: right; margin-bottom: 10px">
-              <user-avatar :size="40"></user-avatar>
+              <user-avatar
+                :size="40"
+                :avatar-url="$store.state.userInfo.avatar"
+                :user-id="$store.state.userInfo.userID"
+              ></user-avatar>
               <div style="margin-left: 10px; display: flex; flex-direction: column;
               justify-content: center; align-items: start">
-                <p style="margin: 0; font-size: 15px"><b>{{userName}}</b> </p>
-                <p style="margin: 0; font-size: 10px"> {{userID}}</p>
+                <p style="margin: 0; font-size: 15px"><b>{{ userName }}</b></p>
+                <p style="margin: 0; font-size: 10px"> {{ userID }}</p>
               </div>
             </div>
             <!-- 快捷入口 -->
@@ -61,6 +69,7 @@ import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
 import UserAvatar from '@/components/UserAvatar.vue'
 import { useRouter } from 'vue-router'
+import { store } from '@/store/store'
 
 export default {
   setup () {
@@ -71,6 +80,9 @@ export default {
   },
   components: { UserAvatar, ArrowRight, Search },
   computed: {
+    store () {
+      return store
+    },
     SwitchButton () {
       return SwitchButton
     },

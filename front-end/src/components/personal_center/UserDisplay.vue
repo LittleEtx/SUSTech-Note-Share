@@ -1,7 +1,7 @@
 <template>
 <div class="head-container">
   <div style="position: relative">
-    <user-avatar :src="userInfo?.avatar" :size="240"> </user-avatar>
+    <user-avatar :avatar-url="userInfo?.avatar" :user-id="userInfo?.userID" :size="240"></user-avatar>
     <!--suppress JSValidateTypes -->
     <el-button
       :icon="Switch" circle size="large"

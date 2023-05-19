@@ -13,7 +13,11 @@
         <el-tab-pane name="info" v-if="activeSlot !== 'info'">
           <template #label>
             <span>
-              <user-avatar :size="20" style="vertical-align: bottom; margin-right: 5px"></user-avatar>
+              <user-avatar
+                :size="20" style="vertical-align: bottom; margin-right: 5px"
+                :avatar-url="userInfo?.avatar"
+                :user-id="userInfo?.userID"
+              ></user-avatar>
               <b> {{ userInfo?.userName }} </b>
             </span>
           </template>

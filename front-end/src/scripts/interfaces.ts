@@ -38,3 +38,11 @@ export interface NoteInfo {
   id: string // 文件夹的id
   files: FileInfo[] // 文件夹下的文件
 }
+
+export interface GroupInfo {
+  groupID: number // 群组ID
+  groupName: string // 群组名字
+  groupDescription: string // 群组描述
+  createTime: string // 群组创建时间
+  owner: UserInfo // 群组的创建者
+}

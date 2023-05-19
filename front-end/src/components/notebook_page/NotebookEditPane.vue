@@ -65,8 +65,8 @@
       style="width: 500px"
       center
     >
-      <el-form label-position="top" :model="editNoteInfo">
-        <el-form-item label="文件名">
+      <el-form label-position="top" :model="editNoteInfo" :rules="rules" ref="form">
+        <el-form-item label="文件名" prop="name">
           <el-input
             v-model="editNoteInfo!.name"
             maxlength="200"
@@ -74,7 +74,7 @@
             placeholder="这个文件的名字"
           ></el-input>
         </el-form-item>
-        <el-form-item label="所属文件夹">
+        <el-form-item label="所属文件夹" prop="noteID">
           <el-select v-model="editNoteInfo!.noteID" placeholder="请选择所属文件夹">
             <el-option
               v-for="note in notes"
@@ -98,10 +98,10 @@
 <script setup lang="ts">
 import FileDisplay from '@/components/notebook_page/FileDisplay.vue'
 import NotebookFileList from '@/components/notebook_page/NotebookFileList.vue'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, reactive, ref } from 'vue'
 import { FileInfo, NoteInfo } from '@/scripts/interfaces'
 import { apiDeleteFile, apiMoveFile, apiRenameFile } from '@/scripts/API_Notebook'
-import { ElDialog, ElForm, ElInput, ElMessageBox } from 'element-plus'
+import { ElDialog, ElForm, ElInput, ElMessage, ElMessageBox, FormRules } from 'element-plus'
 import { downloadFile as download } from '@/scripts/Utils'
 import { Delete, Download, Edit } from '@element-plus/icons-vue'
 
@@ -130,7 +130,7 @@ const notes = computed(() => {
 const tempFileName = ref('')
 const fileNameInputRef = ref<InstanceType<typeof ElInput>>(null)
 const onInputEnter = (e: InputEvent) => {
-  // 当按下回车时，触发blur效果，即上传新建笔记
+  // 当按下回车时，触发blur效果
   (e.target as HTMLInputElement).blur()
 }
 
@@ -143,6 +143,16 @@ const onEditFileName = () => {
 }
 
 const onConfirmEditFileName = async () => {
+  if (!currentFile.value || currentFile.value!.name === '') {
+    ElMessage.error('文件名不能为空')
+    onCancelEditFileName()
+    return
+  }
+  // 如果文件名没有改变，直接退出
+  if (currentFile.value!.name === tempFileName.value) {
+    editingFileName.value = false
+    return
+  }
   await apiRenameFile(currentFile.value!.id, currentFile.value!.name)
   editingFileName.value = false
 }
@@ -180,26 +190,45 @@ const downloadFile = (file: FileInfo) => {
   download(file.url, file.name)
 }
 
-const editNoteInfo = ref<{
-  name: string
-  id: string
-  noteID: string
-}>()
+const editNoteInfo = reactive({
+  name: '',
+  id: '',
+  noteID: ''
+})
 
 const editFile = (file: FileInfo, note: NoteInfo) => {
-  editNoteInfo.value = {
-    name: file.name,
-    id: file.id,
-    noteID: note.id
-  }
+  editNoteInfo.name = file.name
+  editNoteInfo.id = file.id
+  editNoteInfo.noteID = note.id
   showEditFileInfo.value = true
 }
 
+const rules = reactive<FormRules>({
+  name: [
+    { required: true, message: '文件名不能为空', trigger: 'blur' },
+    { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur' }
+  ],
+  noteID: [
+    { required: true, message: '选择要存放的笔记位置', trigger: ['blur', 'change'] }
+  ]
+})
+const form = ref<InstanceType<typeof ElForm>>(null)
 const submitEditFileInfo = async () => {
+  console.log(form.value)
+  try {
+    await form.value!.validate()
+  } catch (e) {
+    return
+  }
   showEditFileInfo.value = false
-  await apiRenameFile(editNoteInfo.value!.id, editNoteInfo.value!.name)
-  await apiMoveFile(editNoteInfo.value!.id, editNoteInfo.value!.noteID)
+  await apiRenameFile(editNoteInfo.id, editNoteInfo.name)
+  await apiMoveFile(editNoteInfo.id, editNoteInfo.noteID)
   await fileList.value.updateFileList()
+  // 如果修改的是当前预览文件，更新
+  if (currentFile.value?.id === editNoteInfo.id) {
+    currentFile.value!.name = editNoteInfo.name
+    currentNote.value = notes.value.find(note => note.id === editNoteInfo.noteID)!
+  }
 }
 
 </script>
