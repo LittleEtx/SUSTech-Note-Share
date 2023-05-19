@@ -7,6 +7,7 @@ import com.example.SUSTechNote.api.UserRepository;
 import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
+import com.example.SUSTechNote.exception.AccountNotExistException;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
@@ -33,12 +34,14 @@ public class NotebookServiceImpl implements NotebookService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final StaticPathHelper staticPathHelper;
+    private final AuthorityService authorityService;
 
-    public NotebookServiceImpl(NotebookRepository notebookRepository, UserRepository userRepository, GroupRepository groupRepository, StaticPathHelper staticPathHelper) {
+    public NotebookServiceImpl(NotebookRepository notebookRepository, UserRepository userRepository, GroupRepository groupRepository, StaticPathHelper staticPathHelper, AuthorityService authorityService) {
         this.notebookRepository = notebookRepository;
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.staticPathHelper = staticPathHelper;
+        this.authorityService = authorityService;
     }
     
     @Override
@@ -226,26 +229,23 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public String shareToUser(String notebookID, String userID) {
-        int userIDInt = StpUtil.getLoginIdAsInt();
-        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
-        if (userIDInt != ownerID) {
-            return "You are not the owner of this notebook.";
-        } else {
-            try {
-                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
-                User newUser = userRepository.findUserByUserID(Integer.parseInt(userID));
-                List<User> users = notebook.getUsers();
-                users.add(newUser);
-                notebook.setUsers(users);
-                notebookRepository.save(notebook);
-                notebookRepository.shareToUser(notebookID, userID);
-                return "Share successfully.";
-            } catch (Exception e) {
-                logger.error("shareToUser error: " + e.getMessage());
-                throw e;
-            }
+    public boolean shareToUser(String notebookID, String userID) {
+        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+        User newUser = userRepository.findUserByUserID(Integer.parseInt(userID));
+        if (newUser == null) {
+            throw new AccountNotExistException("User not found.");
         }
+        if (notebook.getUsers().contains(newUser)) {
+            logger.info("notebook " + notebookID + " already shared to user " + userID);
+            return false;
+        }
+        try {
+            notebookRepository.shareToUser(notebookID, userID);
+        } catch (Exception e) {
+            logger.error("shareToUser error: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override

@@ -4,8 +4,10 @@ import com.example.SUSTechNote.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public record UserInterface(
         int userID,
@@ -27,6 +29,23 @@ public record UserInterface(
             user.getGender(),
             user.getBirth()
         );
+    }
+
+    public static List<UserInterface> fromUserMap(Collection<Map<String, Object>> users) {
+        List<UserInterface> userList = new ArrayList<>();
+        for (var map : users) {
+            var userInfo = new UserInterface(
+                    (int) map.get("userid"),
+                    (String) map.get("user_name"),
+                    (String) map.get("email"),
+                    (String) map.get("avatar"),
+                    (String) map.get("description"),
+                    (int) map.get("gender"),
+                    (Date) map.get("birth")
+            );
+            userList.add(userInfo);
+        }
+        return userList;
     }
 
     public static List<UserInterface> fromUsers(Collection<User> users) {

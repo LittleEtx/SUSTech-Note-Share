@@ -50,4 +50,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not the author of this note");
     }
 
+    @ExceptionHandler(AccountNotExistException.class)
+    public ResponseEntity<?> accountNotExistHandler() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not exist");
+    }
+
 }

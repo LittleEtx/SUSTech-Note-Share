@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app;
 
+import com.example.SUSTechNote.interfaces.UserInterface;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.service.UserService;
 import org.slf4j.Logger;
@@ -27,11 +28,12 @@ public class SearchApp {
 
     @GetMapping("user")
     public ResponseEntity<?> searchUser(@RequestParam("key") String key){
+        logger.info("searchUser: key = {}", key);
         List<Map<String,Object>> users = userService.searchUsersWithLimit(key,10);
-        if (users.size()>0){
-            return ResponseEntity.ok(users);
+        if (users.size() > 0){
+            return ResponseEntity.ok(UserInterface.fromUserMap(users));
         } else {
-            return ResponseEntity.ok("no user found");
+            return ResponseEntity.ok().build();
         }
     }
 
