@@ -2,7 +2,12 @@ package com.example.SUSTechNote.app.Interact;
 
 import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
+import com.example.SUSTechNote.interfaces.GroupInterface;
+import com.example.SUSTechNote.interfaces.UserInterface;
+import com.example.SUSTechNote.service.Impl.AuthorityService;
 import com.example.SUSTechNote.service.NotebookService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +16,15 @@ import java.util.List;
 @RestController
 @RequestMapping("interact/share")
 public class InteractShareApp {
+    private final Logger logger = LoggerFactory.getLogger(InteractShareApp.class);
 
     private final NotebookService notebookService;
+    private final AuthorityService authorityService;
 
-    public InteractShareApp(NotebookService notebookService) {
+    public InteractShareApp(NotebookService notebookService,
+                            AuthorityService authorityService) {
         this.notebookService = notebookService;
+        this.authorityService = authorityService;
     }
 
     /**
@@ -24,12 +33,10 @@ public class InteractShareApp {
      */
     @GetMapping("/get-shared-users")
     public ResponseEntity<?> getShareUsers(@RequestParam("notebook") String notebookID){
-        try {
-            Notebook notebook = notebookService.findNotebookByID(notebookID);
-            return ResponseEntity.ok().body(notebook.getUsers());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        logger.info("getShareUsers: notebookID = {}", notebookID);
+        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+        var users = UserInterface.fromUsers(notebook.getUsers());
+        return ResponseEntity.ok().body(users);
     }
 
     /**
@@ -38,17 +45,9 @@ public class InteractShareApp {
      */
     @GetMapping("/get-shared-groups")
     public ResponseEntity<?> getShareGroups(@RequestParam("notebook") String notebookID){
-        try {
-            Notebook notebook = notebookService.findNotebookByID(notebookID);
-            List<Group> groups = notebook.getGroups();
-            for (Group group : groups) {
-                group.setUser(null);
-                group.setNotebookList(null);
-            }
-            return ResponseEntity.ok().body(groups);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+        var groups = GroupInterface.fromGroups(notebook.getGroups());
+        return ResponseEntity.ok().body(groups);
     }
 
     /**

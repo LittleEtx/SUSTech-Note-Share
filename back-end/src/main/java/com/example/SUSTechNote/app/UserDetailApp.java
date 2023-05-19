@@ -5,6 +5,7 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
+import com.example.SUSTechNote.interfaces.UserInterface;
 import com.example.SUSTechNote.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -87,15 +86,7 @@ public class UserDetailApp {
         if (user == null) {
             return ResponseEntity.badRequest().body("user not exist!");
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("userID",user.getUserID());
-        map.put("userName",user.getUserName());
-        map.put("email",user.getEmail());
-        map.put("avatar",user.getAvatar());
-        map.put("description",user.getDescription());
-        map.put("gender",user.getGender());
-        map.put("birth",user.getBirth());
-        return ResponseEntity.ok(map);
+        return ResponseEntity.ok(UserInterface.fromUser(user));
     }
 
     @PostMapping("/update-info")
