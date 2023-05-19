@@ -1,8 +1,5 @@
 <template>
-  <div v-if="!file">
-    <el-empty description="选择文件以预览"/>
-  </div>
-  <div v-else style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%">
     <iframe
       v-if="fileType === 'pdf'"
       :src="'static/pdf/web/viewer.html?file=' + file.url"
@@ -19,11 +16,11 @@
 
 <script setup lang="ts">
 import type { FileInfo } from '@/scripts/interfaces'
-import { ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import MonacoEditor from '@/components/notebook_page/MonacoEditor.vue'
 
 interface Props {
-  file?: FileInfo
+  file: FileInfo
   canModify: boolean
 }
 
@@ -32,8 +29,9 @@ const props = defineProps<Props>()
 type FileType = 'text' | 'image' | 'video' | 'audio' | 'pdf' | 'other'
 const fileType = ref<FileType>()
 
-watch(() => props.file, async () => {
+const initDisplay = () => {
   if (!props.file) {
+    console.log('file is null')
     return
   }
   switch (props.file.type) {
@@ -57,7 +55,11 @@ watch(() => props.file, async () => {
       break
   }
   console.log('showing file type:' + fileType.value)
-})
+}
+
+onBeforeMount(initDisplay)
+watch(() => props.file, initDisplay)
+
 </script>
 
 <style scoped>

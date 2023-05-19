@@ -28,3 +28,12 @@ html,body{
 .el-icon {
   vertical-align: middle;
 }
+
+/* 文字超出显示省略号 */
+.text-truncated {
+  display: inline-block;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
