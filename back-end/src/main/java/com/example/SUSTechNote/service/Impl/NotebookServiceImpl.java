@@ -229,9 +229,9 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public boolean shareToUser(String notebookID, String userID) {
+    public boolean shareToUser(String notebookID, int userID) {
         Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
-        User newUser = userRepository.findUserByUserID(Integer.parseInt(userID));
+        User newUser = userRepository.findUserByUserID(userID);
         if (newUser == null) {
             throw new AccountNotExistException("User not found.");
         }

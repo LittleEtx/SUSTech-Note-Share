@@ -53,7 +53,10 @@ public class InteractShareApp {
      * @param userID 用户ID
      */
     @PostMapping("/share-to-user")
-    public ResponseEntity<?> shareToUser(@RequestParam("notebook") String notebookID, @RequestParam("target") String userID){
+    public ResponseEntity<?> shareToUser(
+            @RequestParam("notebook") String notebookID,
+            @RequestParam("target") int userID
+    ){
         logger.info("shareToUser: notebookID = {}, userID = {}", notebookID, userID);
         if (notebookService.shareToUser(notebookID, userID)) {
             return ResponseEntity.ok().body("Share success");

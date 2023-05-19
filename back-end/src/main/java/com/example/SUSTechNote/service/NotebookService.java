@@ -33,7 +33,7 @@ public interface NotebookService {
 
     List<Notebook> findSharedNotebooks(int userID);
 
-    boolean shareToUser(String notebookID, String userID);
+    boolean shareToUser(String notebookID, int userID);
 
     boolean ifLike(String notebookID);
 

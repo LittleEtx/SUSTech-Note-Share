@@ -75,7 +75,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Modifying
     @Transactional
     @Query(value = "insert into notebook_share_user values (?1, ?2)", nativeQuery = true)
-    void shareToUser(String notebookID, String userID);
+    void shareToUser(String notebookID, int userID);
 
     @Query(value = "SELECT notebook_name,tag,update_time,authorid,cover,description,is_public,like_num,star,directory,notebookid FROM notebooks WHERE (notebook_name LIKE ?1 OR tag LIKE ?1 or description LIKE ?1) and is_public = 1 ORDER BY notebook_name DESC", nativeQuery = true)
     Page<Map<String,Object>> searchPublicNotebookWithLimit(String keyword, Pageable pageable);
