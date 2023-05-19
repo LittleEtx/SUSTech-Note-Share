@@ -51,9 +51,15 @@
         :can-modify="canModify"
       ></notebook-edit-pane>
       <notebook-comment
+        v-if="notebook?.isPublic"
         v-show="activeSlot === 'comments'"
         :notebook-id="notebookID"
       ></notebook-comment>
+      <notebook-setting
+        v-if="canModify"
+        v-show="activeSlot === 'setting'"
+        :notebook-info="notebook"
+      ></notebook-setting>
     </div>
   </div>
 </template>
@@ -72,6 +78,7 @@ import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
 import ImgUploader from '@/components/ImgUploader.vue'
 import NotebookComment from '@/components/history_show/NotebookComment.vue'
 import NotebookEditPane from '@/components/notebook_page/NotebookEditPane.vue'
+import NotebookSetting from '@/components/notebook_page/NotebookSetting.vue'
 
 const route = useRoute()
 const store = useStore()
