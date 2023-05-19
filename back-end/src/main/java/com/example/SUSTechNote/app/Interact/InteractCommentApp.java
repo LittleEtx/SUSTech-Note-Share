@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@RestController("/interact/comments")
+@RestController()
+@RequestMapping("/interact/comments")
+
 public class InteractCommentApp {
 
     private final CommentService commentService;
