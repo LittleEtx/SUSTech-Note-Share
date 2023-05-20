@@ -20,29 +20,31 @@
         <div style="margin-left: 20px"></div>
         <div style="display: flex; flex-direction: column; width: 100%">
           <notebook-header
-            :can-modify="canModify"
-            :notebook="notebook"
-            @update="getNotebookInfo(notebookID)"
+              :can-modify="canModify"
+              :notebook="notebook"
+              @update="getNotebookInfo(notebookID)"
           ></notebook-header>
           <div style="margin-top: 10px"></div>
           <!--    按钮组    -->
-          <el-tabs v-model="activeSlot">
-            <el-tab-pane name="note">
-              <template #label>
-                <span><el-icon><Collection/></el-icon> <b>笔记</b> </span>
-              </template>
-            </el-tab-pane>
-            <el-tab-pane name="comments">
-              <template #label>
-                <span><el-icon><ChatLineSquare/></el-icon> <b>评论</b> </span>
-              </template>
-            </el-tab-pane>
-            <el-tab-pane name="setting" v-if="canModify">
-              <template #label>
-                <span><el-icon><Setting/></el-icon> <b>设置</b> </span>
-              </template>
-            </el-tab-pane>
-          </el-tabs>
+          <el-affix>
+            <el-tabs v-model="activeSlot" style="background-color: white">
+              <el-tab-pane name="note">
+                <template #label>
+                  <span><el-icon><Collection/></el-icon> <b>笔记</b> </span>
+                </template>
+              </el-tab-pane>
+              <el-tab-pane name="comments" v-if="notebook?.isPublic">
+                <template #label>
+                  <span><el-icon><ChatLineSquare/></el-icon> <b>评论</b> </span>
+                </template>
+              </el-tab-pane>
+              <el-tab-pane name="setting" v-if="canModify">
+                <template #label>
+                  <span><el-icon><Setting/></el-icon> <b>设置</b> </span>
+                </template>
+              </el-tab-pane>
+            </el-tabs>
+          </el-affix>
         </div>
       </div>
       <notebook-edit-pane
@@ -78,7 +80,7 @@ import NotebookHeader from '@/components/notebook_page/NotebookHeader.vue'
 import ImgUploader from '@/components/ImgUploader.vue'
 import NotebookComment from '@/components/history_show/NotebookComment.vue'
 import NotebookEditPane from '@/components/notebook_page/NotebookEditPane.vue'
-import NotebookSetting from '@/components/notebook_page/NotebookSetting.vue'
+import NotebookSetting from '@/components/notebook_page/setting/NotebookSetting.vue'
 
 const route = useRoute()
 const store = useStore()

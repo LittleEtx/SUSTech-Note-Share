@@ -1,5 +1,5 @@
 <template>
-  <el-space
+<el-space
     direction="vertical"
     :fill="true"
     alignment="start"
@@ -7,30 +7,29 @@
     style="width: 100%; text-align: left"
     v-loading="loading"
     element-loading-background="rgba(255, 255, 255, 0.3)"
-  >
+>
   <span>
     <el-text
-      style="font-size: 20px"
-      v-if="!modifyTitle"
-      @click="onModifyTitle"
+        style="font-size: 20px"
+        v-if="!modifyTitle"
+        @click="onModifyTitle"
     >
       <b> {{ notebook?.title }} </b>
     </el-text>
     <el-input
-      v-else
-      v-model="title"
-      ref="titleInputRef"
-      placeholder="请输入标题"
-      @blur="updateTitle"
-      @keyup.enter="onInputEnter"
-      @keyup.esc="modifyTitle = false"
-      :maxlength="40"
-      show-word-limit
-      style="width: 60%"
-    >
-    </el-input>
+        v-else
+        v-model="title"
+        ref="titleInputRef"
+        placeholder="请输入标题"
+        @blur="updateTitle"
+        @keyup.enter="onInputEnter"
+        @keyup.esc="modifyTitle = false"
+        :maxlength="40"
+        show-word-limit
+        style="width: 60%"
+    ></el-input>
   </span>
-    <span>
+  <span>
     <el-tag type="success" effect="dark" v-if="notebook?.isPublic">公开</el-tag>
     <el-tag type="info" effect="dark" v-else>私有</el-tag>
     <el-text size="small" style="font-size: 10px; margin-left: 10px">
@@ -38,23 +37,23 @@
       上次修改于：{{ notebook?.updateTime }}
     </el-text>
   </span>
-    <notebook-tags
+  <notebook-tags
       :modify="canModify"
       :tags="getTags"
       @update="tags => updateTags(tags)"
       style="margin-top: 5px"
-    ></notebook-tags>
-    <div style="margin-top: 5px"></div>
-    <div style="font-size: 10px">
-      <el-text
+  ></notebook-tags>
+  <div style="margin-top: 5px"></div>
+  <div style="font-size: 10px">
+    <el-text
         v-if="!modifyDescription"
         size="small" type="info"
         @click="onModifyDescription"
-      >
-        {{ notebook?.description === '' ? '这个笔记本还没有写简介哦~' : notebook?.description }}
-      </el-text>
-      <div v-else>
-        <el-input
+    >
+      {{ notebook?.description === '' ? '这个笔记本还没有写简介哦~' : notebook?.description }}
+    </el-text>
+    <div v-else>
+      <el-input
           v-model="description"
           size="small"
           type="textarea"
@@ -62,22 +61,22 @@
           placeholder="这个笔记本还没有写简介哦~"
           :autosize="{ minRows: 3 }"
           show-word-limit
-        ></el-input>
-        <div style="margin-top: 5px"></div>
-        <span>
-        <el-button
+      ></el-input>
+      <div style="margin-top: 5px"></div>
+      <span>
+      <el-button
           type="primary" size="small" text
           @click="updateDescription"
-        >保存</el-button>
-        <el-button
+      >保存</el-button>
+      <el-button
           type="info" size="small" text
           @click="modifyDescription = false"
-        >取消</el-button>
-      </span>
-      </div>
-
+      >取消</el-button>
+    </span>
     </div>
-  </el-space>
+
+  </div>
+</el-space>
 </template>
 
 <script setup lang="ts">
