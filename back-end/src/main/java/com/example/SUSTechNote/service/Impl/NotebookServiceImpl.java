@@ -8,6 +8,7 @@ import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.exception.AccountNotExistException;
+import com.example.SUSTechNote.exception.GroupNotExistException;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
@@ -241,79 +242,70 @@ public class NotebookServiceImpl implements NotebookService {
         }
         try {
             notebookRepository.shareToUser(notebookID, userID);
+            return true;
         } catch (Exception e) {
             logger.error("shareToUser error: " + e.getMessage());
             return false;
         }
-        return true;
     }
 
     @Override
     public String shareToGroup(String notebookID, int groupID) {
-        int userIDInt = StpUtil.getLoginIdAsInt();
-        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
-        if (userIDInt != ownerID) {
-            return "You are not the owner of this notebook.";
-        } else {
-            try {
-                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
-                Group newGroup = groupRepository.findGroupByGroupID(groupID);
-                List<Group> groups = notebook.getGroups();
-                groups.add(newGroup);
-                notebook.setGroups(groups);
-                notebookRepository.save(notebook);
-                notebookRepository.shareToGroup(notebookID, groupID);
-                return "Share successfully.";
-            } catch (Exception e) {
-                logger.error("shareToUser error: " + e.getMessage());
-                throw e;
-            }
+        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+        Group newGroup = groupRepository.findGroupByGroupID(groupID);
+        if (newGroup == null) {
+            throw new GroupNotExistException("Group not found.");
+        }
+        if (notebook.getGroups().contains(newGroup)) {
+            logger.info("notebook " + notebookID + " already shared to group " + groupID);
+            return "Notebook already shared to this group.";
+        }
+        try {
+            notebookRepository.shareToGroup(notebookID, groupID);
+            return "Share to group successfully.";
+        } catch (Exception e) {
+            logger.error("shareToGroup error: " + e.getMessage());
+            throw e;
         }
     }
 
     @Override
     public String cancelUserShare(String notebookID, int userID) {
-        int userIDInt = StpUtil.getLoginIdAsInt();
-        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
-        if (userIDInt != ownerID) {
-            return "You are not the owner of this notebook.";
-        } else {
-            try {
-                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
-                User userToRemove = userRepository.findUserByUserID(userID);
-                List<User> users = notebook.getUsers();
-                users.remove(userToRemove);
-                notebook.setUsers(users);
-                notebookRepository.save(notebook);
-                notebookRepository.cancelUserShare(notebookID, userID);
-                return "Cancel successfully.";
-            } catch (Exception e) {
-                logger.error("Cancel fail." + e.getMessage());
-                throw e;
-            }
+        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+        User userToRemove = userRepository.findUserByUserID(userID);
+        if (userToRemove == null) {
+            throw new AccountNotExistException("User not found.");
+        }
+        if (!notebook.getUsers().contains(userToRemove)) {
+            logger.info("notebook " + notebookID + " not shared to user " + userID);
+            return "Notebook not shared to this user.";
+        }
+        try {
+            notebookRepository.cancelUserShare(notebookID, userID);
+            return "Cancel successfully.";
+        } catch (Exception e) {
+            logger.error("cancelUserShare error: " + e.getMessage());
+            throw e;
         }
     }
 
     @Override
     public String cancelGroupShare(String notebookID, int groupID) {
-        int userIDInt = StpUtil.getLoginIdAsInt();
-        int ownerID = notebookRepository.findAuthorIDByNotebookID(notebookID);
-        if (userIDInt != ownerID) {
-            return "You are not the owner of this notebook.";
-        } else {
-            try {
-                Notebook notebook = notebookRepository.findNotebooksByNotebookID(notebookID).get(0);
-                Group groupToRemove = groupRepository.findGroupByGroupID(groupID);
-                List<Group> groups = notebook.getGroups();
-                groups.remove(groupToRemove);
-                notebook.setGroups(groups);
-                notebookRepository.save(notebook);
-                notebookRepository.cancelGroupShare(notebookID, groupID);
-                return "Cancel successfully.";
-            } catch (Exception e) {
-                logger.error("Cancel fail." + e.getMessage());
-                throw e;
-            }
+        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+        Group groupToRemove = groupRepository.findGroupByGroupID(groupID);
+        if (groupToRemove == null) {
+            throw new GroupNotExistException("Group not found.");
+        }
+        if (!notebook.getGroups().contains(groupToRemove)) {
+            logger.info("notebook " + notebookID + " not shared to group " + groupID);
+            return "Notebook not shared to this group.";
+        }
+        try {
+            notebookRepository.cancelGroupShare(notebookID, groupID);
+            return "Cancel successfully.";
+        } catch (Exception e) {
+            logger.error("cancelGroupShare error: " + e.getMessage());
+            throw e;
         }
     }
 

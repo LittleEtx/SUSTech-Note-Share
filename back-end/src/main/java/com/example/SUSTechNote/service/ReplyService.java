@@ -8,5 +8,5 @@ import java.time.LocalDateTime;
 public interface ReplyService {
     String deleteReply(String commentID, String reply);
 
-    String reply(int userID, String commentID, int floor, String content, LocalDateTime replyTime);
+    String reply(int userID, String commentID, String toUserName, String content, LocalDateTime replyTime);
 }

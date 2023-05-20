@@ -25,10 +25,10 @@ public class HistoryApp {
     public ResponseEntity<?> createHistory(@RequestBody JSONObject jsonObject) {
         int userID = Integer.parseInt(jsonObject.getString("userID"));
         String notebookID = jsonObject.getString("notebookID");
-        String visitTimeStr = jsonObject.getString("visitTime");
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
-        LocalDateTime visitTime = LocalDateTime.parse(visitTimeStr, dateTimeFormatter);
+        LocalDateTime visitTime = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String visitTimeStr = visitTime.format(dateTimeFormatter);
+        visitTime = LocalDateTime.parse(visitTimeStr, dateTimeFormatter);
         try {
             historyService.createHistory(userID, notebookID, visitTime);
             return ResponseEntity.ok().body("create history success");

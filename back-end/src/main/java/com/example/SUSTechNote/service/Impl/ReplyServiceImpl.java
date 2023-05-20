@@ -40,31 +40,19 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public String reply(int userID, String commentID, int floor, String content, LocalDateTime replyTime) {
+    public String reply(int userID, String commentID, String toUserName, String content, LocalDateTime replyTime) {
         // 0表示回复楼主，否则表示回复楼中楼
         String newReplyID;
-        if (floor == 0) {
-            List<String> replyIDs = replyRepository.getReplyIDsByCommentID(commentID);
-            if (replyIDs.size() > 0) {
-                String lastReplyID = replyIDs.get(replyIDs.size() - 1);
-                int lastReplyIDNum = Integer.parseInt(lastReplyID.substring(lastReplyID.lastIndexOf("_") + 1));
-                newReplyID = commentID + "_" + (lastReplyIDNum + 1);
-            } else {
-                newReplyID = commentID + "_1";
-            }
+        List<String> replyIDs = replyRepository.getReplyIDsByCommentID(commentID);
+        if (replyIDs.size() > 0) {
+            String lastReplyID = replyIDs.get(replyIDs.size() - 1);
+            int lastReplyIDNum = Integer.parseInt(lastReplyID.substring(lastReplyID.lastIndexOf("_") + 1));
+            newReplyID = commentID + "_" + (lastReplyIDNum + 1);
         } else {
-            String replyFloorID = commentID + "_" + floor;
-            List<String> replyFloorIDs = replyRepository.getReplyFloorIDsByCommentID(replyFloorID);
-            if (replyFloorIDs.size() > 0) {
-                String lastReplyID = replyFloorIDs.get(replyFloorIDs.size() - 1);
-                int lastReplyIDNum = Integer.parseInt(lastReplyID.substring(lastReplyID.lastIndexOf("_") + 1));
-                newReplyID = commentID + "_" + (lastReplyIDNum + 1);
-            } else {
-                newReplyID = commentID + "_1";
-            }
+            newReplyID = commentID + "_1";
         }
         try {
-            replyRepository.createReply(newReplyID, floor, content, replyTime, commentID, userID);
+            replyRepository.createReply(newReplyID, toUserName, content, replyTime, commentID, userID);
             return newReplyID;
         } catch (Exception e) {
             logger.error("create reply failed: " + e.getMessage());

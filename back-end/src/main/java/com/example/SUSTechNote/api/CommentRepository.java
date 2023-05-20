@@ -1,7 +1,6 @@
 package com.example.SUSTechNote.api;
 
 import com.example.SUSTechNote.entity.Comment;
-import com.example.SUSTechNote.entity.Reply;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -40,5 +39,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> getCommentsByNotebookID(String notebookID);
 
     @Query(value = "select * from reply where comment_id = ?1", nativeQuery = true)
-    List<Reply> getRepliesByCommentID(String commentID);
+    List<Object[]> getRepliesByCommentID(String commentID);
 }

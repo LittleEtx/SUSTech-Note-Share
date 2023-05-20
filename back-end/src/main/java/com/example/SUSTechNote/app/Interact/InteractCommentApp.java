@@ -42,11 +42,8 @@ public class InteractCommentApp {
      * 评论一个笔记本
      */
     @PostMapping("/comment")
-    public ResponseEntity<?> comment(@RequestBody JSONObject jsonObject){
-        String notebookID = jsonObject.getString("notebookID");
-        String comment = jsonObject.getString("comment");
-        String commentTimeStr = jsonObject.getString("commentTime");
-        LocalDateTime commentTime = convertToLocalDateTime(commentTimeStr);
+    public ResponseEntity<?> comment(@RequestParam("notebookID") String notebookID, @RequestParam("comment") String comment){
+        LocalDateTime commentTime = convertToLocalDateTime(LocalDateTime.now());
         try {
             String commentID = commentService.comment(notebookID, comment, commentTime);
             return ResponseEntity.ok(commentID);
@@ -77,12 +74,11 @@ public class InteractCommentApp {
     public ResponseEntity<?> reply(@RequestBody JSONObject jsonObject){
         int userID = StpUtil.getLoginIdAsInt();
         String commentID = jsonObject.getString("commentID");
-        int floor = jsonObject.getInteger("reply");
+        String toUserName = jsonObject.getString("toUserName");
         String content = jsonObject.getString("content");
-        String replyTimeStr = jsonObject.getString("replyTime");
-        LocalDateTime replyTime = convertToLocalDateTime(replyTimeStr);
+        LocalDateTime replyTime = convertToLocalDateTime(LocalDateTime.now());
         try {
-            String replyID = replyService.reply(userID, commentID, floor, content, replyTime);
+            String replyID = replyService.reply(userID, commentID, toUserName, content, replyTime);
             return ResponseEntity.ok().body(replyID);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -107,9 +103,9 @@ public class InteractCommentApp {
         }
     }
 
-    public LocalDateTime convertToLocalDateTime(String timeStr){
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+    public LocalDateTime convertToLocalDateTime(LocalDateTime now){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timeStr = now.format(dateTimeFormatter);
         return LocalDateTime.parse(timeStr, dateTimeFormatter);
     }
 

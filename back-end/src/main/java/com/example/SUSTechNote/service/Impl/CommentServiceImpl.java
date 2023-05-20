@@ -3,8 +3,8 @@ package com.example.SUSTechNote.service.Impl;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.api.CommentRepository;
+import com.example.SUSTechNote.api.UserRepository;
 import com.example.SUSTechNote.entity.Comment;
-import com.example.SUSTechNote.entity.Reply;
 import com.example.SUSTechNote.service.CommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +20,11 @@ public class CommentServiceImpl implements CommentService {
 
     private final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -73,11 +75,40 @@ public class CommentServiceImpl implements CommentService {
         List<JSONObject> jsonObjectList = new ArrayList<>();
         for (Comment comment : comments) {
             JSONObject jsonObject = new JSONObject();
-            List<Reply> replies = commentRepository.getRepliesByCommentID(comment.getCommentID());
-            jsonObject.put("comment", comment);
-            jsonObject.put("replies", replies);
+            List<Object[]> rows = commentRepository.getRepliesByCommentID(comment.getCommentID());
+            JSONObject commentJson = convertComment(comment, rows);
+            jsonObject.put("comment", commentJson);
             jsonObjectList.add(jsonObject);
         }
         return jsonObjectList;
+    }
+
+    public List<JSONObject> convertReplies2Json(List<Object[]> replies) {
+        List<JSONObject> jsonObjectList = new ArrayList<>();
+        for (Object[] reply : replies) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("replyID", reply[0]);
+            jsonObject.put("replyContent", reply[1]);
+            jsonObject.put("replyTime", reply[2]);
+            jsonObject.put("toUserName", reply[3]);
+            jsonObject.put("commentID", reply[4]);
+            jsonObject.put("userID", reply[5]);
+            jsonObject.put("userName", userRepository.findUserByUserID((int) reply[5]).getUserName());
+            jsonObject.put("userAvatar", userRepository.findUserByUserID((int) reply[5]).getAvatar());
+            jsonObjectList.add(jsonObject);
+        }
+        return jsonObjectList;
+    }
+
+    public JSONObject convertComment(Comment comment, List<Object[]> replies) {
+        JSONObject commentJson = new JSONObject();
+        commentJson.put("commentID", comment.getCommentID());
+        commentJson.put("commentContent", comment.getCommentContent());
+        commentJson.put("notebookID", comment.getNotebook().getNotebookID());
+        commentJson.put("userID", comment.getUser().getUserID());
+        commentJson.put("commentTime", comment.getCommentTime());
+        commentJson.put("replyNum", replies.size());
+        commentJson.put("replies", convertReplies2Json(replies));
+        return commentJson;
     }
 }

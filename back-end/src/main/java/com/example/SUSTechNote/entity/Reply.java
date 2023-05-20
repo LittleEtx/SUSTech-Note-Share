@@ -12,7 +12,7 @@ public class Reply {
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    private int floor;
+    private String toUserName;
     private String replyContent;
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -35,12 +35,12 @@ public class Reply {
         this.comment = comment;
     }
 
-    public int getFloor() {
-        return floor;
+    public String getToUserName() {
+        return toUserName;
     }
 
-    public void setFloor(int floor) {
-        this.floor = floor;
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
     }
 
     public String getReplyContent() {
