@@ -86,7 +86,9 @@ public class NotebookServiceImpl implements NotebookService {
 
     @Override
     public String deleteNotebook(String notebookID){
+        var notebook = authorityService.checkNotebookAuthority(notebookID);
         try{
+            // TODO: 删除文件、以及相关数据库条目
             notebookRepository.deleteNotebook(notebookID);
             return "Notebook deleted successfully.";
         } catch (Exception e) {

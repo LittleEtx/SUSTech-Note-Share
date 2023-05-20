@@ -137,19 +137,15 @@ public class NotebookApp {
     }
 
     @SaCheckLogin
-    @PostMapping("/delete")
-    public ResponseEntity<?> deleteNotebook(@RequestBody JSONObject jsonObject){
-        String notebookID = jsonObject.getString("notebookID");
-        Notebook notebook = notebookService.findNotebookByID(notebookID);
-        if (StpUtil.getLoginIdAsInt() == notebook.getAuthorID()){
-            try {
-                String result = notebookService.deleteNotebook(notebookID);
-                return ResponseEntity.ok(result);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Notebook deletion failed");
-            }
-        }else {
-            return ResponseEntity.badRequest().body("You are not the author of this notebook");
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteNotebook(
+            @RequestParam("notebook") String notebookID
+    ){
+        try {
+            notebookService.deleteNotebook(notebookID);
+            return ResponseEntity.ok("Notebook deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Notebook deletion failed");
         }
     }
 

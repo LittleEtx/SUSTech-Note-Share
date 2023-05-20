@@ -19,7 +19,9 @@ public class InteractApp {
      * 获取用户最近的点赞列表
      */
     @GetMapping("/if-like")
-    public ResponseEntity<?> getIfLike(@RequestParam String notebookID){
+    public ResponseEntity<?> getIfLike(
+            @RequestParam("notebook") String notebookID
+    ){
         try {
             boolean result = notebookService.ifLike(notebookID);
             return ResponseEntity.ok(result);
@@ -33,7 +35,7 @@ public class InteractApp {
      */
     @PostMapping("/like-notebook")
     public ResponseEntity<?> likeNotebook(
-            @RequestParam("id") String notebookID
+            @RequestParam("notebook") String notebookID
     ){
         try {
             boolean result = notebookService.likeNotebook(notebookID);
@@ -44,11 +46,60 @@ public class InteractApp {
     }
 
     /**
+     * 取消点赞一个笔记
+     * @param notebookID 笔记本ID
+     */
+    @PostMapping("/cancel-like-notebook")
+    public ResponseEntity<?> cancelLikeNotebook(
+            @RequestParam("notebook") String notebookID
+    ){
+        //TODO
+        return ResponseEntity.ok("Unimplemented");
+    }
+
+    /**
+     * 获取用户是否收藏了一个笔记
+     * @param notebookID 笔记本ID
+     */
+    @GetMapping("/if-star")
+    public ResponseEntity<?> getIfStar(
+            @RequestParam("notebook") String notebookID
+    ){
+        // TODO
+        return ResponseEntity.ok("Unimplemented");
+    }
+
+    /**
+     * 收藏一个笔记
+     * @param notebookID 笔记本ID
+     */
+    @PostMapping("/star-notebook")
+    public ResponseEntity<?> starNotebook(
+            @RequestParam("notebook") String notebookID
+    ){
+        // TODO
+        return ResponseEntity.ok("Unimplemented");
+    }
+
+    /**
+     * 取消收藏一个笔记
+     * @param notebookID 笔记本ID
+     */
+    @PostMapping("/cancel-star-notebook")
+    public ResponseEntity<?> cancelStarNotebook(
+            @RequestParam("notebook") String notebookID
+    ){
+        // TODO
+        return ResponseEntity.ok("Unimplemented");
+    }
+
+
+    /**
      * 公开一个笔记
      */
     @PostMapping("/set-notebook-public")
     public ResponseEntity<?> setNotebookPublic(
-            @RequestParam("id") String notebookID
+            @RequestParam("notebook") String notebookID
     ){
         try {
             String result = notebookService.setNotebookPublic(notebookID);
@@ -66,7 +117,7 @@ public class InteractApp {
      */
     @PostMapping("/set-notebook-private")
     public ResponseEntity<?> setNotebookPrivate(
-            @RequestParam("id") String notebookID
+            @RequestParam("notebook") String notebookID
     ){
         try {
             String result = notebookService.setNotebookPrivate(notebookID);
