@@ -6,7 +6,7 @@
   >
     <span style="font-size: 20px"><b>总览</b></span>
     <div style="margin-top: 20px"></div>
-    <el-space :size="10">
+    <el-space :size="10" wrap>
       <!--    笔记本公开性卡片    -->
       <el-card class="info-card" shadow="hover">
         <template #header>
@@ -70,19 +70,30 @@
     <div style="margin-top: 30px"></div>
     <span style="font-size: 20px">
     <b>用户分享</b>
-    <el-button type="primary" style="float: right" @click="onShowUserShareDialog">
+    <el-button type="primary" style="float: right" @click="showUserShareDialog = true">
       <el-icon><Share/></el-icon>添加用户
     </el-button>
   </span>
     <el-divider style="margin-bottom: 0"></el-divider>
-    <el-table style="width: 100%" :data="shareUsers">
+    <!--   展示已经分享给的用户的表格    -->
+    <el-table
+        style="width: 100%"
+        :data="filteredShareUsers"
+        @selection-change="onUserSelectionChange"
+    >
       <el-table-column type="selection" width="50"/>
-      <el-table-column label="全选">
+      <el-table-column>
+        <template #header>
+          <span v-if="!showUserMultiDelete">全选</span>
+          <el-button v-else type="danger" plain @click="deleteMultiUserShare">
+            删除{{ multiSelectUsers.length }}个用户的分享
+          </el-button>
+        </template>
         <template #default="scope">
           <div style="display: flex">
             <user-avatar
-              :avatar-url="scope.row.avatar"
-              :user-id="scope.row.userID"
+                :avatar-url="scope.row.avatar"
+                :user-id="scope.row.userID"
             ></user-avatar>
             <div style="margin-left: 10px">
               <el-text type="primary"><b>{{ (scope.row as UserInfo).userName }}</b></el-text>
@@ -95,15 +106,18 @@
       <el-table-column>
         <template #header>
           <el-input
-            style="float: right"
-            placeholder="搜索用户"
-            :prefix-icon="Search"
+              style="float: right"
+              placeholder="搜索用户"
+              :prefix-icon="Search"
+              v-model="searchShareUsers"
+              @update:model-value="onUpdateSearchUsers"
           ></el-input>
         </template>
         <template #default="scope">
           <el-link
-            :underline="false"
-            style="float: right"
+              :underline="false"
+              style="float: right"
+              @click="deleteUserShare(scope.row)"
           >
             <el-icon>
               <Delete/>
@@ -112,66 +126,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--  分享给用户时的弹窗  -->
-    <el-dialog
-      v-model="showUserShareDialog"
-      destroy-on-close
-    >
-      <template #header>
-        <div style="text-align: center">
-          <el-icon size="30">
-            <Collection/>
-          </el-icon>
-          <br/>
-          <el-text style="font-size: 15px"> 分享<b>{{ notebookInfo.title }}</b>至用户</el-text>
-        </div>
-      </template>
-      <el-input
-        style="width: 100%"
-        placeholder="搜索用户名、学号或邮箱"
-        clearable
-        v-model="searchUserKey"
-        @update:model-value="updateSearchUsers"
-      ></el-input>
-      <el-scrollbar
-        v-show="searchUsers.length > 0"
-        style="max-height: 500px; margin-top: 10px"
-      >
-        <el-radio-group v-model="selectedUserID" style="width: 100%;">
-          <el-space :size="10" direction="vertical" fill style="width: 100%">
-            <el-radio
-              v-for="user in searchUsers"
-              :key="user.userID"
-              :label="user.userID"
-              style="height: 60px"
-              border
-            >
-              <div style="display: flex">
-                <user-avatar
-                  :avatar-url="user.avatar"
-                  :user-id="user.userID"
-                ></user-avatar>
-                <div style="margin-left: 10px">
-                  <el-text type="primary"><b>{{ user.userName }}</b></el-text>
-                  <br/>
-                  <el-text> {{ user.userID }}</el-text>
-                </div>
-              </div>
-            </el-radio>
-          </el-space>
-        </el-radio-group>
-      </el-scrollbar>
-      <template #footer>
-        <el-button
-          type="primary"
-          style="width: 100%"
-          :disabled="selectedUserID === 0"
-          @click="submitUserShare"
-        >
-          {{ selectedUserID !== 0 ? '确定' : '请选择要分享的用户' }}
-        </el-button>
-      </template>
-    </el-dialog>
+    <add-user-share
+        v-if="showUserShareDialog"
+        :shared-users="shareUsers"
+        :notebook-info="notebookInfo!"
+        v-model="showUserShareDialog"
+        @on-submit="id => submitUserShare(id)"
+    ></add-user-share>
     <div style="margin-top: 20px"></div>
 
     <span style="font-size: 20px"><b>群组分享</b></span>
@@ -180,13 +141,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Collection, Delete, Search, Share, User, View } from '@element-plus/icons-vue'
+import { Delete, Search, Share, User, View } from '@element-plus/icons-vue'
 import { GroupInfo, NotebookInfo, UserInfo } from '@/scripts/interfaces'
 import { onMounted, ref, watch } from 'vue'
-import { apiGetNotebookSharedGroups, apiGetNotebookSharedUsers, apiShareNotebookToUser } from '@/scripts/API_Interact'
+import {
+  apiCancelUserShare,
+  apiGetNotebookSharedGroups,
+  apiGetNotebookSharedUsers,
+  apiShareNotebookToUser
+} from '@/scripts/API_Interact'
 import UserAvatar from '@/components/UserAvatar.vue'
-import { apiSearchUsers } from '@/scripts/API_Search'
-import { useStore } from '@/store/store'
+import { ElMessageBox } from 'element-plus'
+import AddUserShare from '@/components/notebook_page/AddUserShare.vue'
 
 interface Props {
   notebookInfo: NotebookInfo | undefined
@@ -210,48 +176,83 @@ onMounted(async () => {
   await updateInfo()
   loading.value = false
 })
+
+const searchShareUsers = ref('')
+const filteredShareUsers = ref<UserInfo[]>([])
+
+const onUpdateSearchUsers = () => {
+  if (searchShareUsers.value === '') {
+    filteredShareUsers.value = shareUsers.value
+  } else {
+    filteredShareUsers.value = shareUsers.value.filter(user =>
+        user.userID.toString().includes(searchShareUsers.value) ||
+        user.userName.includes(searchShareUsers.value)
+    )
+  }
+}
+
 const updateInfo = async () => {
   if (!props.notebookInfo) {
     return
   }
   shareUsers.value = await apiGetNotebookSharedUsers(props.notebookInfo.notebookID)
   shareGroups.value = await apiGetNotebookSharedGroups(props.notebookInfo.notebookID)
+  onUpdateSearchUsers()
 }
 
-const store = useStore()
 // ========= 用户分享 =========
 const showUserShareDialog = ref(false)
-const searchUserKey = ref('')
-const searchUsers = ref<UserInfo[]>([])
-const selectedUserID = ref(0)
-
-const onShowUserShareDialog = () => {
-  showUserShareDialog.value = true
-  searchUserKey.value = ''
-  searchUsers.value = []
-  selectedUserID.value = 0
-}
-
-const updateSearchUsers = async () => {
-  searchUsers.value = (await apiSearchUsers(searchUserKey.value))
-    .filter(user => user.userID !== store.state.userInfo!.userID) // 不能分享给自己
-    .filter(user => !shareUsers.value.find(u => u.userID === user.userID)) // 不能分享给已经分享的用户
-  if (!searchUsers.value.find(user => user.userID === selectedUserID.value)) {
-    // 如果已经选择的用户不在搜索结果中，就取消选择
-    selectedUserID.value = 0
-  }
-  console.log(searchUsers.value)
-}
-const submitUserShare = async () => {
+const submitUserShare = async (selectedUserID: number) => {
   showUserShareDialog.value = false
-  console.log(selectedUserID.value)
   loading.value = true
-  await apiShareNotebookToUser(props.notebookInfo!.notebookID, selectedUserID.value)
+  await apiShareNotebookToUser(props.notebookInfo!.notebookID, selectedUserID)
   await updateInfo()
   loading.value = false
 }
 
-// TODO: filter user, remove user; group related
+const deleteUserShare = async (user: UserInfo) => {
+  try {
+    await ElMessageBox.confirm(`确定要取消分享给用户 ${user.userName} 吗？`, '确认', {
+      confirmButtonText: '确定',
+      confirmButtonClass: 'el-button--danger',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+  } catch (e) {
+    return
+  }
+  loading.value = true
+  await apiCancelUserShare(props.notebookInfo!.notebookID, user.userID)
+  await updateInfo()
+  loading.value = false
+}
+
+const multiSelectUsers = ref<UserInfo[]>([])
+const showUserMultiDelete = ref(false)
+const onUserSelectionChange = (users: UserInfo[]) => {
+  multiSelectUsers.value = users
+  showUserMultiDelete.value = users.length > 0
+}
+
+const deleteMultiUserShare = async () => {
+  try {
+    await ElMessageBox.confirm(`确定要取消分享给这 ${multiSelectUsers.value.length} 个用户吗？`, '确认', {
+      confirmButtonText: '确定',
+      confirmButtonClass: 'el-button--danger',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+  } catch (e) {
+    return
+  }
+  loading.value = true
+  await Promise.all(multiSelectUsers.value
+      .map(user => apiCancelUserShare(props.notebookInfo!.notebookID, user.userID)))
+  await updateInfo()
+  loading.value = false
+}
+
+// TODO: group related
 
 </script>
 

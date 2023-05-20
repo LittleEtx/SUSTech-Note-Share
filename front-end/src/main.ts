@@ -9,11 +9,12 @@ import { router } from './router'
 import { key, store } from './store/store'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 /* eslint-disable no-new */
 const app = createApp(App)
 
-app.use(ElementPlus)
+app.use(ElementPlus, { locale: zhCn })
 app.use(router)
 app.use(store, key)
 
