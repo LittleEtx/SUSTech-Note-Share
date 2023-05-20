@@ -6,7 +6,7 @@
             tab-position="right"
             style="text-align: left"
             v-model="activeTab"
-            @update:model-value="updateActiveTab"
+            @tabClick="updateActiveTab"
         >
           <el-tab-pane name="overview">
             <template #label>
@@ -50,12 +50,15 @@
           :notebook-info="notebookInfo"
           :shared-users="sharedUsers"
           :shared-groups="sharedGroups"
+          @jump-visibility="jumpTo('critical')"
+          @jump-user-share="jumpTo('userSharing')"
+          @jump-group-share="jumpTo('groupSharing')"
       ></setting-overview>
       <div style="margin-top: 30px"></div>
       <span style="font-size: 20px" id="userSharing">
         <b>用户分享</b>
         <el-button type="primary" style="float: right" @click="userShareSettingRef!.addUser()">
-          <el-icon style="margin-right: 10px"><Share/></el-icon>添加用户
+          <el-icon style="margin-right: 10px"><Share/></el-icon> 添加用户
         </el-button>
       </span>
       <user-share-setting
@@ -68,7 +71,7 @@
         <b>群组分享</b>
       </span>
       <div style="margin-top: 20px"></div>
-      <span style="font-size: 20px" id="critical"><b>关键设置</b></span>
+      <span style="font-size: 20px" id="critical" ref="critical"><b>关键设置</b></span>
       <el-divider/>
       <div>
         <el-button :type="notebookInfo!.isPublic ? 'danger' : 'primary'" plain style="float: right">
@@ -100,10 +103,11 @@
 import type { GroupInfo, NotebookInfo, UserInfo } from '@/scripts/interfaces'
 import UserShareSetting from '@/components/notebook_page/setting/UserShareSetting.vue'
 import { Collection, Delete, Share, User } from '@element-plus/icons-vue'
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import SettingOverview from '@/components/notebook_page/setting/SettingOverview.vue'
+import type { TabsPaneContext } from 'element-plus'
 
-const activeTab = ref('share')
+const activeTab = ref('overview')
 
 interface Props {
   notebookInfo: NotebookInfo | undefined
@@ -117,16 +121,20 @@ const userShareSettingRef = ref<InstanceType<typeof UserShareSetting>>()
 
 // =========== 以下为滚动导航栏相关 ===========
 const scrollRef = ref<InstanceType<typeof HTMLElement>>()
-const scrollList = ref([]) // 每个盒子的滚动距离列表
+const scrollList = ref<{
+  key: string
+  scrollTopNum: number
+}[]>([]) // 每个盒子的滚动距离列表
 
-const handleScroll = (e) => { // 滚动事件
+const listenForChange = ref(true)
+const handleScroll = () => { // 滚动事件
+  if (!listenForChange.value) return
   scrollList.value.forEach((item) => {
-    if (e.target.scrollTop >= item.scrollTopNum) {
-      activeTab.value = item
+    if (window.scrollY + 70 >= item.scrollTopNum) {
+      activeTab.value = item.key
     }
   })
 }
-
 const items = [
   'overview',
   'userSharing',
@@ -134,16 +142,31 @@ const items = [
   'critical'
 ]
 
-const updateActiveTab = (item) => { // 单击单个导航执行事件
-  console.log(item)
-  nextTick(() => {
-    scrollRef.value!.scrollTop = document.getElementById(item)!.offsetTop + 2
+const updateActiveTab = (pane: TabsPaneContext) => { // 单击单个导航执行事件
+  jumpTo(pane.paneName as string)
+}
+
+const jumpTo = (item: string) => {
+  const node = document.getElementById(item)! // 跳转到对应导航
+  const targetY = node.offsetTop - 70
+  const spendTime = Math.abs(window.scrollY - targetY) / 1.5 + 1000
+  listenForChange.value = false
+  window.scrollTo({
+    top: targetY,
+    behavior: 'smooth'
   })
+  setTimeout(() => {
+    listenForChange.value = true
+  }, spendTime)
 }
 
 onMounted(() => {
+  // 记录每个item距离页面顶端的距离
   items.forEach((item) => {
-    scrollList.value.push({ scrollTopNum: document.getElementById(item)!.offsetTop })
+    scrollList.value.push({
+      key: item,
+      scrollTopNum: document.getElementById(item)!.offsetTop
+    })
   })
   window.addEventListener('scroll', handleScroll, true)
 })
@@ -162,7 +185,7 @@ onBeforeUnmount(() => {
 
 .affix-container {
   height: 100%;
-  min-width: 220px;
+  min-width: 230px;
 }
 
 .main-container {

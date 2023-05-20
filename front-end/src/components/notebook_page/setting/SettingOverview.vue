@@ -9,6 +9,17 @@ interface Props {
 }
 
 defineProps<Props>()
+
+interface Emits {
+  (e: 'jumpUserShare'): void
+
+  (e: 'jumpGroupShare'): void
+
+  (e: 'jumpVisibility'): void
+}
+
+const emit = defineEmits<Emits>()
+
 </script>
 
 <template>
@@ -31,7 +42,12 @@ defineProps<Props>()
         }}
       </el-text>
       <div style="position: absolute; bottom: 15px">
-        <el-link type="primary" style="font-size: 10px">修改可见度</el-link>
+        <el-link
+            type="primary"
+            style="font-size: 10px"
+            @click="emit('jumpVisibility')"
+        >修改可见度
+        </el-link>
       </div>
     </el-card>
     <el-card
@@ -50,7 +66,12 @@ defineProps<Props>()
         他们可以直接访问这个笔记本
       </el-text>
       <div style="position: absolute; bottom: 15px">
-        <el-link type="primary" style="font-size: 10px">管理</el-link>
+        <el-link
+            type="primary"
+            style="font-size: 10px"
+            @click="emit('jumpUserShare')"
+        >管理
+        </el-link>
       </div>
     </el-card>
     <el-card
@@ -69,7 +90,12 @@ defineProps<Props>()
         群组成员可以访问这个笔记本
       </el-text>
       <div style="position: absolute; bottom: 15px">
-        <el-link type="primary" style="font-size: 10px">管理</el-link>
+        <el-link
+            type="primary"
+            style="font-size: 10px"
+            @click="emit('jumpGroupShare')"
+        >管理
+        </el-link>
       </div>
     </el-card>
   </el-space>

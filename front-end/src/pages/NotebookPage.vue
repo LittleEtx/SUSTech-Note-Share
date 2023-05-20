@@ -27,7 +27,11 @@
           <div style="margin-top: 10px"></div>
           <!--    按钮组    -->
           <el-affix>
-            <el-tabs v-model="activeSlot" style="background-color: white">
+            <el-tabs
+                v-model="activeSlot"
+                style="background-color: white"
+                @update:model-value="slot => updateRenderList(slot as string)"
+            >
               <el-tab-pane name="note">
                 <template #label>
                   <span><el-icon><Collection/></el-icon> <b>笔记</b> </span>
@@ -53,14 +57,14 @@
         :can-modify="canModify"
       ></notebook-edit-pane>
       <notebook-comment
-        v-if="notebook?.isPublic"
-        v-show="activeSlot === 'comments'"
-        :notebook-id="notebookID"
+          v-if="notebook?.isPublic && lazyRenderList.includes('comments')"
+          v-show="activeSlot === 'comments'"
+          :notebook-id="notebookID"
       ></notebook-comment>
       <notebook-setting
-        v-if="canModify"
-        v-show="activeSlot === 'setting'"
-        :notebook-info="notebook"
+          v-if="canModify && lazyRenderList.includes('setting')"
+          v-show="activeSlot === 'setting'"
+          :notebook-info="notebook"
       ></notebook-setting>
     </div>
   </div>
@@ -89,6 +93,13 @@ const notebook = ref<NotebookInfo>()
 const show404 = ref(false)
 const activeSlot = ref('note')
 const canModify = ref(false)
+const lazyRenderList = ref<string[]>(['note'])
+
+const updateRenderList = (slot: string) => {
+  if (!lazyRenderList.value.includes(slot)) {
+    lazyRenderList.value.push(slot)
+  }
+}
 
 const notebookID = computed(() => {
   return route.params.notebookID as string
