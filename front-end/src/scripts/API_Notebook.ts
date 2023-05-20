@@ -170,6 +170,11 @@ export async function apiMoveFile (fileID: string, newNoteID: string): Promise<v
   })
 }
 
+/**
+ * 重命名笔记
+ * @param noteID
+ * @param newName
+ */
 export async function apiRenameNote (noteID: string, newName: string): Promise<void> {
   await axios.post('/api/notebook/rename-note', {}, {
     params: {
@@ -179,11 +184,28 @@ export async function apiRenameNote (noteID: string, newName: string): Promise<v
   })
 }
 
+/**
+ * 删除笔记
+ * @param noteID
+ * @param newNote
+ */
 export async function apiDeleteNote (noteID: string, newNote?: string): Promise<void> {
   await axios.delete('/api/notebook/delete-note', {
     params: {
       note: noteID,
       target: newNote
+    }
+  })
+}
+
+/**
+ * 删除笔记本
+ * @param notebookID
+ */
+export const apiDeleteNotebook = async (notebookID: string): Promise<void> => {
+  await axios.delete('/api/notebook/delete', {
+    params: {
+      notebook: notebookID
     }
   })
 }

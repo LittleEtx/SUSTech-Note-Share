@@ -3,10 +3,10 @@
     <div class="affix-container">
       <el-affix :offset="100" target=".container-layout">
         <el-tabs
-            tab-position="right"
-            style="text-align: left"
-            v-model="activeTab"
-            @tabClick="updateActiveTab"
+          tab-position="right"
+          style="text-align: left"
+          v-model="activeTab"
+          @tabClick="updateActiveTab"
         >
           <el-tab-pane name="overview">
             <template #label>
@@ -47,12 +47,12 @@
       <span style="font-size: 20px" id="overview"><b>总览</b></span>
       <div style="margin-top: 20px"></div>
       <setting-overview
-          :notebook-info="notebookInfo"
-          :shared-users="sharedUsers"
-          :shared-groups="sharedGroups"
-          @jump-visibility="jumpTo('critical')"
-          @jump-user-share="jumpTo('userSharing')"
-          @jump-group-share="jumpTo('groupSharing')"
+        :notebook-info="notebookInfo"
+        :shared-users="sharedUsers"
+        :shared-groups="sharedGroups"
+        @jump-visibility="jumpTo('critical')"
+        @jump-user-share="jumpTo('userSharing')"
+        @jump-group-share="jumpTo('groupSharing')"
       ></setting-overview>
       <div style="margin-top: 30px"></div>
       <span style="font-size: 20px" id="userSharing">
@@ -62,9 +62,9 @@
         </el-button>
       </span>
       <user-share-setting
-          ref="userShareSettingRef"
-          :notebook-info="notebookInfo"
-          v-model="sharedUsers"
+        ref="userShareSettingRef"
+        :notebook-info="notebookInfo"
+        v-model="sharedUsers"
       ></user-share-setting>
       <div style="margin-top: 20px"></div>
       <span style="font-size: 20px" id="groupSharing">
@@ -74,7 +74,11 @@
       <span style="font-size: 20px" id="critical" ref="critical"><b>关键设置</b></span>
       <el-divider/>
       <div>
-        <el-button :type="notebookInfo!.isPublic ? 'danger' : 'primary'" plain style="float: right">
+        <el-button
+          :type="notebookInfo!.isPublic ? 'danger' : 'primary'"
+          plain style="float: right"
+          @click="() => notebookInfo!.isPublic ? onSetNotebookPrivate() : onSetNotebookPublic()"
+        >
           将笔记本的可见性改为 {{ notebookInfo.isPublic ? '私有' : '公开' }}
         </el-button>
         <el-text size="large"><b> 改变笔记本的可见性 </b></el-text>
@@ -83,7 +87,11 @@
       </div>
       <el-divider/>
       <div>
-        <el-button type="danger" plain style="float: right">
+        <el-button
+          type="danger" plain
+          style="float: right"
+          @click="onDeleteNotebook"
+        >
           <el-icon style="margin-right: 10px">
             <Delete/>
           </el-icon>
@@ -106,6 +114,10 @@ import { Collection, Delete, Share, User } from '@element-plus/icons-vue'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import SettingOverview from '@/components/notebook_page/setting/SettingOverview.vue'
 import type { TabsPaneContext } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
+import { apiDeleteNotebook } from '@/scripts/API_Notebook'
+import { useRouter } from 'vue-router'
+import { apiSetNotebookPrivate, apiSetNotebookPublic } from '@/scripts/API_Interact'
 
 const activeTab = ref('overview')
 
@@ -113,7 +125,7 @@ interface Props {
   notebookInfo: NotebookInfo | undefined
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const sharedUsers = ref<UserInfo[]>([])
 const sharedGroups = ref<GroupInfo[]>([])
@@ -141,7 +153,6 @@ const items = [
   'groupSharing',
   'critical'
 ]
-
 const updateActiveTab = (pane: TabsPaneContext) => { // 单击单个导航执行事件
   jumpTo(pane.paneName as string)
 }
@@ -173,6 +184,64 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
+
+// ============关键设置================
+const router = useRouter()
+const onDeleteNotebook = async () => {
+  try {
+    await ElMessageBox.confirm(
+      '确定要删除这个笔记本吗？所有和这个笔记本有关的一切都将被移除', '警告', {
+        confirmButtonText: '确定',
+        confirmButtonClass: 'el-button--danger',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+  } catch (e) {
+    return
+  }
+  await apiDeleteNotebook(props.notebookInfo!.notebookID)
+  router.back()
+}
+
+interface Emits {
+  (e: 'onUpdateNotebookVisibility'): void
+}
+
+const emit = defineEmits<Emits>()
+
+const onSetNotebookPrivate = async () => {
+  try {
+    await ElMessageBox.confirm(
+      '确定要将这个笔记本设为私有？点赞数和收藏数都将被清空，且所有评论将被删除', '警告', {
+        confirmButtonText: '确定',
+        confirmButtonClass: 'el-button--danger',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+  } catch (e) {
+    return
+  }
+  await apiSetNotebookPrivate(props.notebookInfo!.notebookID)
+  emit('onUpdateNotebookVisibility')
+}
+
+const onSetNotebookPublic = async () => {
+  try {
+    await ElMessageBox.confirm(
+      '确定将笔记本设为公开？该笔记将对所有人可见。笔记本的评论区将会开放', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'primary'
+      }
+    )
+  } catch (e) {
+    return
+  }
+  await apiSetNotebookPublic(props.notebookInfo!.notebookID)
+  emit('onUpdateNotebookVisibility')
+}
 
 </script>
 

@@ -1,5 +1,6 @@
 <template>
-<el-space
+<div style="position: relative">
+  <el-space
     direction="vertical"
     :fill="true"
     alignment="start"
@@ -7,16 +8,16 @@
     style="width: 100%; text-align: left"
     v-loading="loading"
     element-loading-background="rgba(255, 255, 255, 0.3)"
->
-  <span>
-    <el-text
+  >
+    <span>
+      <el-text
         style="font-size: 20px"
         v-if="!modifyTitle"
         @click="onModifyTitle"
-    >
-      <b> {{ notebook?.title }} </b>
-    </el-text>
-    <el-input
+      >
+        <b> {{ notebook?.title }} </b>
+      </el-text>
+      <el-input
         v-else
         v-model="title"
         ref="titleInputRef"
@@ -27,33 +28,33 @@
         :maxlength="40"
         show-word-limit
         style="width: 60%"
-    ></el-input>
-  </span>
-  <span>
-    <el-tag type="success" effect="dark" v-if="notebook?.isPublic">公开</el-tag>
-    <el-tag type="info" effect="dark" v-else>私有</el-tag>
-    <el-text size="small" style="font-size: 10px; margin-left: 10px">
-      <el-icon> <Clock/> </el-icon>
-      上次修改于：{{ notebook?.updateTime }}
-    </el-text>
-  </span>
-  <notebook-tags
+      ></el-input>
+    </span>
+    <span>
+      <el-tag type="success" effect="dark" v-if="notebook?.isPublic">公开</el-tag>
+      <el-tag type="info" effect="dark" v-else>私有</el-tag>
+      <el-text size="small" style="font-size: 10px; margin-left: 10px">
+        <el-icon> <Clock/> </el-icon>
+        上次修改于：{{ notebook?.updateTime }}
+      </el-text>
+    </span>
+    <notebook-tags
       :modify="canModify"
       :tags="getTags"
       @update="tags => updateTags(tags)"
       style="margin-top: 5px"
-  ></notebook-tags>
-  <div style="margin-top: 5px"></div>
-  <div style="font-size: 10px">
-    <el-text
+    ></notebook-tags>
+    <div style="margin-top: 5px"></div>
+    <div style="font-size: 10px">
+      <el-text
         v-if="!modifyDescription"
         size="small" type="info"
         @click="onModifyDescription"
-    >
-      {{ notebook?.description === '' ? '这个笔记本还没有写简介哦~' : notebook?.description }}
-    </el-text>
-    <div v-else>
-      <el-input
+      >
+        {{ notebook?.description === '' ? '这个笔记本还没有写简介哦~' : notebook?.description }}
+      </el-text>
+      <div v-else>
+        <el-input
           v-model="description"
           size="small"
           type="textarea"
@@ -61,29 +62,44 @@
           placeholder="这个笔记本还没有写简介哦~"
           :autosize="{ minRows: 3 }"
           show-word-limit
-      ></el-input>
-      <div style="margin-top: 5px"></div>
-      <span>
-      <el-button
+        ></el-input>
+        <div style="margin-top: 5px"></div>
+        <span>
+        <el-button
           type="primary" size="small" text
           @click="updateDescription"
-      >保存</el-button>
-      <el-button
+        >保存</el-button>
+        <el-button
           type="info" size="small" text
           @click="modifyDescription = false"
-      >取消</el-button>
-    </span>
+        >取消</el-button>
+      </span>
+      </div>
     </div>
-
+  </el-space>
+  <div style="right: 0; top: 0; position: absolute">
+    <el-button type="primary" :plain="!hasLiked" style="width: 70px">
+      <el-icon>
+        <CaretTop/>
+      </el-icon>
+      <span style="margin-left: 5px">{{ notebook?.likeCount }}</span>
+    </el-button>
+    <div style="margin-top: 10px"></div>
+    <el-button type="warning" :plain="!hasStarred" style="width: 70px">
+      <el-icon>
+        <StarFilled/>
+      </el-icon>
+      <span style="margin-left: 5px">{{ notebook?.starCount }}</span>
+    </el-button>
   </div>
-</el-space>
+</div>
 </template>
 
 <script setup lang="ts">
-import { Clock } from '@element-plus/icons-vue'
+import { CaretTop, Clock, StarFilled } from '@element-plus/icons-vue'
 import NotebookTags from '@/components/NotebookTags.vue'
 import { apiUpdateBasicInfo } from '@/scripts/API_Notebook'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import type { NotebookInfo } from '@/scripts/interfaces'
 import { ElInput, ElMessage } from 'element-plus'
 
@@ -167,6 +183,13 @@ const updateDescription = async () => {
   loading.value = false
   modifyDescription.value = false
 }
+
+// ------------ 点赞/收藏 ----------------
+const hasLiked = ref(false)
+const hasStarred = ref(false)
+watch(() => props.notebook, async () => {
+  // TODO: 从后端获取是否点赞/收藏
+})
 </script>
 
 <style scoped>

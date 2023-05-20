@@ -20,17 +20,17 @@
         <div style="margin-left: 20px"></div>
         <div style="display: flex; flex-direction: column; width: 100%">
           <notebook-header
-              :can-modify="canModify"
-              :notebook="notebook"
-              @update="getNotebookInfo(notebookID)"
+            :can-modify="canModify"
+            :notebook="notebook"
+            @update="getNotebookInfo(notebookID)"
           ></notebook-header>
           <div style="margin-top: 10px"></div>
           <!--    按钮组    -->
           <el-affix>
             <el-tabs
-                v-model="activeSlot"
-                style="background-color: white"
-                @update:model-value="slot => updateRenderList(slot as string)"
+              v-model="activeSlot"
+              style="background-color: white"
+              @update:model-value="slot => updateRenderList(slot as string)"
             >
               <el-tab-pane name="note">
                 <template #label>
@@ -57,14 +57,15 @@
         :can-modify="canModify"
       ></notebook-edit-pane>
       <notebook-comment
-          v-if="notebook?.isPublic && lazyRenderList.includes('comments')"
-          v-show="activeSlot === 'comments'"
-          :notebook-id="notebookID"
+        v-if="notebook?.isPublic && lazyRenderList.includes('comments')"
+        v-show="activeSlot === 'comments'"
+        :notebook-id="notebookID"
       ></notebook-comment>
       <notebook-setting
-          v-if="canModify && lazyRenderList.includes('setting')"
-          v-show="activeSlot === 'setting'"
-          :notebook-info="notebook"
+        v-if="canModify && lazyRenderList.includes('setting')"
+        v-show="activeSlot === 'setting'"
+        :notebook-info="notebook"
+        @on-update-notebook-visibility="getNotebookInfo(notebookID)"
       ></notebook-setting>
     </div>
   </div>

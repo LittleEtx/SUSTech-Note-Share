@@ -1,15 +1,15 @@
 <template>
 <div
-    style="text-align: left"
-    v-loading="loading"
-    element-loading-background="rgba(255, 255, 255, 0.3)"
+  style="text-align: left"
+  v-loading="loading"
+  element-loading-background="rgba(255, 255, 255, 0.3)"
 >
   <el-divider style="margin-bottom: 0"></el-divider>
   <!--   展示已经分享给的用户的表格    -->
   <el-table
-      style="width: 100%"
-      :data="filteredShareUsers"
-      @selection-change="onUserSelectionChange"
+    style="width: 100%"
+    :data="filteredShareUsers"
+    @selection-change="onUserSelectionChange"
   >
     <el-table-column type="selection" width="50"/>
     <el-table-column>
@@ -22,8 +22,8 @@
       <template #default="scope">
         <div style="display: flex">
           <user-avatar
-              :avatar-url="scope.row.avatar"
-              :user-id="scope.row.userID"
+            :avatar-url="scope.row.avatar"
+            :user-id="scope.row.userID"
           ></user-avatar>
           <div style="margin-left: 10px">
             <el-text type="primary"><b>{{ (scope.row as UserInfo).userName }}</b></el-text>
@@ -36,18 +36,18 @@
     <el-table-column>
       <template #header>
         <el-input
-            style="float: right"
-            placeholder="搜索用户"
-            :prefix-icon="Search"
-            v-model="searchShareUsers"
-            @update:model-value="onUpdateSearchUsers"
+          style="float: right"
+          placeholder="搜索用户"
+          :prefix-icon="Search"
+          v-model="searchShareUsers"
+          @update:model-value="onUpdateSearchUsers"
         ></el-input>
       </template>
       <template #default="scope">
         <el-link
-            :underline="false"
-            style="float: right"
-            @click="deleteUserShare(scope.row)"
+          :underline="false"
+          style="float: right"
+          @click="deleteUserShare(scope.row)"
         >
           <el-icon>
             <Delete/>
@@ -57,11 +57,11 @@
     </el-table-column>
   </el-table>
   <add-user-share
-      v-if="showUserShareDialog"
-      :shared-users="sharedUsers"
-      :notebook-info="notebookInfo!"
-      v-model="showUserShareDialog"
-      @on-submit="id => submitUserShare(id)"
+    v-if="showUserShareDialog"
+    :shared-users="sharedUsers"
+    :notebook-info="notebookInfo!"
+    v-model="showUserShareDialog"
+    @on-submit="id => submitUserShare(id)"
   ></add-user-share>
 </div>
 </template>
@@ -97,12 +97,12 @@ const sharedUsers = computed({
 
 const loading = ref(false)
 watch(
-    () => props.notebookInfo,
-    async () => {
-      loading.value = true
-      await updateInfo()
-      loading.value = false
-    }
+  () => props.notebookInfo,
+  async () => {
+    loading.value = true
+    await updateInfo()
+    loading.value = false
+  }
 )
 onMounted(async () => {
   loading.value = true
@@ -118,8 +118,8 @@ const onUpdateSearchUsers = () => {
     filteredShareUsers.value = sharedUsers.value
   } else {
     filteredShareUsers.value = sharedUsers.value.filter(user =>
-        user.userID.toString().includes(searchShareUsers.value) ||
-        user.userName.includes(searchShareUsers.value)
+      user.userID.toString().includes(searchShareUsers.value) ||
+      user.userName.includes(searchShareUsers.value)
     )
   }
 }
@@ -187,7 +187,7 @@ const deleteMultiUserShare = async () => {
   }
   loading.value = true
   await Promise.all(multiSelectUsers.value
-      .map(user => apiCancelUserShare(props.notebookInfo!.notebookID, user.userID)))
+    .map(user => apiCancelUserShare(props.notebookInfo!.notebookID, user.userID)))
   await updateInfo()
   loading.value = false
 }

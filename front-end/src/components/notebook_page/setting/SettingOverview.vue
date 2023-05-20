@@ -12,9 +12,7 @@ defineProps<Props>()
 
 interface Emits {
   (e: 'jumpUserShare'): void
-
   (e: 'jumpGroupShare'): void
-
   (e: 'jumpVisibility'): void
 }
 
@@ -51,8 +49,8 @@ const emit = defineEmits<Emits>()
       </div>
     </el-card>
     <el-card
-        class="info-card" shadow="hover"
-        v-if="sharedUsers.length > 0"
+      class="info-card" shadow="hover"
+      v-if="sharedUsers.length > 0"
     >
       <template #header>
         <el-text size="small">直接访问</el-text>
@@ -67,16 +65,16 @@ const emit = defineEmits<Emits>()
       </el-text>
       <div style="position: absolute; bottom: 15px">
         <el-link
-            type="primary"
-            style="font-size: 10px"
-            @click="emit('jumpUserShare')"
+          type="primary"
+          style="font-size: 10px"
+          @click="emit('jumpUserShare')"
         >管理
         </el-link>
       </div>
     </el-card>
     <el-card
-        class="info-card" shadow="hover"
-        v-if="sharedGroups.length > 0"
+      class="info-card" shadow="hover"
+      v-if="sharedGroups.length > 0"
     >
       <template #header>
         <el-text size="small">通过群组访问</el-text>
@@ -91,9 +89,9 @@ const emit = defineEmits<Emits>()
       </el-text>
       <div style="position: absolute; bottom: 15px">
         <el-link
-            type="primary"
-            style="font-size: 10px"
-            @click="emit('jumpGroupShare')"
+          type="primary"
+          style="font-size: 10px"
+          @click="emit('jumpGroupShare')"
         >管理
         </el-link>
       </div>

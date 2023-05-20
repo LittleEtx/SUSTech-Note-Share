@@ -82,3 +82,27 @@ export const apiCancelGroupShare = async (notebookID: string, targetGroupID: num
     }
   })
 }
+
+/**
+ * 将笔记本公开
+ * @param notebookID
+ */
+export const apiSetNotebookPublic = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/set-notebook-public', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+/**
+ * 将笔记本设为私有
+ * @param notebookID
+ */
+export const apiSetNotebookPrivate = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/set-notebook-private', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
