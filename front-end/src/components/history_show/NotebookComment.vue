@@ -26,7 +26,9 @@
         <span class="author-time">{{item.comment.commentTime}}</span>
       </div>
       <div class="icon-btn">
-        <span @click="showReplyInput(i,item.comment.name,item.id)"><el-icon><ChatDotSquare /></el-icon>{{item.comment.replyNum}}</span>
+        <span @click="showReplyInput(i,item.comment.name,item.id)"><el-icon><ChatDotSquare /></el-icon>{{item.comment.replyNum  }}  </span>
+
+        <button class="delete-btn" @click="deleteComment(item.comment.commentID)">删除</button> <!-- Delete button -->
         <i class="iconfont el-icon-caret-top"></i>{{item.like}}
       </div>
       <div class="talk-box">
@@ -45,16 +47,16 @@
             <span @click="showReplyInput(i,reply.userName,reply.id)">
               <el-icon><ChatDotSquare /></el-icon></span>
             <i class="iconfont el-icon-caret-top"></i>{{}}
+            <button class="delete-btn" @click="deleteReply(item.comment.commentID, reply.replyID)">删除</button> <!-- Delete button -->
           </div>
           <div class="talk-box">
             <p>
               <span>回复 {{reply.toUserName}}:</span>
               <span class="reply">{{reply.replyContent}}</span>
+
             </p>
           </div>
-          <div class="reply-box">
 
-          </div>
         </div>
       </div>
       <div  v-show="_inputShow(i)" class="my-reply my-comment-reply">
@@ -200,6 +202,27 @@ export default {
   },
   directives: {clickoutside},
   methods: {
+    deleteComment(index) {
+      axios.delete('/api/interact/comments/delete-comment', {
+        params: {
+          comment: index,
+        }
+      }).then(res => {
+      })
+      this.getData()
+    },
+    deleteReply(commentIndex, replyIndex) {
+      axios.delete('/api/interact/comments/delete-reply',{
+        params: {
+          comment: commentIndex,
+          reply: replyIndex,
+        }
+      }).then(res => {
+        console.log("111111")
+        console.log(res)
+      })
+      this.getData()
+    },
     getData() {
       axios.get('/api/user/get-info', {}).then(op => {
         this.myName = op.data.userName
@@ -210,7 +233,7 @@ export default {
           notebook: this.notebookId,
         }
       }).then(res => {
-        console.log(res)
+        // console.log(res)
         this.comments = res.data
         for (let i = 0; i < res.data.length; i++) {
             this.comments[i].comment.inputShow = false
@@ -223,9 +246,9 @@ export default {
               this.comments[i].comment.headImg = op.data.avatar
           })
         }
-        console.log(this.comments)
-
+        // console.log(this.comments)
       })
+      // console.log("刷新成功")
     },
     inputFocus() {
       var replyInput = document.getElementById('replyInput');
