@@ -282,7 +282,8 @@ public class NotebookServiceImpl implements NotebookService {
 
     @Override
     public String cancelUserShare(String notebookID, int userID) {
-        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+//        Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
+        Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
         User userToRemove = userRepository.findUserByUserID(userID);
         if (userToRemove == null) {
             throw new AccountNotExistException("User not found.");
