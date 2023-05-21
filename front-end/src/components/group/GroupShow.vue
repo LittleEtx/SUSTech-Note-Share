@@ -20,7 +20,7 @@
         <div class="group-members" style=" overflow-y: auto;">
           <h4>成员</h4>
           <div v-for="(member, index) in group.members" :key="index">
-            <el-link :underline="false" style="display: block; text-align: left;">
+            <el-link :underline="false" style="display: block; text-align: left;" @click="jump(member.userID)">
               <el-avatar :src="member.avatar" style="margin-right: 10px; margin-top: 10px"></el-avatar>
               <el-tooltip :content="member.userName" :effect="tooltipEffect">
                 <span class="ellipsis" v-if="group.groupOwnerID === member.userID"
@@ -62,7 +62,8 @@ export default {
   computed: {
     SUSTechLogo () {
       return SUSTechLogo
-    }
+    },
+
   },
   mounted () {
     const route = useRoute()
@@ -127,24 +128,13 @@ export default {
         }
       })
     },
-    getPositionStyle (index) {
-      const topOffset = index * 50 // 根据需要调整偏移量
-      return {
-        position: 'absolute',
-        top: `${ topOffset }px`
-      }
+    jump (UserID) {
+      this.$router.push('/user/' + UserID)
+      // this.$router.push('/home')
     },
     goBack () {
       // 处理返回逻辑
       this.$router.back()
-    },
-    toggleFavorite () {
-      this.isFavorite = !this.isFavorite
-      const icon = this.isFavorite ? 'el-icon-star-on' : 'el-icon-star-off'
-      const text = this.isFavorite ? '取消收藏' : '收藏'
-      this.$message.success(this.isFavorite ? '已收藏' : '已取消收藏')
-      this.$refs.favoriteBtn.setIconClass(icon)
-      this.$refs.favoriteBtn.setText(text)
     }
   }
 }
