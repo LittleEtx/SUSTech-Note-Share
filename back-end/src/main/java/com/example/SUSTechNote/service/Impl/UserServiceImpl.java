@@ -1,6 +1,7 @@
 package com.example.SUSTechNote.service.Impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.api.UserRepository;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.exception.AccountAlreadyExistException;
@@ -18,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -189,10 +189,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<Map<String,Object>> searchUsersWithLimit(String key, int limit){
-        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "user_name"));
+    public List<JSONObject> searchUsersWithLimit(String key, int pageNumber, int pageSize){
+        PageRequest pageRequest = PageRequest.of(pageNumber,pageSize, Sort.by(Sort.Direction.DESC, "user_name"));
         key = "%" + key + "%";
-        Page<Map<String,Object>> users = userRepository.searchUsersWithLimit(key,pageRequest);
+        Page<JSONObject> users = userRepository.searchUsersWithLimit(key,pageRequest);
         return users.getContent();
     }
 

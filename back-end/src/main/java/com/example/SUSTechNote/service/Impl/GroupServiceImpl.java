@@ -164,8 +164,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<JSONObject> searchGroupsWithLimit(String key, int limit){
-        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "groupid"));
+    public List<JSONObject> searchGroupsWithLimit(String key,int pageNumber, int pageSize){
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "groupid"));
         key = "%" + key + "%";
         int userID = StpUtil.getLoginIdAsInt();
         Page<JSONObject> groups = groupRepository.searchGroupsWithLimit(key,userID,pageRequest);
