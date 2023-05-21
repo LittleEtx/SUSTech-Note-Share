@@ -65,7 +65,11 @@
           <notebook-card :notebook="notebook"></notebook-card>
           <el-popover trigger="click">
             <template #reference>
-              <el-button text :icon="MoreFilled" type="info" class="more-icon"></el-button>
+              <el-button
+                text type="info"
+                :icon="MoreFilled"
+                style="position: absolute; right: 0; bottom: 0;"
+              ></el-button>
             </template>
             <el-text size="small">
               <el-icon>
@@ -171,9 +175,4 @@ const changeDir = async (notebook: NotebookInfo) => {
   text-overflow: ellipsis; /* 3.文字用省略号替代超出的部分 */
 }
 
-.more-icon {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
 </style>

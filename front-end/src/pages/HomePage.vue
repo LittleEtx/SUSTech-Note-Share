@@ -45,6 +45,7 @@
       </el-tabs>
       <center-main v-show="activeSlot === 'info'"></center-main>
       <center-notebooks v-show="activeSlot === 'note'"></center-notebooks>
+      <center-star v-show="activeSlot === 'star'"></center-star>
       <center-groups v-show="activeSlot === 'group'"></center-groups>
     </div>
   </div>
@@ -59,9 +60,11 @@ import UserAvatar from '@/components/UserAvatar.vue'
 import CenterGroups from '@/components/group/CenterGroups.vue'
 import CenterNotebooks from '@/components/personal_center/CenterNotebooks.vue'
 import MainHeader from '@/components/MainHeader.vue'
+import CenterStar from '@/components/personal_center/CenterStar.vue'
 
 export default {
   components: {
+    CenterStar,
     MainHeader,
     CenterNotebooks,
     CenterGroups,
