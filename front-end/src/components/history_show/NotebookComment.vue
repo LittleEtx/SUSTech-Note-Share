@@ -123,81 +123,7 @@ export default {
       myId: 19870621,
       to: '',
       toId: -1,
-      comments: [
-        // {
-        //   name:'Lana Del Rey',
-        //   id:19870621,
-        //   headImg:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
-        //   comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
-        //   time:'2019年9月16日 18:43',
-        //   commentNum:2,
-        //   like:15,
-        //   inputShow:false,
-        //   reply:[
-        //     {
-        //       from:'Taylor Swift',
-        //       fromId:19891221,
-        //       fromHeadImg:'https://ae01.alicdn.com/kf/H94c78935ffa64e7e977544d19ecebf06L.jpg',
-        //       to:'Lana Del Rey',
-        //       toId:19870621,
-        //       comment:'我很喜欢你的新专辑！！',
-        //       time:'2019年9月16日 18:43',
-        //       commentNum:1,
-        //       like:15,
-        //       inputShow:false
-        //     },
-        //     {
-        //       from:'Ariana Grande',
-        //       fromId:1123,
-        //       fromHeadImg:'https://ae01.alicdn.com/kf/Hf6c0b4a7428b4edf866a9fbab75568e6U.jpg',
-        //       to:'Lana Del Rey',
-        //       toId:19870621,
-        //       comment:'别忘记宣传我们的合作单曲啊',
-        //       time:'2019年9月16日 18:43',
-        //       commentNum:0,
-        //       like:5,
-        //       inputShow:false
-        //
-        //     }
-        //   ]
-        // },
-        // {
-        //   name:'Taylor Swift',
-        //   id:19891221,
-        //   headImg:'https://ae01.alicdn.com/kf/H94c78935ffa64e7e977544d19ecebf06L.jpg',
-        //   comment:'我发行了我的新专辑Lover',
-        //   time:'2019年9月16日 18:43',
-        //   commentNum:1,
-        //   like:5,
-        //   inputShow:false,
-        //   reply:[
-        //     {
-        //       from:'Lana Del Rey',
-        //       fromId:19870621,
-        //       fromHeadImg:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
-        //       to:'Taylor Swift',
-        //       toId:19891221,
-        //       comment:'新专辑和speak now 一样棒！',
-        //       time:'2019年9月16日 18:43',
-        //       commentNum:25,
-        //       like:5,
-        //       inputShow:false
-        //
-        //     }
-        //   ]
-        // },
-        // {
-        //   name:'Norman Fucking Rockwell',
-        //   id:20190830,
-        //   headImg:'https://ae01.alicdn.com/kf/Hdd856ae4c81545d2b51fa0c209f7aa28Z.jpg',
-        //   comment:'Plz buy Norman Fucking Rockwell on everywhere',
-        //   time:'2019年9月16日 18:43',
-        //   commentNum:0,
-        //   like:5,
-        //   inputShow:false,
-        //   reply:[]
-        // },
-      ]
+      comments: []
     }
   },
   directives: {clickoutside},
@@ -209,7 +135,10 @@ export default {
         }
       }).then(res => {
       })
-      this.getData()
+      setTimeout(() => {
+        // 执行你的操作
+        this.getData();
+      }, 500);
     },
     deleteReply(commentIndex, replyIndex) {
       axios.delete('/api/interact/comments/delete-reply',{
@@ -221,10 +150,13 @@ export default {
         console.log("111111")
         console.log(res)
       })
-      this.getData()
+      setTimeout(() => {
+        // 执行你的操作
+        this.getData();
+      }, 500);
     },
     getData() {
-      axios.get('/api/user/get-info', {}).then(op => {
+      axios.get('/api/user/get-info').then(op => {
         this.myName = op.data.userName
         this.myHeader = op.data.avatar
       })
@@ -233,22 +165,22 @@ export default {
           notebook: this.notebookId,
         }
       }).then(res => {
-        // console.log(res)
+        console.log(res)
         this.comments = res.data
         for (let i = 0; i < res.data.length; i++) {
             this.comments[i].comment.inputShow = false
             axios.get('/api/user/get-info', {
               params:{
                 userID : this.comments[i].comment.userID
-              }
+              },
             }).then(op => {
               this.comments[i].comment.name = op.data.userName
               this.comments[i].comment.headImg = op.data.avatar
           })
         }
-        // console.log(this.comments)
+        console.log(this.comments)
       })
-      // console.log("刷新成功")
+      console.log("刷新成功")
     },
     inputFocus() {
       var replyInput = document.getElementById('replyInput');
@@ -294,7 +226,11 @@ export default {
         })
         this.replyComment = ''
         input.innerHTML = '';
-        this.getData()
+        setTimeout(() => {
+          // 执行你的操作
+          this.getData();
+        }, 500);
+        this.$forceUpdate()
       }
     },
     sendCommentReply(i, j) {
@@ -317,7 +253,10 @@ export default {
 
         this.replyComment = ''
         document.getElementsByClassName("reply-comment-input")[i].innerHTML = ""
-        this.getData()
+        setTimeout(() => {
+          // 执行你的操作
+          this.getData();
+        }, 1000);
       }
     },
     onDivInput: function (e) {
@@ -398,16 +337,17 @@ export default {
 .author-title:not(:last-child)
   border-bottom: 1px solid rgba(178,186,194,.3)
 .author-title
-  padding 10px
+  padding 5px
   .header-img
     display inline-block
     vertical-align top
   .author-info
     display inline-block
-    margin-left 5px
-    width 60%
-    height 40px
+    margin-left 1px
+    width 20%
+    height 20px
     line-height 20px
+    text-align: left
     >span
       display block
       cursor pointer
@@ -416,10 +356,10 @@ export default {
       text-overflow ellipsis
     .author-name
       color #000
-      font-size 18px
+      font-size 12px
       font-weight bold
     .author-time
-      font-size 14px
+      font-size 10px
   .icon-btn
     width 30%
     padding 0 !important
