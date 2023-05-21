@@ -3,6 +3,11 @@
   <div class="header">
     <main-header></main-header>
   </div>
+  <el-button
+    style="position: absolute; left: 20px; top: 80px; z-index: 100"
+    @click="router.push({ name: 'user', params: { userID: userInfo.userID } })"
+  >视角：我自己
+  </el-button>
   <div class="main-container">
     <transition name="el-zoom-in-center">
       <user-display :id="userInfo?.userID" v-show="activeSlot === 'info'"></user-display>
@@ -63,6 +68,7 @@ import CenterNotebooks from '@/components/personal_center/CenterNotebooks.vue'
 import MainHeader from '@/components/MainHeader.vue'
 import CenterStar from '@/components/personal_center/CenterStar.vue'
 import CenterShare from '@/components/personal_center/CenterShare.vue'
+import { useRouter } from 'vue-router'
 
 export default {
   components: {
@@ -78,6 +84,12 @@ export default {
     Collection,
     MenuIcon,
     UserDisplay
+  },
+  setup () {
+    const router = useRouter()
+    return {
+      router
+    }
   },
   data () {
     return {

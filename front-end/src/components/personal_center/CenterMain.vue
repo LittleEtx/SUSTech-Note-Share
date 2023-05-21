@@ -10,7 +10,6 @@
       :key="index" :notebook="notebook"
     ></notebook-card>
   </el-space>
-
 </div>
 </template>
 <script setup lang="ts">
@@ -27,6 +26,7 @@ watch(
   () => window.screenX,
   async () => {
     const count = window.screenX * 0.8 -
+      // TODO
       await updateInfo()
   }
 )
