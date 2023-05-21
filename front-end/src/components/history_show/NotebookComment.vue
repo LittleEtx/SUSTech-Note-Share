@@ -20,11 +20,16 @@
       </div>
     </div>
     <div v-for="(item,i) in comments" :key="i" class="author-title reply-father">
-      <el-avatar :size="40" :src="item.comment.headImg" class="header-img"></el-avatar>
-      <div class="author-info">
-        <span class="author-name">{{ item.comment.name }}</span>
-        <span class="author-time">{{ item.comment.commentTime }}</span>
-      </div>
+      <el-link
+        style="margin-left: -100px"
+        :underline="false"
+        @click="$router.push({ name: 'user', params: { userID: item.comment.userID }})">
+        <el-avatar :size="40" :src="item.comment.headImg" class="header-img"></el-avatar>
+        <div class="author-info">
+          <span class="author-name">{{ item.comment.name }}</span>
+          <span class="author-time">{{ item.comment.commentTime }}</span>
+        </div>
+      </el-link>
       <div class="icon-btn">
         <span @click="showReplyInput(i,item.comment.name,item.id)"><el-icon><ChatDotSquare/></el-icon>{{
             item.comment.replyNum
@@ -41,11 +46,14 @@
       </div>
       <div class="reply-box">
         <div v-for="(reply,j) in item.comment.replies" :key="j" class="author-title">
-          <el-avatar :size="40" :src="reply.userAvatar" class="header-img"></el-avatar>
-          <div class="author-info">
-            <span class="author-name">{{ reply.userName }}</span>
-            <span class="author-time">{{ reply.replyTime }}</span>
-          </div>
+          <el-link :underline="false"
+                   @click="$router.push({ name: 'user', params: { userID: reply.userID }})">
+            <el-avatar :size="40" :src="reply.userAvatar" class="header-img"></el-avatar>
+            <div class="author-info">
+              <span class="author-name">{{ reply.userName }}</span>
+              <span class="author-time">{{ reply.replyTime }}</span>
+            </div>
+          </el-link>
           <div class="icon-btn">
             <span @click="showReplyInput(i,reply.userName,reply.id)">
               <el-icon><ChatDotSquare/></el-icon></span>
@@ -83,7 +91,7 @@ import { ChatDotSquare, Delete } from '@element-plus/icons-vue'
 import axios from 'axios'
 import { ElMessageBox } from 'element-plus'
 import UserAvatar from '@/components/UserAvatar.vue'
-import {apiGetUserInfo} from "@/scripts/API_User";
+import { apiGetUserInfo } from '@/scripts/API_User'
 
 const clickoutside = {
   // 初始化指令
@@ -379,9 +387,10 @@ export default {
     vertical-align top
 
   .author-info
+    margin-top -20px
     display inline-block
     margin-left 1px
-    width 20%
+    width 80%
     height 20px
     line-height 20px
     text-align: left
