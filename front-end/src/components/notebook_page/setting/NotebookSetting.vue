@@ -69,7 +69,16 @@
       <div style="margin-top: 20px"></div>
       <span style="font-size: 20px" id="groupSharing">
         <b>群组分享</b>
+        <el-button type="primary" style="float: right" @click="groupShareSettingRef!.addGroup()">
+          <el-icon style="margin-right: 10px"><Share/></el-icon> 添加群组
+        </el-button>
       </span>
+      <group-share-setting
+          ref="groupShareSettingRef"
+          :notebook-info="notebookInfo"
+          v-model="sharedGroups"
+      ></group-share-setting>
+      <div style="margin-top: 20px"></div>
       <div style="margin-top: 20px"></div>
       <span style="font-size: 20px" id="critical" ref="critical"><b>关键设置</b></span>
       <el-divider/>
@@ -110,6 +119,7 @@
 <script setup lang="ts">
 import type { GroupInfo, NotebookInfo, UserInfo } from '@/scripts/interfaces'
 import UserShareSetting from '@/components/notebook_page/setting/UserShareSetting.vue'
+import GroupShareSetting from '@/components/notebook_page/setting/GroupShareSetting.vue'
 import { Collection, Delete, Share, User } from '@element-plus/icons-vue'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import SettingOverview from '@/components/notebook_page/setting/SettingOverview.vue'
@@ -130,6 +140,7 @@ const props = defineProps<Props>()
 const sharedUsers = ref<UserInfo[]>([])
 const sharedGroups = ref<GroupInfo[]>([])
 const userShareSettingRef = ref<InstanceType<typeof UserShareSetting>>()
+const groupShareSettingRef = ref<InstanceType<typeof GroupShareSetting>>()
 
 // =========== 以下为滚动导航栏相关 ===========
 const scrollRef = ref<InstanceType<typeof HTMLElement>>()
