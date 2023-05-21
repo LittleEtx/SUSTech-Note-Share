@@ -1,7 +1,10 @@
 package com.example.SUSTechNote.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Group;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -44,4 +47,10 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Query(value = "select * from my_groups where group_ownerid = ?1", nativeQuery = true)
     Group findGroupByGroupID(int i);
+
+    @Query(value = "SELECT groupid,group_description,group_name,group_ownerid,group_owner_name,create_time " +
+            "FROM (select * from user_group left join my_groups  on user_group.group_id = my_groups.groupid) as gp " +
+            "WHERE (groupid LIKE ?1 OR group_name LIKE ?1) AND user_id = ?2", nativeQuery = true)
+    Page<JSONObject> searchGroupsWithLimit(String keyword, int userID, Pageable pageable);
+
 }

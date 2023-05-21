@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.service.Impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.api.GroupRepository;
 import com.example.SUSTechNote.api.NotebookRepository;
@@ -7,8 +8,11 @@ import com.example.SUSTechNote.api.UserRepository;
 import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
-import com.example.SUSTechNote.service.GroupService;
 import com.example.SUSTechNote.interfaces.NotebookInterface;
+import com.example.SUSTechNote.service.GroupService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -157,5 +161,14 @@ public class GroupServiceImpl implements GroupService {
             notebooks.add(notebook);
         }
         return NotebookInterface.fromNotebooks(notebooks);
+    }
+
+    @Override
+    public List<JSONObject> searchGroupsWithLimit(String key, int limit){
+        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "groupid"));
+        key = "%" + key + "%";
+        int userID = StpUtil.getLoginIdAsInt();
+        Page<JSONObject> groups = groupRepository.searchGroupsWithLimit(key,userID,pageRequest);
+        return groups.getContent();
     }
 }
