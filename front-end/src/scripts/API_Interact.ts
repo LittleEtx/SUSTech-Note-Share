@@ -63,8 +63,8 @@ export const apiCancelUserShare = async (notebookID: string, targetUserID: numbe
 export const apiShareNotebookToGroup = async (notebookID: string, targetGroupID: number): Promise<void> => {
   await axios.post('/api/interact/share/share-to-group', {}, {
     params: {
-      notebook: notebookID,
-      group: targetGroupID
+      notebookID: notebookID,
+      groupID: targetGroupID
     }
   })
 }
@@ -77,8 +77,8 @@ export const apiShareNotebookToGroup = async (notebookID: string, targetGroupID:
 export const apiCancelGroupShare = async (notebookID: string, targetGroupID: number): Promise<void> => {
   await axios.post('/api/interact/share/cancel-group-share', {}, {
     params: {
-      notebook: notebookID,
-      group: targetGroupID
+      notebookID: notebookID,
+      groupID: targetGroupID
     }
   })
 }
