@@ -39,13 +39,14 @@ const selectedUserID = ref(0)
 const store = useStore()
 const updateSearchNewUsers = async () => {
   const result = await apiSearchUsers(searchNewUserKey.value)
+  console.log(result)
   if (!result) {
     searchUsers.value = []
     return
   }
   searchUsers.value = result
-      .filter(user => user.userID !== store.state.userInfo!.userID) // 不能分享给自己
-      .filter(user => !props.sharedUsers.find(u => u.userID === user.userID)) // 不能分享给已经分享的用户
+    .filter(user => user.userID !== store.state.userInfo!.userID) // 不能分享给自己
+    .filter(user => !props.sharedUsers.find(u => u.userID === user.userID)) // 不能分享给已经分享的用户
   if (!searchUsers.value.find(user => user.userID === selectedUserID.value)) {
     // 如果已经选择的用户不在搜索结果中，就取消选择
     selectedUserID.value = 0

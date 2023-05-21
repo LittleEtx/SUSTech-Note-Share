@@ -125,9 +125,4 @@ const deleteShareNotebook = async (notebook: NotebookInfo) => {
     </el-container>
     <el-empty v-else description="还有没用户分享笔记本给你哟~"></el-empty>
   </div>
-
 </template>
-
-<style scoped>
-
-</style>

@@ -17,11 +17,17 @@ export const apiSearchUsers = async (keyword: string): Promise<UserInfo[]> => {
 /**
  * 搜索公开笔记本
  * @param keyword
+ * @param page
+ * @param numberPerPage
  */
-export const apiSearchNotebooks = async (keyword: string): Promise<NotebookInfo[]> => {
+export const apiSearchNotebooks = async (
+  keyword: string, page: number, numberPerPage: number
+): Promise<NotebookInfo[]> => {
   const { data } = await axios.get('/api/search/notebook', {
     params: {
-      key: keyword
+      key: keyword,
+      pageSize: numberPerPage,
+      pageNumber: page
     }
   })
   return data

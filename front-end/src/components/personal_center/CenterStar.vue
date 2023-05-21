@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import type { NotebookInfo } from '@/scripts/interfaces'
 import { apiGetStarredNotebooks } from '@/scripts/API_Center'
 import NotebookCard from '@/components/NotebookCard.vue'
+import { apiCancelStarNotebook } from '@/scripts/API_Interact'
 
 const searchKey = ref('')
 const displayNotebooks = ref<NotebookInfo[]>([])
@@ -34,7 +35,7 @@ onMounted(async () => {
 
 const deleteStarNotebook = async (notebook: NotebookInfo) => {
   loading.value = true
-  // TODO: delete the notebook from starred notebooks
+  await apiCancelStarNotebook(notebook.notebookID)
   await updateInfo()
   loading.value = false
 }

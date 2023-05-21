@@ -48,12 +48,18 @@
                   >{{ tag }}</el-tag>
                 </span>
                 <div style="display: flex; align-items: center; margin-top: 10px">
-                  <user-avatar
-                    :avatar-url="history.author.avatar"
-                    :user-id="history.author.userID"
-                    :size="20"
-                  ></user-avatar>
-                  <el-text style="margin-left: 5px"><b> {{ history.author.userName }} </b></el-text>
+                  <el-link
+                    :underline="false"
+                    @click="$router.push({ name: 'user', params: { userID: history.author.userID }})"
+                  >
+                    <user-avatar
+                      :avatar-url="history.author.avatar"
+                      :user-id="history.author.userID"
+                      :size="20"
+                    ></user-avatar>
+                    <span style="margin-left: 5px"><b> {{ history.author.userName }} </b></span>
+                  </el-link>
+
                   <el-text size="small" style="margin-left: 15px">
                     <el-icon>
                       <Clock/>

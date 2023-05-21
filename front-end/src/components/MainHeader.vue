@@ -7,9 +7,11 @@
            @click="$router.push({ name:'home' })" alt="">
     </el-col>
     <el-col :span="6">
-      <el-input placeholder="搜索笔记" class="search-input">
+      <el-input placeholder="搜索笔记" class="search-input" v-show="showSearchBar">
         <template #prefix>
-          <el-icon><Search /></el-icon>
+          <el-icon>
+            <Search/>
+          </el-icon>
         </template>
       </el-input>
     </el-col>
@@ -75,7 +77,6 @@
 <script>
 import { apiLogout } from '@/scripts/API_Auth'
 import { ArrowRight, Clock, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
-import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
 import UserAvatar from '@/components/UserAvatar.vue'
 import { useRouter } from 'vue-router'
@@ -86,6 +87,13 @@ export default {
     const router = useRouter()
     return {
       router
+    }
+  },
+  props: {
+    showSearchBar: {
+      type: Boolean,
+      default: true,
+      required: false
     }
   },
   components: { UserAvatar, ArrowRight, Search },
@@ -104,9 +112,6 @@ export default {
     },
     User () {
       return User
-    },
-    DefaultAvatar () {
-      return DefaultAvatar
     },
     SUSTechNoteIcon () {
       return SUSTechNoteIcon

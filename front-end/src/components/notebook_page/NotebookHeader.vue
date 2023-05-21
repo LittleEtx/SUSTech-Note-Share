@@ -222,16 +222,13 @@ const onStar = async () => {
     if (!hasStarred.value) {
       await apiStarNotebook(props.notebook!.notebookID)
       ++props.notebook!.starCount
-      console.log('star')
     } else {
       await apiCancelStarNotebook(props.notebook!.notebookID)
       --props.notebook!.starCount
-      console.log('cancel star')
     }
   } catch (e) {
   }
   hasStarred.value = await apiIfStarNotebook(props.notebook!.notebookID)
-  console.log(hasStarred.value)
 }
 
 </script>

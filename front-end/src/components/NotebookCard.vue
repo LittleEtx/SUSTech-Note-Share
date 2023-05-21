@@ -22,15 +22,18 @@
       <el-text v-if="notebook.authorID === store.state.userInfo?.userID" size="small">
         {{ notebook.tags.length > 0 ? notebook.tags[0] : '' }}
       </el-text>
-      <template v-else>
+      <el-link
+        v-else :underline="false"
+        @click.stop="$router.push({ name: 'user', params: { userID: notebook.authorID }})"
+      >
         <user-avatar
           :size="15"
           style="min-width: 15px"
           :avatar-url="userInfo?.avatar"
           :user-id="userInfo?.userID"
         ></user-avatar>
-        <el-text truncated>{{ userInfo?.userName }}</el-text>
-      </template>
+        <span class="text-truncated" style="width: 120px">{{ userInfo?.userName }}</span>
+      </el-link>
     </div>
     <div style="height: 3px"></div>
     <el-text size="small">
