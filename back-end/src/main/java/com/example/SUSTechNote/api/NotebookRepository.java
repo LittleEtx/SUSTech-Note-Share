@@ -97,7 +97,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "insert into user_star_notebook(notebook_id, user_id) values (?1, ?2)", nativeQuery = true)
+    @Query(value = "insert into user_star_notebook(notebook_id, user_id) values (?2, ?1)", nativeQuery = true)
     void starNotebook(int userID, String notebookID);
 
     @Modifying
