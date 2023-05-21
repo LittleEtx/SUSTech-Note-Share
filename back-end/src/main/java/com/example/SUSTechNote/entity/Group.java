@@ -17,13 +17,13 @@ public class Group {
     private String GroupOwnerName;
     private String createTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "group_notebook",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "notebook_id")
-    )
-    List<Notebook> notebookList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "group_notebook",
+//            joinColumns = @JoinColumn(name = "group_id"),
+//            inverseJoinColumns = @JoinColumn(name = "notebook_id")
+//    )
+//    List<Notebook> notebookList;
 
     public Integer getGroupID() {
         return GroupID;
@@ -57,13 +57,13 @@ public class Group {
         this.user = user;
     }
 
-    public List<Notebook> getNotebookList() {
-        return notebookList;
-    }
-
-    public void setNotebookList(List<Notebook> notebookList) {
-        this.notebookList = notebookList;
-    }
+//    public List<Notebook> getNotebookList() {
+//        return notebookList;
+//    }
+//
+//    public void setNotebookList(List<Notebook> notebookList) {
+//        this.notebookList = notebookList;
+//    }
 
     public String getGroupOwnerName() {
         return GroupOwnerName;

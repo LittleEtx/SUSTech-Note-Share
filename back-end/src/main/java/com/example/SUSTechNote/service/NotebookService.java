@@ -1,11 +1,14 @@
 package com.example.SUSTechNote.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
+import com.example.SUSTechNote.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -59,4 +62,8 @@ public interface NotebookService {
     void removeOneLikeData(String notebookID);
 
     void StarNotebook(String notebookID);
+
+    List<JSONObject> getShareGroups(String notebookID);
+
+    List<JSONObject> getShareUsers(String notebookID);
 }

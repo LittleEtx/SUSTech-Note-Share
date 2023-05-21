@@ -23,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class NotebookServiceImpl implements NotebookService {
@@ -271,6 +268,7 @@ public class NotebookServiceImpl implements NotebookService {
             return "Notebook already shared to this group.";
         }
         try {
+            logger.info("share notebook " + notebookID + " to group " + groupID);
             notebookRepository.shareToGroup(notebookID, groupID);
             return "Share to group successfully.";
         } catch (Exception e) {
@@ -397,6 +395,42 @@ public class NotebookServiceImpl implements NotebookService {
         Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
         notebook.setStar(notebook.getStar()+1);
         notebookRepository.save(notebook);
+    }
+
+    @Override
+    public List<JSONObject> getShareGroups(String notebookID) {
+        List<Object[]> groups = notebookRepository.getSharedGroups(notebookID);
+        List<JSONObject> groupInfos = new ArrayList<>();
+        for (var group: groups) {
+            JSONObject groupInfo = new JSONObject();
+            groupInfo.put("groupID",group[0]);
+            groupInfo.put("groupName",group[1]);
+            groupInfo.put("groupDescription",group[2]);
+            groupInfo.put("groupOwnerID",group[3]);
+            groupInfo.put("groupOwnerName",group[4]);
+            groupInfo.put("createTime",group[5]);
+            groupInfos.add(groupInfo);
+        }
+        return groupInfos;
+    }
+
+    @Override
+    public List<JSONObject> getShareUsers(String notebookID) {
+        List<Object[]> users = notebookRepository.getSharedUsers(notebookID);
+        List<JSONObject> userInfos = new ArrayList<>();
+        for (Object[] user: users
+             ) {
+            JSONObject userInfo = new JSONObject();
+            userInfo.put("userID",user[0]);
+            userInfo.put("userName",user[1]);
+            userInfo.put("email",user[2]);
+            userInfo.put("avatar",user[3]);
+            userInfo.put("description",user[4]);
+            userInfo.put("gender",user[5]);
+            userInfo.put("birth",user[6]);
+            userInfos.add(userInfo);
+        }
+        return userInfos;
     }
 
 
