@@ -163,6 +163,7 @@ const submitAvatar = async () => {
     await ElMessageBox.alert('上传失败: ' + e.response.data)
   }
   await store.dispatch('updateInfo')
+  userInfo.value = store.state.userInfo
   uploadingAvatar.value = false
   showUploadAvatar.value = false
 }

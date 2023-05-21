@@ -45,7 +45,7 @@ const deleteShareNotebook = async (notebook: NotebookInfo) => {
     await ElMessageBox.confirm('确定要删除这个分享给你的笔记本吗？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
   } catch (e) {
     return
@@ -73,7 +73,6 @@ const deleteShareNotebook = async (notebook: NotebookInfo) => {
             v-for="user in users.values()"
             :key="user.userID"
             :index="user.userID.toString()"
-            class="dir-item-menu"
           >
             <div style="max-width: 150px; display: flex; align-items: center">
               <user-avatar

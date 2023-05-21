@@ -78,7 +78,7 @@ import NotebookTags from '@/components/NotebookTags.vue'
 
 interface Props {
   directories: Iterable<string> // 现有的文件夹分类
-  defaultDir: string
+  defaultDir: string // 默认的文件夹分类
 }
 
 const props = defineProps<Props>()

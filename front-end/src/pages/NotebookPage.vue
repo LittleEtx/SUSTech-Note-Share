@@ -8,15 +8,19 @@
     </div>
     <div class="main-container">
       <div style="display: flex; flex-direction: row; width: 100%">
-        <img-uploader
-          style="min-width: 200px"
-          :origin-url="notebookCover"
-          type="cover" :height="120" :width="200"
-          :show-tip="false"
-          @change="file => onUploadCover(file as File)"
-          v-loading="loadingCover"
-          element-loading-background="rgba(255, 255, 255, 0.3)"
-        ></img-uploader>
+        <div style="min-width: 200px">
+          <img-uploader
+            v-if="canModify"
+            style="min-width: 200px"
+            :origin-url="notebookCover"
+            type="cover" :height="120" :width="200"
+            :show-tip="false"
+            @change="file => onUploadCover(file as File)"
+            v-loading="loadingCover"
+            element-loading-background="rgba(255, 255, 255, 0.3)"
+          ></img-uploader>
+          <el-image v-else style="height: 120px; width: 200px" :src="notebookCover" alt=""/>
+        </div>
         <div style="margin-left: 20px"></div>
         <div style="display: flex; flex-direction: column; width: 100%">
           <notebook-header

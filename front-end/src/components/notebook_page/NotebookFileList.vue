@@ -69,7 +69,7 @@
         </el-popover>
       </template>
       <!--   上传/创建文件   -->
-      <el-menu-item :index="note.id + 'create'">
+      <el-menu-item :index="note.id + 'create'" v-if="canModify">
         <el-popover trigger="click">
           <template #reference>
             <el-button :icon="Plus" link>添加文件</el-button>

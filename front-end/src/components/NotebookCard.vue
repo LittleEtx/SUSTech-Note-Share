@@ -53,7 +53,7 @@ import { Clock } from '@element-plus/icons-vue'
 import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
 import { useStore } from '@/store/store'
 import UserAvatar from '@/components/UserAvatar.vue'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { apiGetUserInfo } from '@/scripts/API_User'
 
 interface Props {
@@ -65,13 +65,17 @@ const props = defineProps<Props>()
 const store = useStore()
 
 const userInfo = ref<UserInfo>()
-onBeforeMount(async () => {
+
+const updateInfo = async () => {
   if (props.notebook.authorID === store.state.userInfo?.userID) {
     userInfo.value = store.state.userInfo
   } else {
     userInfo.value = await apiGetUserInfo(props.notebook.authorID)
   }
-})
+}
+
+onBeforeMount(updateInfo)
+watch(() => props.notebook, updateInfo)
 
 </script>
 

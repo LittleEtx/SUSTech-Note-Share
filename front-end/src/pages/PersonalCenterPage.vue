@@ -18,17 +18,18 @@
       </el-affix>
     </div>
     <div style=" margin-left: 30px"></div>
-    <div style="text-align: left">
+    <div style="text-align: left; display: grid; width: 100%">
       <div style="margin-top: 10px">
         <el-text size="large"><b> 公开笔记本 </b></el-text>
       </div>
       <div style="margin-top: 20px"></div>
-      <el-space :size="20" wrap>
+      <el-space v-if="publicNotebooks.length > 0" :size="20" wrap>
         <notebook-card
           v-for="(notebook, index) in publicNotebooks"
           :key="index" :notebook="notebook"
         ></notebook-card>
       </el-space>
+      <el-empty v-else description="该用户还没有公开笔记哟~"></el-empty>
     </div>
   </div>
   <el-backtop :right="30" :bottom="30"/>

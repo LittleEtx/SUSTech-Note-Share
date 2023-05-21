@@ -138,7 +138,9 @@ const updateNotebook = async () => {
 
 onBeforeMount(async () => {
   await updateNotebook()
-  selectedDir.value = notebookByDirs.value.keys().next().value
+  selectedDir.value = notebookByDirs.value.size > 0
+    ? notebookByDirs.value.keys().next().value
+    : ''
 })
 
 // submit create notebook
