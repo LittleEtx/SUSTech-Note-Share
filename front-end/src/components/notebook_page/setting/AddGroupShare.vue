@@ -3,7 +3,7 @@
 import UserAvatar from '@/components/UserAvatar.vue'
 import { Collection } from '@element-plus/icons-vue'
 import type {GroupInfo, NotebookInfo} from '@/scripts/interfaces'
-import { computed, ref } from 'vue'
+import {computed, onBeforeMount, ref} from 'vue'
 import {apiSearchGroups} from '@/scripts/API_Search'
 import { useStore } from '@/store/store'
 
@@ -49,7 +49,7 @@ const updateSearchNewGroups = async () => {
     selectedGroupID.value = 0
   }
 }
-
+onBeforeMount (updateSearchNewGroups)
 const submitGroupShare = () => {
   emit('onSubmit', selectedGroupID.value)
 }
