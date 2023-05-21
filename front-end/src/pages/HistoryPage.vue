@@ -24,6 +24,7 @@
     <div style="margin-top: 20px"></div>
     <history-timeline ref="timeLineRef"></history-timeline>
   </div>
+  <el-backtop :right="30" :bottom="30"/>
 </div>
 </template>
 
@@ -48,8 +49,6 @@ const onClearAllHistory = async () => {
   }
   await timeLineRef.value.clearAll()
 }
-
-
 
 </script>
 
