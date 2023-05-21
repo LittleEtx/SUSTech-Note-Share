@@ -376,18 +376,24 @@ public class NotebookServiceImpl implements NotebookService {
     public void removeOneLikeData(String notebookID){
         int loginID = StpUtil.getLoginIdAsInt();
         notebookRepository.removeOneLikeData(loginID,notebookID);
+        Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
+        notebook.setLikeNum(notebook.getLikeNum()-1);
     }
 
     @Override
     public void removeOneStarData(String notebookID){
         int loginID = StpUtil.getLoginIdAsInt();
         notebookRepository.removeOneStarData(loginID,notebookID);
+        Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
+        notebook.setStar(notebook.getStar()-1);
     }
 
     @Override
     public void StarNotebook(String notebookID){
         int loginID = StpUtil.getLoginIdAsInt();
         notebookRepository.starNotebook(loginID,notebookID);
+        Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
+        notebook.setStar(notebook.getStar()+1);
     }
 
 
