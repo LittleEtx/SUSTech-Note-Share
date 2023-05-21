@@ -378,6 +378,7 @@ public class NotebookServiceImpl implements NotebookService {
         notebookRepository.removeOneLikeData(loginID,notebookID);
         Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
         notebook.setLikeNum(notebook.getLikeNum()-1);
+        notebookRepository.save(notebook);
     }
 
     @Override
@@ -386,6 +387,7 @@ public class NotebookServiceImpl implements NotebookService {
         notebookRepository.removeOneStarData(loginID,notebookID);
         Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
         notebook.setStar(notebook.getStar()-1);
+        notebookRepository.save(notebook);
     }
 
     @Override
@@ -394,6 +396,7 @@ public class NotebookServiceImpl implements NotebookService {
         notebookRepository.starNotebook(loginID,notebookID);
         Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
         notebook.setStar(notebook.getStar()+1);
+        notebookRepository.save(notebook);
     }
 
 
