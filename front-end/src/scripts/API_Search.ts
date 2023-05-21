@@ -1,4 +1,5 @@
 import type { GroupInfo, NotebookInfo, UserInfo } from '@/scripts/interfaces'
+import { getTags } from '@/scripts/interfaces'
 import axios from 'axios'
 
 /**
@@ -30,7 +31,10 @@ export const apiSearchNotebooks = async (
       pageNumber: page
     }
   })
-  return data
+  return data.map((notebook: any) => {
+    notebook.tags = getTags(notebook.tag)
+    return notebook
+  })
 }
 
 /**

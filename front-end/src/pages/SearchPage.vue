@@ -16,10 +16,12 @@ const relatedNotebooks = ref<NotebookInfo[]>([])
 watch(() => props.query, async (newVal) => {
   searchKey.value = newVal
   relatedNotebooks.value = await apiSearchNotebooks(searchKey.value, 0, 30)
+  console.log(relatedNotebooks.value)
 })
 onBeforeMount(async () => {
   searchKey.value = props.query
   relatedNotebooks.value = await apiSearchNotebooks(searchKey.value, 0, 30)
+  console.log(relatedNotebooks.value)
 })
 
 </script>
@@ -39,7 +41,7 @@ onBeforeMount(async () => {
     <el-input
       v-model="searchKey"
       style="width: 500px"
-      @change="$router.push('/search?q=' + searchKey)"
+      @change="$router.push({ name: 'search', query: { q: searchKey }})"
       :prefix-icon="Search"
     ></el-input>
     <div style="margin-top: 40px"></div>
