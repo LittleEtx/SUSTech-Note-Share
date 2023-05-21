@@ -339,12 +339,3 @@ const deleteNoteConfirm = async () => {
 }
 </script>
 
-<style scoped>
-.text-truncated {
-  display: inline-block;
-  max-width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-</style>

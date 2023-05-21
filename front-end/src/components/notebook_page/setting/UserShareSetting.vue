@@ -72,7 +72,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { apiCancelUserShare, apiGetNotebookSharedUsers, apiShareNotebookToUser } from '@/scripts/API_Interact'
 import UserAvatar from '@/components/UserAvatar.vue'
 import { ElMessageBox } from 'element-plus'
-import AddUserShare from '@/components/notebook_page/AddUserShare.vue'
+import AddUserShare from '@/components/notebook_page/setting/AddUserShare.vue'
 
 interface Props {
   notebookInfo: NotebookInfo | undefined

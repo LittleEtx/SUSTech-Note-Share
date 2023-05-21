@@ -16,7 +16,7 @@ export async function apiGetUserID (): Promise<number> {
  * @returns {Promise<UserInfo>} 用户信息
  */
 export async function apiGetUserInfo (id: number): Promise<UserInfo> {
-  const { data } = await axios.get('/api/user/get-info', { params: { userID: id } })
+  const { data } = await axios.get('/api/user/get-info', { params: { user: id } })
   return data
 }
 

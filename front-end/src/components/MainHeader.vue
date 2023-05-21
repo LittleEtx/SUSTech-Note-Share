@@ -26,20 +26,28 @@
         <template #default>
           <div class="pop-out">
             <!-- 个人信息展示  -->
-            <div style="display: flex; justify-content: right; margin-bottom: 10px">
+            <div style="max-width: 150px; display: flex; align-items: center">
               <user-avatar
-                :size="40"
+                style="min-width: 40px"
                 :avatar-url="$store.state.userInfo.avatar"
                 :user-id="$store.state.userInfo.userID"
               ></user-avatar>
-              <div style="margin-left: 10px; display: flex; flex-direction: column;
-              justify-content: center; align-items: start">
-                <p style="margin: 0; font-size: 15px"><b>{{ userName }}</b></p>
-                <p style="margin: 0; font-size: 10px"> {{ userID }}</p>
+              <div style="margin-left: 10px; display: block; line-height: normal; text-align: left"
+                   class="text-truncated">
+                <span style="height: 20px; font-size: 15px"><b>{{ $store.state.userInfo.userName }}</b></span> <br>
+                <el-text style="height: 10px; font-size: 10px"> {{ $store.state.userInfo.userID }}</el-text>
               </div>
             </div>
+            <div style="margin-top: 10px"></div>
             <!-- 快捷入口 -->
-            <el-divider class="pop-divider" />
+            <el-divider class="pop-divider"/>
+            <el-link :underline="false" :icon="Clock" class="popover-button" @click="$router.push({ name: 'history' })">
+              <h5 class="popover-word">浏览历史</h5>
+              <el-icon>
+                <ArrowRight/>
+              </el-icon>
+            </el-link>
+            <el-divider class="pop-divider"/>
             <el-link :underline="false" :icon="User" class="popover-button" @click="$router.push({ name: 'home' })">
               <h5 class="popover-word">个人中心</h5>
               <el-icon>
@@ -48,9 +56,11 @@
             </el-link>
             <el-link :underline="false" :icon="Lock" class="popover-button" @click="resetPassword">
               <h5 class="popover-word">修改密码</h5>
-              <el-icon><ArrowRight /></el-icon>
+              <el-icon>
+                <ArrowRight/>
+              </el-icon>
             </el-link>
-            <el-divider class="pop-divider" />
+            <el-divider class="pop-divider"/>
             <el-link :underline="false" :icon="SwitchButton" class="popover-button" @click="logout">
               <h5 class="popover-word">登出</h5>
             </el-link>
@@ -64,7 +74,7 @@
 
 <script>
 import { apiLogout } from '@/scripts/API_Auth'
-import { ArrowRight, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
+import { ArrowRight, Clock, Lock, Search, SwitchButton, User } from '@element-plus/icons-vue'
 import DefaultAvatar from '@/assets/default-file/default-avatar.png'
 import SUSTechNoteIcon from '@/assets/icon/icon_with_word.svg'
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -80,6 +90,9 @@ export default {
   },
   components: { UserAvatar, ArrowRight, Search },
   computed: {
+    Clock () {
+      return Clock
+    },
     store () {
       return store
     },

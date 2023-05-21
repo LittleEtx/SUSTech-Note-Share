@@ -53,6 +53,7 @@ export const router = createRouter({
     },
     {
       path: '/history',
+      name: 'history',
       component: HistoryPage
     }
   ]
