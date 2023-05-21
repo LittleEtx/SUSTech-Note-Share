@@ -128,8 +128,8 @@ public class NotebookApp {
         String title = jsonObject.getString("title");
         String tag = jsonObject.getString("tag");
         String description = jsonObject.getString("description");
-        authorityService.checkNotebookAuthority(notebookID);
-        if (notebookService.updateNotebook(notebookID, title, tag, description)) {
+        String directory = jsonObject.getString("directory");
+        if (notebookService.updateNotebook(notebookID, title, tag, description, directory)) {
             return ResponseEntity.ok("Notebook updated successfully");
         } else {
             return ResponseEntity.badRequest().body("Notebook update failed");

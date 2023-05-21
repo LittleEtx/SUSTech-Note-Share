@@ -13,7 +13,7 @@ import java.util.Map;
 public interface NotebookService {
     void addNotebook(String noteBookID, int userID, String directory, String savingPath, String title, String tag, String description, int isPublic);
 
-    boolean updateNotebook(String notebookID, String notebookName, String tag, String description);
+    boolean updateNotebook(String notebookID, String notebookName, String tag, String description, String directory);
 
     String deleteNotebook(String notebookID);
 

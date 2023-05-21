@@ -68,14 +68,21 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public boolean updateNotebook(String notebookID, String notebookName, String tag, String description){
-        var notebook = getNotebookBasic(notebookID);
+    public boolean updateNotebook(
+            String notebookID,
+            String notebookName,
+            String tag,
+            String description,
+            String directory
+    ){
+        var notebook = authorityService.checkNotebookAuthority(notebookID);
         try {
             notebookRepository.updateNotebook(
                     notebookID,
                     Objects.requireNonNullElse(notebookName, notebook.getNotebookName()),
                     Objects.requireNonNullElse(tag, notebook.getTag()),
-                    Objects.requireNonNullElse(description, notebook.getDescription())
+                    Objects.requireNonNullElse(description, notebook.getDescription()),
+                    Objects.requireNonNullElse(directory, notebook.getDirectory())
             );
         } catch (Exception e) {
             logger.error("updateNotebook error: " + e.getMessage());

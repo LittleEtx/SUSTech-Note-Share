@@ -25,8 +25,10 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "update notebooks set notebook_name = ?2, tag = ?3, description = ?4 where notebookid = ?1", nativeQuery = true)
-    void updateNotebook(String notebookID, String notebookName, String tag, String description);
+    @Query(value = "update notebooks " +
+            "set notebook_name = ?2, tag = ?3, description = ?4, directory = ?5 " +
+            "where notebookid = ?1", nativeQuery = true)
+    void updateNotebook(String notebookID, String notebookName, String tag, String description, String directory);
 
     @Query(value = "select * from notebooks " +
             "where authorid = ?1 " +
@@ -46,11 +48,6 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Transactional
     @Query(value = "update notebooks set cover = ?1 where notebookid = ?2", nativeQuery = true)
     void updateCover(String Cover, String notebookID);
-
-    @Modifying
-    @Transactional
-    @Query(value = "update notebooks set directory = ?3 where directory = ?2 and authorid = ?1", nativeQuery = true)
-    void renameDir(int userID, String oldName, String newName);
 
     @Query(value = "select authorid from notebooks where notebookid = ?1", nativeQuery = true)
     Integer findAuthorIDByNotebookID(String notebookID);
