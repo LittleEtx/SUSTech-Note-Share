@@ -83,6 +83,7 @@ import { ChatDotSquare, Delete } from '@element-plus/icons-vue'
 import axios from 'axios'
 import { ElMessageBox } from 'element-plus'
 import UserAvatar from '@/components/UserAvatar.vue'
+import {apiGetUserInfo} from "@/scripts/API_User";
 
 const clickoutside = {
   // 初始化指令
@@ -194,13 +195,10 @@ export default {
         this.comments = res.data
         for (let i = 0; i < res.data.length; i++) {
           this.comments[i].comment.inputShow = false
-          axios.get('/api/user/get-info', {
-            params: {
-              userID: this.comments[i].comment.userID
-            },
-          }).then(op => {
-            this.comments[i].comment.name = op.data.userName
-            this.comments[i].comment.headImg = op.data.avatar
+          apiGetUserInfo(this.comments[i].comment.userID)
+              .then(op => {
+            this.comments[i].comment.name = op.userName
+            this.comments[i].comment.headImg = op.avatar
           })
         }
         console.log(this.comments)
