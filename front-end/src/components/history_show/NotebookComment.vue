@@ -76,6 +76,7 @@
 import { ChatDotSquare } from '@element-plus/icons-vue'
 import { store } from '@/store/store'
 import axios from 'axios'
+import {apiGetUserInfo} from "@/scripts/API_User";
 
 const clickoutside = {
   // 初始化指令
@@ -172,8 +173,9 @@ export default {
             this.comments[i].comment.inputShow = false
           apiGetUserInfo(this.comments[i].comment.userID).
           then(op => {
-              this.comments[i].comment.name = op.data.userName
-              this.comments[i].comment.headImg = op.data.avatar
+            console.log(op)
+              this.comments[i].comment.name = op.userName
+              this.comments[i].comment.headImg = op.avatar
           })
         }
         console.log(this.comments)
