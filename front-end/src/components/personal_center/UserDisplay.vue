@@ -50,7 +50,7 @@
       </span>
       <!--   email   -->
       <p style="margin: 0; font-size: 10px"> {{ userInfo?.email }}</p>
-      <p style="margin-top: 10px; margin-bottom: 0; font-size: 15px" v-show="userInfo?.birth !== undefined">
+      <p style="margin-top: 10px; margin-bottom: 0; font-size: 15px" v-show="userInfo?.birth">
         <el-icon>
           <Calendar/>
         </el-icon>
