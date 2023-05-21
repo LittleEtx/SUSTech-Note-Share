@@ -32,4 +32,7 @@ public interface GroupService {
     List<JSONObject> groupMembers(int groupID);
 
     List<NotebookInterface> groupNotebookInfo(int groupID);
+
+    List<JSONObject> searchGroupsWithLimit(String key, int limit);
+
 }

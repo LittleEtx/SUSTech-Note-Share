@@ -1,6 +1,9 @@
 package com.example.SUSTechNote.app;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.interfaces.UserInterface;
+import com.example.SUSTechNote.service.GroupService;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.service.UserService;
 import org.slf4j.Logger;
@@ -21,9 +24,12 @@ public class SearchApp {
     private final UserService userService;
     private final NotebookService notebookService;
 
-    public SearchApp(UserService userService,NotebookService notebookService) {
+    private final GroupService groupService;
+
+    public SearchApp(UserService userService,NotebookService notebookService,GroupService groupService) {
         this.userService = userService;
         this.notebookService = notebookService;
+        this.groupService = groupService;
     }
 
     @GetMapping("user")
@@ -44,7 +50,19 @@ public class SearchApp {
         if (notebooks.size()>0){
             return ResponseEntity.ok(notebooks);
         } else {
-            return ResponseEntity.ok("no notebook found");
+            return ResponseEntity.ok().build();
+        }
+    }
+
+    @SaCheckLogin
+    @GetMapping("group")
+    public ResponseEntity<?> searchGroup(@RequestParam("key") String key){
+        //按照ID或者群组名字来搜索用户已经加入的群组，返回匹配的群组的信息列表
+        List<JSONObject> groups = groupService.searchGroupsWithLimit(key,10);
+        if (groups.size()>0){
+            return ResponseEntity.ok(groups);
+        } else {
+            return ResponseEntity.ok().build();
         }
     }
 }
