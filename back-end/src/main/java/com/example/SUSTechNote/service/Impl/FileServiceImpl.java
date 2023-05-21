@@ -35,14 +35,13 @@ public class FileServiceImpl implements FileService {
     public synchronized String uploadFile(String noteID, String fileName,
                                           MultipartFile file) throws IOException {
         Note note = authorityService.checkNoteAuthority(noteID);
-//        var noteID = note.getNoteID();
-        var files = fileRepository.findFilesByNotebook(noteID);
+        var notebookID = note.getNotebookID();
+        var files = fileRepository.findFilesByNotebook(notebookID);
         int lastFileNum = files.stream()
-                .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
-                .max(Integer::compareTo).orElse(0);
-        // 新建文件，生成新的文件ID, 注意实际保存到文件夹的时候应该保留文件后缀名，但是存入数据库时应该去掉
-        String fileType = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
-        String fileID = noteID + "_" + (lastFileNum + 1) + fileType;
+            .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
+            .max(Integer::compareTo).orElse(0);
+        // 新建文件，生成新的文件ID
+        String fileID = notebookID + "_" + (lastFileNum + 1);
 
         // 若笔记的文件夹不存在，则创建
         File noteFile = new File(staticPathHelper.getStaticPath(), note.getSavingPath());
@@ -53,12 +52,11 @@ public class FileServiceImpl implements FileService {
                 throw new IOException("create note file failed");
             }
         }
-        String relativePath = note.getSavingPath() + "/" + fileID;
+        String relativePath = note.getSavingPath()  + "/" + fileID;
         File targetFile = new File(noteFile, fileID);
         file.transferTo(targetFile); // this method will automatically delete file if already exist
         String fileUrl = "/api/static" + relativePath;
 
-        fileID = fileID.substring(0, fileID.lastIndexOf(".")); // 去掉文件后缀名
         fileRepository.save(new Files(fileID, fileName, fileUrl,
                 relativePath, file.getContentType(), note));
         logger.debug("add file " + fileName + " to "
