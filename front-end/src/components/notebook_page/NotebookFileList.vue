@@ -48,25 +48,32 @@
           @blur="onConfirmEditNote"
           @click.stop
         ></el-input>
-        <el-popover
-          v-else
-          placement="right"
-          trigger="hover"
-          :show-after="350"
-          :width="180"
-        >
-          <template #reference>
-            <span class="text-truncated">
-              <el-icon v-if="note.files.length != 0"><Folder/></el-icon>
-              <el-icon v-else><FolderOpened/></el-icon>
-              {{ note.name }}
+        <div v-else>
+          <el-popover
+            v-if="canModify"
+            placement="right"
+            trigger="hover"
+            :show-after="350"
+            :width="180"
+          >
+            <template #reference>
+              <span class="text-truncated">
+                <el-icon v-if="note.files.length != 0"><Folder/></el-icon>
+                <el-icon v-else><FolderOpened/></el-icon>
+                {{ note.name }}
+              </span>
+            </template>
+            <span>
+              <el-button text :icon="Edit" @click="onClickEditNote(note)" size="small">重命名</el-button>
+              <el-button text :icon="Delete" @click="deleteNote(note)" size="small">删除</el-button>
             </span>
-          </template>
-          <span>
-            <el-button text :icon="Edit" @click="onClickEditNote(note)" size="small">重命名</el-button>
-            <el-button text :icon="Delete" @click="deleteNote(note)" size="small">删除</el-button>
+          </el-popover>
+          <span v-else class="text-truncated">
+            <el-icon v-if="note.files.length != 0"><Folder/></el-icon>
+            <el-icon v-else><FolderOpened/></el-icon>
+            {{ note.name }}
           </span>
-        </el-popover>
+        </div>
       </template>
       <!--   上传/创建文件   -->
       <el-menu-item :index="note.id + 'create'" v-if="canModify">
@@ -115,6 +122,7 @@
       <template v-for="file in note.files" :key="file.name">
         <el-menu-item :index="file.id">
           <el-popover
+            v-if="canModify"
             placement="right"
             trigger="hover"
             :width="160"
@@ -132,6 +140,9 @@
               <el-button text :icon="Delete" @click="emit('onDeleteFile', file)" size="small"></el-button>
             </span>
           </el-popover>
+          <div v-else>
+            <span class="text-truncated">{{ file.name }}</span>
+          </div>
         </el-menu-item>
       </template>
     </el-sub-menu>

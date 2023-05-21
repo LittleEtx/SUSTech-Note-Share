@@ -24,10 +24,18 @@
           <el-header style="text-align: left">
             <div style="margin-top: 15px"></div>
             <span style="float: right">
-            <el-button text :icon="Edit" @click="editFile(currentFile!, currentNote!)" size="small"></el-button>
-            <el-button text :icon="Download" @click="downloadFile(currentFile!)" size="small"></el-button>
-            <el-button text :icon="Delete" @click="deleteFile(currentFile!)" size="small"></el-button>
-          </span>
+              <el-button
+                v-show="canModify"
+                text size="small"
+                :icon="Edit" @click="editFile(currentFile!, currentNote!)"
+              ></el-button>
+              <el-button text :icon="Download" @click="downloadFile(currentFile!)" size="small"></el-button>
+              <el-button
+                v-show="canModify"
+                text size="small"
+                :icon="Delete" @click="deleteFile(currentFile!)"
+              ></el-button>
+            </span>
             <div style="margin-left: 10%; width: 60%">
               <el-text
                 v-if="!editingFileName"
@@ -116,7 +124,6 @@ const currentFile = ref<FileInfo>()
 const currentNote = ref<NoteInfo>()
 const editingFileName = ref(false)
 const onSelectFile = (file: FileInfo, note: NoteInfo) => {
-  console.log('onSelectFile', file, note)
   currentFile.value = file
   currentNote.value = note
   editingFileName.value = false // 切换时取消输入
