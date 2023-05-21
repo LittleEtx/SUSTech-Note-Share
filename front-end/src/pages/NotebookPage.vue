@@ -86,6 +86,7 @@ import ImgUploader from '@/components/ImgUploader.vue'
 import NotebookComment from '@/components/history_show/NotebookComment.vue'
 import NotebookEditPane from '@/components/notebook_page/NotebookEditPane.vue'
 import NotebookSetting from '@/components/notebook_page/setting/NotebookSetting.vue'
+import { apiAddHistory } from '@/scripts/API_HIstory'
 
 const route = useRoute()
 const store = useStore()
@@ -127,11 +128,13 @@ watch(
   () => route.params.notebookID,
   async (newID) => {
     await getNotebookInfo(newID as string)
+    await apiAddHistory(newID as string)
   }
 )
 
 onBeforeMount(async () => {
   await getNotebookInfo(notebookID.value)
+  await apiAddHistory(notebookID.value)
 })
 
 // 上传封面

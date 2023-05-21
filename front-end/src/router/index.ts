@@ -37,6 +37,7 @@ export const router = createRouter({
     },
     {
       path: '/notebook/:notebookID',
+      name: 'notebook',
       component: NotebookPage
     },
     {

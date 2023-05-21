@@ -3,7 +3,7 @@
   shadow="hover" class="card-size"
   :body-style="{ padding: '0px' }"
   style="cursor: pointer"
-  @click="$router.push(`/notebook/${notebook.notebookID}`)"
+  @click="$router.push({ name: 'notebook', params: { notebookID: notebook.notebookID }})"
 >
   <el-image :src="notebook.cover === null ? DefaultCover : notebook.cover" class="cover">
     <template #error>

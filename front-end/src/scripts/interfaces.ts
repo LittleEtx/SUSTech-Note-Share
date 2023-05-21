@@ -46,3 +46,8 @@ export interface GroupInfo {
   createTime: string // 群组创建时间
   owner: UserInfo // 群组的创建者
 }
+
+export interface HistoryInfo {
+  visitTime: string // 访问时间
+  notebookID: string // 笔记本ID
+}

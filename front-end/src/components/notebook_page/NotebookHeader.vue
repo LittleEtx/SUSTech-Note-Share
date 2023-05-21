@@ -9,7 +9,7 @@
     v-loading="loading"
     element-loading-background="rgba(255, 255, 255, 0.3)"
   >
-    <span>
+    <div style="display: flex; justify-content: space-between">
       <el-text
         style="font-size: 20px"
         v-if="!modifyTitle"
@@ -29,7 +29,22 @@
         show-word-limit
         style="width: 60%"
       ></el-input>
-    </span>
+      <div style="display: flex; flex-direction: row; min-width: 150px; margin-left: 10px">
+        <el-button type="primary" :plain="!hasLiked" style="width: 70px">
+          <el-icon>
+            <CaretTop/>
+          </el-icon>
+          <span style="margin-left: 5px">{{ notebook?.likeCount }}</span>
+        </el-button>
+        <div style="margin-left: 10px"></div>
+        <el-button type="warning" :plain="!hasStarred" style="width: 70px">
+          <el-icon>
+            <StarFilled/>
+          </el-icon>
+          <span style="margin-left: 5px">{{ notebook?.starCount }}</span>
+        </el-button>
+      </div>
+    </div>
     <span>
       <el-tag type="success" effect="dark" v-if="notebook?.isPublic">公开</el-tag>
       <el-tag type="info" effect="dark" v-else>私有</el-tag>
@@ -77,21 +92,6 @@
       </div>
     </div>
   </el-space>
-  <div style="right: 0; top: 0; position: absolute">
-    <el-button type="primary" :plain="!hasLiked" style="width: 70px">
-      <el-icon>
-        <CaretTop/>
-      </el-icon>
-      <span style="margin-left: 5px">{{ notebook?.likeCount }}</span>
-    </el-button>
-    <div style="margin-top: 10px"></div>
-    <el-button type="warning" :plain="!hasStarred" style="width: 70px">
-      <el-icon>
-        <StarFilled/>
-      </el-icon>
-      <span style="margin-left: 5px">{{ notebook?.starCount }}</span>
-    </el-button>
-  </div>
 </div>
 </template>
 
