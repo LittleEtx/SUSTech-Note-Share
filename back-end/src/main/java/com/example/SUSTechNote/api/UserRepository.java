@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findUserByEmail(String email);
 
     @Query(value = "SELECT userid,user_name,email,avatar,description,gender,birth FROM users WHERE user_name LIKE ?1 OR email LIKE ?1 or userID LIKE ?1 ORDER BY user_name DESC", nativeQuery = true)
-    Page<Map<String,Object>> searchUsersWithLimit(String keyword, Pageable pageable);
+    Page<JSONObject> searchUsersWithLimit(String keyword, Pageable pageable);
 
     @Modifying
     @Transactional

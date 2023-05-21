@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/search")
@@ -33,9 +31,9 @@ public class SearchApp {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> searchUser(@RequestParam("key") String key){
+    public ResponseEntity<?> searchUser(@RequestParam("key") String key,int pageNumber, int pageSize){
         logger.info("searchUser: key = {}", key);
-        List<Map<String,Object>> users = userService.searchUsersWithLimit(key,10);
+        List<JSONObject> users = userService.searchUsersWithLimit(key,pageNumber,pageSize);
         if (users.size() > 0){
             return ResponseEntity.ok(UserInterface.fromUserMap(users));
         } else {
@@ -44,9 +42,9 @@ public class SearchApp {
     }
 
     @GetMapping("/notebook")
-    public ResponseEntity<?> searchNotebook(@RequestParam("key") String key){
+    public ResponseEntity<?> searchNotebook(@RequestParam("key") String key,int pageNumber, int pageSize){
         //搜索公开的笔记本
-        List<JSONObject> notebooks = notebookService.searchPublicNotebookWithLimit(key,10);
+        List<JSONObject> notebooks = notebookService.searchPublicNotebookWithLimit(key,pageNumber,pageSize);
         if (notebooks.size()>0){
             return ResponseEntity.ok(notebooks);
         } else {
@@ -56,13 +54,13 @@ public class SearchApp {
 
     @SaCheckLogin
     @GetMapping("/group")
-    public ResponseEntity<?> searchGroup(@RequestParam("key") String key){
+    public ResponseEntity<?> searchGroup(@RequestParam("key") String key,int pageNumber, int pageSize){
         //按照ID或者群组名字来搜索用户已经加入的群组，返回匹配的群组的信息列表
-        List<JSONObject> groups = groupService.searchGroupsWithLimit(key,10);
+        List<JSONObject> groups = groupService.searchGroupsWithLimit(key,pageNumber,pageSize);
         if (groups.size()>0){
             return ResponseEntity.ok(groups);
         } else {
-            return ResponseEntity.ok(new ArrayList<>());
+            return ResponseEntity.ok().build();
         }
     }
 }

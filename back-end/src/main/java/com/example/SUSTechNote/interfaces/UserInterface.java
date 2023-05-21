@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.interfaces;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -7,7 +8,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public record UserInterface(
         int userID,
@@ -31,7 +31,7 @@ public record UserInterface(
         );
     }
 
-    public static List<UserInterface> fromUserMap(Collection<Map<String, Object>> users) {
+    public static List<UserInterface> fromUserMap(Collection<JSONObject> users) {
         List<UserInterface> userList = new ArrayList<>();
         for (var map : users) {
             var userInfo = new UserInterface(

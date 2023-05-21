@@ -33,6 +33,6 @@ public interface GroupService {
 
     List<NotebookInterface> groupNotebookInfo(int groupID);
 
-    List<JSONObject> searchGroupsWithLimit(String key, int limit);
+    List<JSONObject> searchGroupsWithLimit(String key,int pageNumber, int pageSize);
 
 }
