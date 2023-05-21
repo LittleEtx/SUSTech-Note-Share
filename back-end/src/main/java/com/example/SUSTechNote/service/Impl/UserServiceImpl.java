@@ -189,8 +189,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<JSONObject> searchUsersWithLimit(String key, int pageNumber, int pageSize){
-        PageRequest pageRequest = PageRequest.of(pageNumber,pageSize, Sort.by(Sort.Direction.DESC, "user_name"));
+    public List<JSONObject> searchUsersWithLimit(String key,int pageSize){
+        PageRequest pageRequest = PageRequest.of(0,pageSize, Sort.by(Sort.Direction.DESC, "user_name"));
         key = "%" + key + "%";
         Page<JSONObject> users = userRepository.searchUsersWithLimit(key,pageRequest);
         return users.getContent();

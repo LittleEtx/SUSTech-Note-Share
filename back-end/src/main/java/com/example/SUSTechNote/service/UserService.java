@@ -16,7 +16,7 @@ public interface UserService {
 
     void register(String email, String userName, String password);
 
-    List<JSONObject> searchUsersWithLimit(String key, int pageNumber, int pageSize);
+    List<JSONObject> searchUsersWithLimit(String key, int pageSize);
     /**
      * Auto register will default username and password
      * @param email email to be register
