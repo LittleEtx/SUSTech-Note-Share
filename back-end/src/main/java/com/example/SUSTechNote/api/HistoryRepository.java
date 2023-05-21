@@ -16,13 +16,14 @@ public interface HistoryRepository extends JpaRepository<History, Integer> {
     @Query(value = "insert into history (user_id, notebookID, visit_time) values (?1, ?2, ?3)", nativeQuery = true)
     void createHistory(int user_id, String notebookID, LocalDateTime visitTime);
 
-    @Query(value = "select * from history where user_id = ?1", nativeQuery = true)
+    @Query(value = "select * from history where user_id = ?1 order by visit_time desc", nativeQuery = true)
     List<History> getHistory(int userID);
+
 
     @Modifying
     @Transactional
-    @Query(value = "delete from history where user_id = ?1 and historyID = ?2", nativeQuery = true)
-    void deleteHistory(int userID, int historyID);
+    @Query(value = "delete from history where user_id = ?1 and notebookid = ?2", nativeQuery = true)
+    void deleteHistory(int userID, String notebookID);
 
     @Modifying
     @Transactional

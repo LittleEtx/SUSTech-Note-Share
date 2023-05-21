@@ -1,6 +1,7 @@
 package com.example.SUSTechNote.app;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.service.HistoryService;
 import org.slf4j.Logger;
@@ -21,16 +22,14 @@ public class HistoryApp {
         this.historyService = historyService;
     }
 
-    @PostMapping("/createHistory")
-    public ResponseEntity<?> createHistory(@RequestBody JSONObject jsonObject) {
-        int userID = Integer.parseInt(jsonObject.getString("userID"));
-        String notebookID = jsonObject.getString("notebookID");
-        LocalDateTime visitTime = LocalDateTime.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String visitTimeStr = visitTime.format(dateTimeFormatter);
-        visitTime = LocalDateTime.parse(visitTimeStr, dateTimeFormatter);
+    @PostMapping("/visit")
+    public ResponseEntity<?> createHistory(
+            @RequestParam("notebook") String notebookID
+    ) {
+        int userID = StpUtil.getLoginIdAsInt();
+        logger.debug("User {} visit notebook {}", userID, notebookID);
         try {
-            historyService.createHistory(userID, notebookID, visitTime);
+            historyService.createHistory(userID, notebookID);
             return ResponseEntity.ok().body("create history success");
         } catch (Exception e) {
             logger.debug("create history failed");
@@ -38,23 +37,37 @@ public class HistoryApp {
         }
     }
 
-    @GetMapping("/getHistory")
-    public ResponseEntity<?> getHistory() {
+    @GetMapping("/get-notebook-history")
+    public ResponseEntity<?> getHistory(
+            @RequestParam(name = "start", required = false, defaultValue = "0") Integer start,
+            @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit
+    ) {
         int userID = StpUtil.getLoginIdAsInt();
+        logger.debug("User {} get history", userID);
         try {
-            return ResponseEntity.ok().body(historyService.getHistory(userID));
+            var historyList = historyService.getHistory(userID, start, limit);
+            JSONArray jsonArray = new JSONArray();
+            for (var history : historyList) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("notebookID", history.getNotebookID());
+                jsonObject.put("visitTime", history.getVisitTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                jsonArray.add(jsonObject);
+            }
+            return ResponseEntity.ok().body(jsonArray);
         } catch (Exception e) {
             logger.debug("get history failed");
             return ResponseEntity.badRequest().body("get history failed\n"+e.getMessage());
         }
     }
 
-    @PostMapping("/deleteHistory")
-    public ResponseEntity<?> deleteHistory(@RequestBody JSONObject jsonObject) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteHistory(
+            @RequestParam("notebook") String notebookID
+    ) {
         int userID = StpUtil.getLoginIdAsInt();
-        int historyID = Integer.parseInt(jsonObject.getString("historyID"));
+        logger.debug("User {} delete history of notebook {}", userID, notebookID);
         try {
-            historyService.deleteHistory(userID, historyID);
+            historyService.deleteHistory(userID, notebookID);
             return ResponseEntity.ok().body("delete history success");
         } catch (Exception e) {
             logger.debug("delete history failed");
@@ -62,9 +75,10 @@ public class HistoryApp {
         }
     }
 
-    @PostMapping("/deleteAllHistory")
+    @DeleteMapping("/delete-all")
     public ResponseEntity<?> deleteAllHistory() {
         int userID = StpUtil.getLoginIdAsInt();
+        logger.debug("User {} delete all history", userID);
         try {
             historyService.deleteAllHistory(userID);
             return ResponseEntity.ok().body("delete all history success");

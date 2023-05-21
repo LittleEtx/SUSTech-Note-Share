@@ -1,18 +1,17 @@
 package com.example.SUSTechNote.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.example.SUSTechNote.entity.History;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public interface HistoryService {
-    void createHistory(int userID, String notebookID, LocalDateTime visitTime);
+    void createHistory(int userID, String notebookID);
 
-    List<JSONObject> getHistory(int userID);
+    List<History> getHistory(int userID, int start, int limit);
 
-    void deleteHistory(int userID, int historyID);
+    void deleteHistory(int userID, String notebookID);
 
     void deleteAllHistory(int userID);
 }

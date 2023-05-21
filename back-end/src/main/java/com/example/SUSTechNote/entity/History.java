@@ -1,4 +1,5 @@
 package com.example.SUSTechNote.entity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ public class History {
     @JoinColumn(name = "user_id")
     private User user;
     private String notebookID;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime visitTime;
 
     public Integer getHistoryID() {
