@@ -13,6 +13,9 @@ public class Reply {
     @JoinColumn(name = "comment_id")
     private Comment comment;
     private String toUserName;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "longtext")
     private String replyContent;
     @ManyToOne
     @JoinColumn(name = "user_id")

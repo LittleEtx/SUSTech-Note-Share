@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     private String commentID;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "longtext")
     private String commentContent;
     @ManyToOne
     @JoinColumn(name = "notebook_id")

@@ -41,7 +41,6 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public String reply(int userID, String commentID, String toUserName, String content, LocalDateTime replyTime) {
-        // 0表示回复楼主，否则表示回复楼中楼
         String newReplyID;
         List<String> replyIDs = replyRepository.getReplyIDsByCommentID(commentID);
         if (replyIDs.size() > 0) {

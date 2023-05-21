@@ -27,11 +27,8 @@ public interface ReplyRepository extends JpaRepository<Reply, Integer> {
     @Query(value = "select replyid from reply where comment_id = ?1", nativeQuery = true)
     List<String> getReplyIDsByCommentID(String commentID);
 
-    @Query(value = "select replyid from reply where replyid like ?1", nativeQuery = true)
-    List<String> getReplyFloorIDsByCommentID(String replyFloorID);
-
     @Modifying
     @Transactional
-    @Query(value = "insert into reply(replyid, to_user_name, reply_content, reply_time, comment_id, user_id) values(?1, ?2, ?3, ?4, ?5, ?6)", nativeQuery = true)
+    @Query(value = "insert into reply(replyid, to_user_name, reply_content, reply_time, comment_id, user_id, floor) values(?1, ?2, ?3, ?4, ?5, ?6, 0)", nativeQuery = true)
     void createReply(String newReplyID, String toUserName, String content, LocalDateTime replyTime, String commentID, int userID);
 }
