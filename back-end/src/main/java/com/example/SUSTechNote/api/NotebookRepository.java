@@ -33,8 +33,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     void updateNotebook(String notebookID, String notebookName, String tag, String description, String directory);
 
     @Query(value = "select * from notebooks " +
-            "where authorid = ?1 " +
-            "and remove_time is null", nativeQuery = true)
+            "where authorid = ?1", nativeQuery = true)
     List<Notebook> findNotebookByAuthorID(int userID);
 
     @Query(value = "select cover from notebooks where notebookid = ?1", nativeQuery = true)
@@ -42,8 +41,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Query(value = "select * from notebooks " +
             "where authorid = ?1 " +
-            "and is_public = 1 " +
-            "and remove_time IS NULL", nativeQuery = true)
+            "and is_public = 1 ", nativeQuery = true)
     List<Notebook> findPublicNotebooksByAuthorID(int userID);
 
     @Modifying
@@ -62,8 +60,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
 
     @Query(value = "select * from notebooks " +
             "where notebookid in " +
-            "(select notebookid from notebook_share_user where userid = ?1) " +
-            "and remove_time is null", nativeQuery = true)
+            "(select notebookid from notebook_share_user where userid = ?1) ", nativeQuery = true)
     List<Notebook> findSharedNotebooksByUserID(int userID);
 
     @Query(value = "select groupid, group_name, group_description, group_ownerid, group_owner_name, create_time from my_groups " +
