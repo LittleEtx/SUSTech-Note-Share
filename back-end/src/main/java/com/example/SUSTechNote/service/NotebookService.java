@@ -49,4 +49,14 @@ public interface NotebookService {
 
     String cancelGroupShare(String notebookID, int groupID);
     List<Map<String,Object>> searchPublicNotebookWithLimit(String key, int limit);
+
+    boolean findUserLikeExistByNotebookID(String notebookID);
+
+    boolean findUserStarExistByNotebookID(String notebookID);
+
+    void removeOneStarData(String notebookID);
+
+    void removeOneLikeData(String notebookID);
+
+    void StarNotebook(String notebookID);
 }

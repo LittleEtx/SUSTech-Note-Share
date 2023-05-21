@@ -325,4 +325,48 @@ public class NotebookServiceImpl implements NotebookService {
         Page<Map<String,Object>> notebooks = notebookRepository.searchPublicNotebookWithLimit(key,pageRequest);
         return notebooks.getContent();
     }
+
+    @Override
+    public boolean findUserLikeExistByNotebookID(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        int count = notebookRepository.findUserLikeByUserIDAndNotebookID(loginID,notebookID);
+        if (count == 0){
+            logger.info("user has not like this notebook!");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    @Override
+    public boolean findUserStarExistByNotebookID(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        int count = notebookRepository.findUserStarByUserIDAndNotebookID(loginID,notebookID);
+        if (count == 0){
+            logger.info("user has not star this notebook!");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    @Override
+    public void removeOneLikeData(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        notebookRepository.removeOneLikeData(loginID,notebookID);
+    }
+
+    @Override
+    public void removeOneStarData(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        notebookRepository.removeOneStarData(loginID,notebookID);
+    }
+
+    @Override
+    public void StarNotebook(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        notebookRepository.starNotebook(loginID,notebookID);
+    }
+
+
 }

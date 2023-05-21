@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.app.Interact;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.example.SUSTechNote.service.NotebookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,36 +50,50 @@ public class InteractApp {
      * 取消点赞一个笔记
      * @param notebookID 笔记本ID
      */
+    @SaCheckLogin
     @PostMapping("/cancel-like-notebook")
     public ResponseEntity<?> cancelLikeNotebook(
             @RequestParam("notebook") String notebookID
     ){
         //TODO
-        return ResponseEntity.ok("Unimplemented");
+        if (notebookService.findUserLikeExistByNotebookID(notebookID)){
+            notebookService.removeOneLikeData(notebookID);
+            return ResponseEntity.ok("cancel like successfully");
+        }
+        return ResponseEntity.ok("cancel like failed");
     }
 
     /**
      * 获取用户是否收藏了一个笔记
      * @param notebookID 笔记本ID
      */
+    @SaCheckLogin
     @GetMapping("/if-star")
     public ResponseEntity<?> getIfStar(
             @RequestParam("notebook") String notebookID
     ){
         // TODO
-        return ResponseEntity.ok("Unimplemented");
+        if (notebookService.findUserStarExistByNotebookID(notebookID)){
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
     }
 
     /**
      * 收藏一个笔记
      * @param notebookID 笔记本ID
      */
+    @SaCheckLogin
     @PostMapping("/star-notebook")
     public ResponseEntity<?> starNotebook(
             @RequestParam("notebook") String notebookID
     ){
         // TODO
-        return ResponseEntity.ok("Unimplemented");
+        if (notebookService.findUserStarExistByNotebookID(notebookID)){
+            return ResponseEntity.badRequest().body("user has stared the notebook");
+        }
+        notebookService.StarNotebook(notebookID);
+        return ResponseEntity.ok("star the notebook successfully");
     }
 
     /**
@@ -89,10 +104,13 @@ public class InteractApp {
     public ResponseEntity<?> cancelStarNotebook(
             @RequestParam("notebook") String notebookID
     ){
-        // TODO
-        return ResponseEntity.ok("Unimplemented");
+        //TODO
+        if (notebookService.findUserStarExistByNotebookID(notebookID)){
+            notebookService.removeOneStarData(notebookID);
+            return ResponseEntity.ok("cancel star successfully");
+        }
+        return ResponseEntity.badRequest().body("cancel star failed");
     }
-
 
     /**
      * 公开一个笔记

@@ -80,6 +80,26 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Query(value = "select notebook_id from user_like_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
     List<String> findLikeNotebookIDByUserID(int userID, String notebookID);
 
+    @Query(value = "select count(user_id) from user_like_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
+    int findUserLikeByUserIDAndNotebookID(int userID, String notebookID);
+
+    @Query(value = "select count(user_id) from user_star_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
+    int findUserStarByUserIDAndNotebookID(int userID, String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_like_notebook where user_id = ?1 and notebook_id = ?2 ", nativeQuery = true)
+    void removeOneLikeData(int userID, String notebookID);
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_star_notebook where user_id = ?1 and notebook_id = ?2 ", nativeQuery = true)
+    void removeOneStarData(int userID, String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into user_star_notebook(notebook_id, user_id) values (?1, ?2)", nativeQuery = true)
+    void starNotebook(int userID, String notebookID);
+
     @Modifying
     @Transactional
     @Query(value = "insert into user_like_notebook(notebook_id, user_id) values (?1, ?2)", nativeQuery = true)
@@ -134,4 +154,6 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Transactional
     @Query(value = "delete from notebook_share_group where notebookid = ?1 and groupid = ?2", nativeQuery = true)
     void cancelGroupShare(String notebookID, int groupID);
+
+
 }
