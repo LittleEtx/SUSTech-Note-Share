@@ -10,6 +10,7 @@ import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.entity.User;
 import com.example.SUSTechNote.exception.AccountNotExistException;
 import com.example.SUSTechNote.exception.GroupNotExistException;
+import com.example.SUSTechNote.interfaces.NotebookInterface;
 import com.example.SUSTechNote.service.NotebookService;
 import com.example.SUSTechNote.util.StaticPathHelper;
 import org.slf4j.Logger;
@@ -322,32 +323,11 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public  List<JSONObject> searchPublicNotebookWithLimit(String key,  int pageNumber, int pageSize){
+    public List<NotebookInterface> searchPublicNotebookWithLimit(String key, int pageNumber, int pageSize){
         PageRequest pageRequest = PageRequest.of(pageNumber,pageSize, Sort.by(Sort.Direction.DESC, "notebook_name"));
         key = "%" + key + "%";
         Page<JSONObject> notebooks = notebookRepository.searchPublicNotebookWithLimit(key,pageRequest);
-        List<JSONObject> notebooksContent = notebooks.getContent();
-        List<JSONObject> notebookList = new ArrayList<>();
-        for (JSONObject notebook: notebooksContent
-             ) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("authorID",notebook.get("authorid"));
-            jsonObject.put("likeCount",notebook.get("like_num"));
-            jsonObject.put("notebookID",notebook.get("notebookid"));
-            jsonObject.put("tags",notebook.get("tag"));
-            jsonObject.put("directory",notebook.get("directory"));
-            jsonObject.put("cover",notebook.get("cover"));
-            jsonObject.put("starCount",notebook.get("star"));
-            jsonObject.put("updateTime",notebook.get("update_time"));
-            jsonObject.put("description",notebook.get("description"));
-            jsonObject.put("isPublic",notebook.get("is_public"));
-            jsonObject.put("title",notebook.get("notebook_name"));
-            jsonObject.put("userName",userRepository.findUserByUserID((int)notebook.get("authorid")).getUserName());
-            jsonObject.put("userAvatar",userRepository.findUserByUserID((int)notebook.get("authorid")).getAvatar());
-            notebookList.add(jsonObject);
-//
-        }
-        return notebookList;
+        return NotebookInterface.fromNotebookMap(notebooks.getContent());
     }
 
     @Override

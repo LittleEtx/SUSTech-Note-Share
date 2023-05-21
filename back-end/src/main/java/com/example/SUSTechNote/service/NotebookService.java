@@ -2,6 +2,7 @@ package com.example.SUSTechNote.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
+import com.example.SUSTechNote.interfaces.NotebookInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,7 +49,7 @@ public interface NotebookService {
     String cancelUserShare(String notebookID, int userID);
 
     String cancelGroupShare(String notebookID, int groupID);
-    List<JSONObject> searchPublicNotebookWithLimit(String key, int pageNumber, int pageSize);
+    List<NotebookInterface> searchPublicNotebookWithLimit(String key, int pageNumber, int pageSize);
 
     boolean findUserLikeExistByNotebookID(String notebookID);
 

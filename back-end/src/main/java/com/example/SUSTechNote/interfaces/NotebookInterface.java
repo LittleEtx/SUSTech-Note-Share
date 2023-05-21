@@ -1,9 +1,12 @@
 package com.example.SUSTechNote.interfaces;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public record NotebookInterface(
@@ -37,6 +40,26 @@ public record NotebookInterface(
         );
     }
     public static List<NotebookInterface> fromNotebooks(List<Notebook> notebooks){
+        return notebooks.stream().map(NotebookInterface::fromNotebook).toList();
+    }
+
+    public static NotebookInterface fromNotebook(JSONObject notebook){
+        return new NotebookInterface(
+                (String) notebook.get("notebookid"),
+                (int) notebook.get("authorid"),
+                (String) notebook.get("notebook_name"),
+                (String) notebook.get("tag"),
+                ((Timestamp) notebook.get("update_time")).toLocalDateTime(),
+                (String) notebook.get("cover"),
+                (String) notebook.get("description"),
+                (String) notebook.get("directory"),
+                (Integer) notebook.get("is_public"),
+                (int) notebook.get("like_num"),
+                (int) notebook.get("star")
+        );
+    }
+
+    public static List<NotebookInterface> fromNotebookMap(Collection<JSONObject> notebooks){
         return notebooks.stream().map(NotebookInterface::fromNotebook).toList();
     }
 }

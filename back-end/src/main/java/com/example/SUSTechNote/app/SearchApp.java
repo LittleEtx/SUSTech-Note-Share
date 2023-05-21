@@ -39,18 +39,18 @@ public class SearchApp {
         if (users.size() > 0){
             return ResponseEntity.ok(UserInterface.fromUserMap(users));
         } else {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
     @GetMapping("/notebook")
     public ResponseEntity<?> searchNotebook(@RequestParam("key") String key,int pageNumber,int pageSize){
         //搜索公开的笔记本
-        List<JSONObject> notebooks = notebookService.searchPublicNotebookWithLimit(key,pageNumber,pageSize);
+        var notebooks = notebookService.searchPublicNotebookWithLimit(key,pageNumber,pageSize);
         if (notebooks.size()>0){
             return ResponseEntity.ok(notebooks);
         } else {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 
