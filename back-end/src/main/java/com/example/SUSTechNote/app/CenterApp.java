@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,8 +41,8 @@ public class CenterApp {
         }
     }
 
-    @GetMapping("get-public-notebooks")
-    public ResponseEntity<?> findNotebookByNotebookID(@Param("userID") int userID){
+    @GetMapping("public-notebooks")
+    public ResponseEntity<?> findNotebookByNotebookID(@RequestParam("user") int userID){
         try {
             List<Notebook> notebooks = notebookService.findPublicNotebooks(userID);
             return ResponseEntity.ok(NotebookInterface.fromNotebooks(notebooks));
@@ -52,9 +53,9 @@ public class CenterApp {
     }
 
     @GetMapping("get-starred-notebooks")
-    public ResponseEntity<?> findStarredNotebooks(@Param("userID") int userID){
+    public ResponseEntity<?> findStarredNotebooks(){
+        User user = userService.findUserById(StpUtil.getLoginIdAsInt());
         try {
-            User user = userService.findUserById(userID);
             List<Notebook> starredNotebooks = user.getStarNotebookList();
             return ResponseEntity.ok(NotebookInterface.fromNotebooks(starredNotebooks));
         } catch (Exception e) {
@@ -63,19 +64,9 @@ public class CenterApp {
         }
     }
 
-    @GetMapping("public-notebooks")
-    public ResponseEntity<?> findPublicNotebooks(@Param("userID") int userID){
-        try {
-            List<Notebook> notebooks = notebookService.findPublicNotebooks(userID);
-            return ResponseEntity.ok(NotebookInterface.fromNotebooks(notebooks));
-        } catch (Exception e) {
-            logger.warn(e.getMessage());
-            return ResponseEntity.badRequest().body("Notebook query failed \n" + e);
-        }
-    }
-
     @GetMapping("get-shared-notebooks")
-    public ResponseEntity<?> findSharedNotebooks(@Param("userID") int userID){
+    public ResponseEntity<?> findSharedNotebooks(){
+        int userID = StpUtil.getLoginIdAsInt();
         try {
             List<Notebook> notebooks = notebookService.findSharedNotebooks(userID);
             return ResponseEntity.ok(NotebookInterface.fromNotebooks(notebooks));

@@ -80,8 +80,10 @@ public class UserDetailApp {
     }
 
     @GetMapping("/get-info")
-    public ResponseEntity<?> getInfo(){
-        int userID = StpUtil.getLoginIdAsInt();
+    public ResponseEntity<?> getInfo(
+            @RequestParam(value = "user", required = false) Integer userID
+    ){
+        if (userID == null) userID = StpUtil.getLoginIdAsInt();
         User user = userService.findUserById(userID);
         if (user == null) {
             return ResponseEntity.badRequest().body("user not exist!");
