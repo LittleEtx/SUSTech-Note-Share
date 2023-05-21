@@ -235,6 +235,12 @@ const updateNotesInfo = async () => {
     const r = a.name.localeCompare(b.name)
     return r === 0 ? a.id.localeCompare(b.id) : r
   })
+  for (const info of infos) {
+    info.files.sort((a, b) => {
+      const r = a.name.localeCompare(b.name)
+      return r === 0 ? a.id.localeCompare(b.id) : r
+    })
+  }
   notes.value = infos
 }
 

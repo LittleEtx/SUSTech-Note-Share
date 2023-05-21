@@ -16,7 +16,7 @@
     </el-scrollbar>
     <video v-else-if="fileType === 'video'" :src="file?.url" style="width: 100%" controls></video>
     <audio v-else-if="fileType === 'audio'" :src="file?.url" style="width: 100%" controls></audio>
-    <div v-else>Unknown file type</div>
+    <div v-else>暂不支持浏览该类型文件</div>
   </div>
 </template>
 
@@ -32,7 +32,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-type FileType = 'text' | 'image' | 'video' | 'audio' | 'pdf' | 'other'
+type FileType = 'text' | 'image' | 'video' | 'audio' | 'pdf' | 'office' | 'other'
 const fileType = ref<FileType>()
 
 const initDisplay = () => {
@@ -40,6 +40,7 @@ const initDisplay = () => {
     console.log('file is null')
     return
   }
+  console.log(props.file.type)
   switch (props.file.type) {
     case 'application/pdf':
       fileType.value = 'pdf'
@@ -54,6 +55,14 @@ const initDisplay = () => {
       break
     case 'audio/mpeg':
       fileType.value = 'audio'
+      break
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    case 'application/msword':
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    case 'application/vnd.ms-excel':
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+    case 'application/vnd.ms-powerpoint':
+      fileType.value = 'office'
       break
     default:
       // use text file
