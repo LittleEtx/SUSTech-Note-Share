@@ -24,3 +24,20 @@ export async function apiGetPublicNotebooks (userID: number): Promise<NotebookIn
     return notebook
   })
 }
+
+export async function apiGetStarredNotebooks (): Promise<NotebookInfo[]> {
+  const { data } = await axios.get('/api/center/get-starred-notebooks')
+  return data.map((notebook: any) => {
+    notebook.tags = getTags(notebook.tag)
+    return notebook
+  })
+}
+
+export async function apiSharedGetNotebook (notebookID: string): Promise<NotebookInfo[]> {
+  const { data } = await axios.get('/api/center/get-shared-notebooks', { params: { notebookID } })
+  data.tags = getTags(data.tag)
+  return data.map((notebook: any) => {
+    notebook.tags = getTags(notebook.tag)
+    return notebook
+  })
+}

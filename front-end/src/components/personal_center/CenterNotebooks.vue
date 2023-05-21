@@ -2,7 +2,10 @@
 <div v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.3)">
   <div style="text-align: right">
     <el-button type="primary" @click="showCreateNotebook = true">
-      <el-icon><CirclePlus /></el-icon> 新建笔记本
+      <el-icon style="margin-right: 10px">
+        <CirclePlus/>
+      </el-icon>
+      新建笔记本
     </el-button>
     <el-dialog
       v-model="showCreateNotebook"
@@ -30,7 +33,7 @@
       <!--   左侧边栏展示所有文件夹   -->
       <el-menu
         class="el-menu-vertical-demo"
-        :default-active="notebookByDirs.keys().next().value"
+        :default-active="selectedDir"
         @open="selectedDir = $event"
         @select="selectedDir = $event"
       >
@@ -49,18 +52,47 @@
     </el-aside>
     <el-main style="text-align: left">
       <!--   右侧展示所有卡片   -->
-      <el-space :size="20" wrap style="padding-left: 20px">
+      <el-space
+        v-if="notebookByDirs.get(selectedDir)?.length > 0"
+        :size="20" wrap
+        style="padding-left: 20px"
+      >
         <div
           v-for="(notebook, index) in notebookByDirs.get(selectedDir)"
           :key="index"
           style="position: relative"
         >
-          <notebook-display :notebook="notebook"></notebook-display>
-          <el-icon type="info" class="more-icon">
-            <MoreFilled/>
-          </el-icon>
+          <notebook-card :notebook="notebook"></notebook-card>
+          <el-popover trigger="click">
+            <template #reference>
+              <el-button text :icon="MoreFilled" type="info" class="more-icon"></el-button>
+            </template>
+            <el-text size="small">
+              <el-icon>
+                <Edit/>
+              </el-icon>
+              切换分区
+            </el-text>
+            <br>
+            <el-select
+              filterable
+              allow-create
+              default-first-option
+              v-model="notebook.directory"
+              @change="changeDir(notebook)"
+              placeholder="选择分区或输入新分区"
+            >
+              <el-option
+                v-for="item in notebookByDirs.keys()"
+                :key="item"
+                :label="item"
+                :value="item"
+              ></el-option>
+            </el-select>
+          </el-popover>
         </div>
       </el-space>
+      <el-empty v-else description="没有笔记本可以展示"></el-empty>
     </el-main>
   </el-container>
 </div>
@@ -69,12 +101,15 @@
 <script setup lang="ts">
 import { NotebookInfo } from '@/scripts/interfaces'
 import { onBeforeMount, ref } from 'vue'
-import NotebookDisplay from '@/components/NotebookCard.vue'
+import NotebookCard from '@/components/NotebookCard.vue'
 import { apiGetUserNotebooks } from '@/scripts/API_Center'
-import { CirclePlus, Folder, MoreFilled } from '@element-plus/icons-vue'
+import { CirclePlus, Edit, Folder, MoreFilled } from '@element-plus/icons-vue'
 import NewNotebook from '@/components/personal_center/NewNotebook.vue'
 import { ElMessageBox } from 'element-plus'
-import { router } from '@/router'
+import { useRouter } from 'vue-router'
+import { apiUpdateBasicInfo } from '@/scripts/API_Notebook'
+
+const router = useRouter()
 
 const showCreateNotebook = ref(false)
 
@@ -82,7 +117,9 @@ const notebookByDirs = ref<Map<string, NotebookInfo[]>>(new Map())
 const selectedDir = ref<string>('')
 // loading before data is loaded
 const loading = ref<boolean>(true)
-onBeforeMount(async () => {
+
+const updateNotebook = async () => {
+  notebookByDirs.value.clear()
   const notebookInfos = await apiGetUserNotebooks()
   notebookInfos.forEach((notebookInfo) => {
     const dir = notebookInfo.directory
@@ -93,6 +130,11 @@ onBeforeMount(async () => {
     }
   })
   loading.value = false
+}
+
+onBeforeMount(async () => {
+  await updateNotebook()
+  selectedDir.value = notebookByDirs.value.keys().next().value
 })
 
 // submit create notebook
@@ -111,6 +153,15 @@ const submitCreateNotebook = async () => {
   }
 }
 
+// edit notebook
+const changeDir = async (notebook: NotebookInfo) => {
+  loading.value = true
+  await apiUpdateBasicInfo(notebook.notebookID,
+    { directory: notebook.directory })
+  await updateNotebook()
+  loading.value = false
+}
+
 </script>
 
 <style scoped>
@@ -122,7 +173,7 @@ const submitCreateNotebook = async () => {
 
 .more-icon {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: 0;
+  bottom: 0;
 }
 </style>

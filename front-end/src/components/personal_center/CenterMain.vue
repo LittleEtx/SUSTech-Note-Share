@@ -7,14 +7,14 @@
     </el-button>
   </div>
   <el-space :size="20" wrap style="margin-top: 20px">
-    <notebook-display v-for="(notebook, index) in notebooks"
-      :key="index" :notebook="notebook"
-    ></notebook-display>
+    <notebook-card v-for="(notebook, index) in notebooks"
+                   :key="index" :notebook="notebook"
+    ></notebook-card>
   </el-space>
 </div>
 </template>
 <script setup lang="ts">
-import NotebookDisplay from '@/components/NotebookCard.vue'
+import NotebookCard from '@/components/NotebookCard.vue'
 import type { NotebookInfo } from '@/scripts/interfaces'
 import { CirclePlus } from '@element-plus/icons-vue'
 

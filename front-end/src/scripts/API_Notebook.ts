@@ -51,6 +51,7 @@ interface UpdateNotebookInfo {
   tags?: string[]
   description?: string
   title?: string
+  directory?: string
 }
 
 /**
@@ -59,17 +60,19 @@ interface UpdateNotebookInfo {
  * @param tags 笔记本的标签
  * @param description 笔记本的描述
  * @param title 笔记本标题
+ * @param directory 笔记本所处文件夹
  */
 export async function apiUpdateBasicInfo (
   notebookID: string,
-  { tags, description, title }: UpdateNotebookInfo
+  { tags, description, title, directory }: UpdateNotebookInfo
 ): Promise<void> {
   const tag = tags?.join(',')
   await axios.post('/api/notebook/update_info', {
     notebookID,
     tag,
     description,
-    title
+    title,
+    directory
   })
 }
 
