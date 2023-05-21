@@ -45,12 +45,15 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(value = "select notebook_id from group_notebook where group_id = ?1", nativeQuery = true)
     List<String> findGroupNotebooksByGroupID(int groupID);
 
-    @Query(value = "select * from my_groups where group_ownerid = ?1", nativeQuery = true)
+    @Query(value = "select * from my_groups where groupid = ?1", nativeQuery = true)
     Group findGroupByGroupID(int i);
 
     @Query(value = "SELECT groupid,group_description,group_name,group_ownerid,group_owner_name,create_time " +
             "FROM (select * from user_group left join my_groups  on user_group.group_id = my_groups.groupid) as gp " +
             "WHERE (groupid LIKE ?1 OR group_name LIKE ?1) AND user_id = ?2", nativeQuery = true)
+//    select * from my_groups where groupid in
+//    (select groupid from user_group where user_id = ?1) and
+//    (groupid like ?2 or my_groups.group_name like ?2);
     Page<JSONObject> searchGroupsWithLimit(String keyword, int userID, Pageable pageable);
 
 }

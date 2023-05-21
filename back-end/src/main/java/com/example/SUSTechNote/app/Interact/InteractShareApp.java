@@ -70,14 +70,14 @@ public class InteractShareApp {
      */
     @PostMapping("/share-to-group")
     public ResponseEntity<?> shareToGroup(
-            @RequestParam("notebook") String notebookID,
-            @RequestParam("target") int groupID
+            @RequestParam("notebookID") String notebookID,
+            @RequestParam("groupID") int groupID
     ){
         try {
             String result = notebookService.shareToGroup(notebookID, groupID);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Share fail"+e.getMessage());
+            return ResponseEntity.badRequest().body("Share fail "+e.getMessage());
         }
     }
 

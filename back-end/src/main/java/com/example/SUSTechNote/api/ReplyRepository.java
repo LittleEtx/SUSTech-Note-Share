@@ -29,6 +29,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "insert into reply(replyid, to_user_name, reply_content, reply_time, comment_id, user_id, floor) values(?1, ?2, ?3, ?4, ?5, ?6, 0)", nativeQuery = true)
+    @Query(value = "insert into reply(replyid, to_user_name, reply_content, reply_time, comment_id, user_id) values(?1, ?2, ?3, ?4, ?5, ?6)", nativeQuery = true)
     void createReply(String newReplyID, String toUserName, String content, LocalDateTime replyTime, String commentID, int userID);
 }

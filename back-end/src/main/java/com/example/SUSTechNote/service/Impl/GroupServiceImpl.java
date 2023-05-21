@@ -169,6 +169,18 @@ public class GroupServiceImpl implements GroupService {
         key = "%" + key + "%";
         int userID = StpUtil.getLoginIdAsInt();
         Page<JSONObject> groups = groupRepository.searchGroupsWithLimit(key,userID,pageRequest);
-        return groups.getContent();
+        List<JSONObject> groupsContent = groups.getContent();
+        List<JSONObject> groupList = new ArrayList<>();
+        for (JSONObject group : groupsContent) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("groupID", group.get("groupid"));
+            jsonObject.put("groupName", group.get("group_name"));
+            jsonObject.put("groupDescription", group.get("group_description"));
+            jsonObject.put("createTime", group.get("create_time"));
+            jsonObject.put("groupOwnerName", group.get("group_owner_name"));
+            jsonObject.put("groupOwnerID", group.get("group_ownerid"));
+            groupList.add(jsonObject);
+        }
+        return groupList;
     }
 }
