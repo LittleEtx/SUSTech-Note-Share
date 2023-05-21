@@ -15,11 +15,10 @@
 <!--  新建笔记  -->
     <el-menu-item index="create" v-if="canModify">
       <template v-if="!showCreateNote">
-        <el-button link @click="onClickCreateNote">
-          <el-icon>
-            <Plus/>
-          </el-icon>
-          <span>新建笔记</span>
+        <el-button
+          link @click="onClickCreateNote"
+          :icon="FolderAdd"
+        >新建笔记
         </el-button>
       </template>
       <el-input
@@ -71,12 +70,46 @@
       </template>
       <!--   上传/创建文件   -->
       <el-menu-item :index="note.id + 'create'">
-        <el-button link @click="onClickCreateFile(note)">
-          <el-icon>
-            <Upload/>
-          </el-icon>
-          <span>上传/创建文件</span>
-        </el-button>
+        <el-popover trigger="click">
+          <template #reference>
+            <el-button :icon="Plus" link>添加文件</el-button>
+          </template>
+          <div style="display: grid">
+            <span>
+               <el-button
+                 link style="width: 100%"
+                 @click="onClickUploadFile(note)"
+                 :icon="Upload"
+               >上传文件</el-button>
+            </span>
+            <span style="margin-top: 10px">
+              <el-button
+                link style="width: 100%"
+                @click="onCreateNewFile(note)"
+                :icon="Plus"
+              >新建文件</el-button>
+            </span>
+          </div>
+        </el-popover>
+        <el-dialog v-model="showNewFileDialog" center>
+          <template #header>
+            <el-text size="large">新建文件至 {{ selectedNote!.name }}</el-text>
+          </template>
+          <el-form label-position="top">
+            <el-form-item label="文件名称">
+              <el-input
+                placeholder="请输入文件名称"
+                v-model="newFileName"
+                maxlength="200"
+                show-word-limit
+              ></el-input>
+            </el-form-item>
+          </el-form>
+          <template #footer>
+            <el-button @click="showNewFileDialog = false" style="width: 30%">取消</el-button>
+            <el-button type="primary" @click="onSubmitNewFile" style="width: 30%">确定</el-button>
+          </template>
+        </el-dialog>
       </el-menu-item>
       <!--   每个文件的按钮   -->
       <template v-for="file in note.files" :key="file.name">
@@ -135,8 +168,8 @@
 </template>
 
 <script setup lang="ts">
-import { apiCreateNote, apiDeleteNote, apiGetNoteInfos, apiRenameNote } from '@/scripts/API_Notebook'
-import { Delete, Download, Edit, Folder, FolderOpened, Plus, Upload } from '@element-plus/icons-vue'
+import { apiCreateNote, apiDeleteNote, apiGetNoteInfos, apiRenameNote, apiUploadFile } from '@/scripts/API_Notebook'
+import { Delete, Download, Edit, Folder, FolderAdd, FolderOpened, Plus, Upload } from '@element-plus/icons-vue'
 import { ElDialog, ElInput, ElMenu, ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onBeforeMount, ref, watch } from 'vue'
 import type { FileInfo, NoteInfo } from '@/scripts/interfaces'
@@ -246,10 +279,33 @@ const createNoteCancel = () => {
 // =============新建文件================
 const showUploadDialog = ref(false)
 const selectedNote = ref<NoteInfo>()
-const onClickCreateFile = (note: NoteInfo) => {
+const onClickUploadFile = (note: NoteInfo) => {
   showUploadDialog.value = true
   selectedNote.value = note
 }
+
+const showNewFileDialog = ref(false)
+const newFileName = ref('')
+const onCreateNewFile = (note: NoteInfo) => {
+  selectedNote.value = note
+  showNewFileDialog.value = true
+  newFileName.value = ''
+}
+
+const onSubmitNewFile = async () => {
+  if (newFileName.value === '') {
+    ElMessage.warning('文件名不能为空！')
+    return
+  }
+
+  loading.value = true
+  const file = new File([], newFileName.value)
+  await apiUploadFile(selectedNote.value!.id, file)
+  await updateNotesInfo()
+  loading.value = false
+  showNewFileDialog.value = false
+}
+
 const onFinishUpload = async () => {
   loading.value = true
   await updateNotesInfo()
@@ -338,4 +394,3 @@ const deleteNoteConfirm = async () => {
   loading.value = false
 }
 </script>
-

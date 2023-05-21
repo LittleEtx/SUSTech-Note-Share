@@ -11,6 +11,12 @@
       :can-modify="canModify"
       :file="file!"
     ></monaco-editor>
+    <el-scrollbar v-else-if="fileType === 'image'">
+      <img :src="file?.url" style="width: 100%" alt="">
+    </el-scrollbar>
+    <video v-else-if="fileType === 'video'" :src="file?.url" style="width: 100%" controls></video>
+    <audio v-else-if="fileType === 'audio'" :src="file?.url" style="width: 100%" controls></audio>
+    <div v-else>Unknown file type</div>
   </div>
 </template>
 

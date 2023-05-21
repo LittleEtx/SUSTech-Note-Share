@@ -14,15 +14,22 @@
         >
           <el-card style="height: 120px" :body-style="{ padding: '0px' }" shadow="hover">
             <div style="display: flex; align-items: center; ">
-              <el-image
-                :src="history.notebook.cover === null ? DefaultCover : history.notebook.cover"
-                style="min-width: 200px; max-width: 200px; height: 120px; cursor: pointer"
+              <div
                 @click="$router.push({ name: 'notebook', params: { notebookID: history.notebook.notebookID }})"
+                style="min-width: 200px; max-width: 200px; height: 120px; cursor: pointer"
               >
-                <template #error>
-                  <img :src="DefaultCover" class="cover" alt=""/>
-                </template>
-              </el-image>
+                <el-image
+                  style="height: 120px; width: 200px"
+                  :src="history.notebook.cover === null ? DefaultCover : history.notebook.cover"
+                >
+                  <template #error>
+                    <img
+                      style="height: 120px; width: 200px"
+                      :src="DefaultCover" class="cover" alt=""
+                    />
+                  </template>
+                </el-image>
+              </div>
               <div style="margin-left: 20px"></div>
               <div style="display: grid">
                 <el-text truncated>
@@ -34,7 +41,11 @@
                 <span class="text-truncated" style="margin-top: 3px">
                   <el-tag size="small" type="success" v-if="history.notebook.isPublic">公开</el-tag>
                   <el-tag size="small" type="info" v-else>私有</el-tag>
-                  <el-tag size="small" v-for="tag in history.notebook.tags" style="margin-left: 5px">{{ tag }}</el-tag>
+                  <el-tag
+                    size="small"
+                    v-for="tag in history.notebook.tags" style="margin-left: 5px"
+                    :key="tag"
+                  >{{ tag }}</el-tag>
                 </span>
                 <div style="display: flex; align-items: center; margin-top: 10px">
                   <user-avatar
@@ -111,18 +122,21 @@ const updateList = async (count: number) => {
     return
   }
   for (const item of newItems) {
-    const notebook = await apiGetBasicInfo(item.notebookID)
-    const authorID = notebook.authorID
-    // 更新用户信息
-    if (!user.value.has(authorID)) {
-      const author = await apiGetUserInfo(authorID)
-      user.value.set(authorID, author)
+    try {
+      const notebook = await apiGetBasicInfo(item.notebookID)
+      const authorID = notebook.authorID
+      // 更新用户信息
+      if (!user.value.has(authorID)) {
+        const author = await apiGetUserInfo(authorID)
+        user.value.set(authorID, author)
+      }
+      historyList.value.push({
+        visitTime: item.visitTime,
+        notebook,
+        author: user.value.get(authorID)!
+      })
+    } catch (e) {
     }
-    historyList.value.push({
-      visitTime: item.visitTime,
-      notebook: notebook,
-      author: user.value.get(authorID)!
-    })
   }
   updateLock.value = false
 }
@@ -144,8 +158,4 @@ const clearAll = async () => {
 defineExpose({
   clearAll
 })
-
 </script>
-<style scoped>
-
-</style>

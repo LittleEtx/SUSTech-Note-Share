@@ -47,7 +47,7 @@
             <span @click="showReplyInput(i,reply.userName,reply.id)">
               <el-icon><ChatDotSquare /></el-icon></span>
             <i class="iconfont el-icon-caret-top"></i>{{}}
-            <button class="delete-btn" @click="deleteReply(item.comment.commentID, reply.replyID)">删除</button> <!-- Delete button -->
+            <button v-if="myId == reply.userID" class="delete-btn" @click="deleteReply(item.comment.commentID, reply.replyID)">删除</button> <!-- Delete button -->
           </div>
           <div class="talk-box">
             <p>
@@ -159,6 +159,7 @@ export default {
       axios.get('/api/user/get-info').then(op => {
         this.myName = op.data.userName
         this.myHeader = op.data.avatar
+        this.myId = op.data.userID
       })
       axios.get('/api/interact/comments/get-notebook-comments', {
         params: {

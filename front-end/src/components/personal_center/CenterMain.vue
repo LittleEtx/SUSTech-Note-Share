@@ -25,9 +25,9 @@ watch(
   // set the count of recent notebooks according to the width of the screen
   () => window.screenX,
   async () => {
-    const count = window.screenX * 0.8 -
-      // TODO
-      await updateInfo()
+    // const count = window.screenX * 0.8 -
+    // TODO
+    await updateInfo()
   }
 )
 
@@ -35,8 +35,11 @@ const updateInfo = async () => {
   recentNotebooks.value = []
   const histories = await apiGetHistory(0, 10)
   for (const history of histories) {
-    const notebook = await apiGetBasicInfo(history.notebookID)
-    recentNotebooks.value.push(notebook)
+    try {
+      const notebook = await apiGetBasicInfo(history.notebookID)
+      recentNotebooks.value.push(notebook)
+    } catch (e) {
+    }
   }
 }
 

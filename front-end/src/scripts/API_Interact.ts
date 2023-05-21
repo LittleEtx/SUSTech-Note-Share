@@ -106,3 +106,53 @@ export const apiSetNotebookPrivate = async (notebookID: string): Promise<void> =
     }
   })
 }
+
+export const apiIfLikeNotebook = async (notebookID: string): Promise<boolean> => {
+  const { data } = await axios.get('/api/interact/if-like', {
+    params: {
+      notebook: notebookID
+    }
+  })
+  return data
+}
+
+export const apiLikeNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/like-notebook', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+export const apiCancelLikeNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/cancel-like-notebook', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+export const apiIfStarNotebook = async (notebookID: string): Promise<boolean> => {
+  const { data } = await axios.get('/api/interact/if-star', {
+    params: {
+      notebook: notebookID
+    }
+  })
+  return data
+}
+
+export const apiStarNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/star-notebook', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+export const apiCancelStarNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/cancel-star-notebook', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}

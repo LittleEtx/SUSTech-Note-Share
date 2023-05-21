@@ -4,6 +4,7 @@
     <main-header></main-header>
   </div>
   <el-button
+    v-show="activeSlot === 'info'"
     style="position: absolute; left: 20px; top: 80px; z-index: 100"
     @click="router.push({ name: 'user', params: { userID: userInfo.userID } })"
   >视角：我自己
