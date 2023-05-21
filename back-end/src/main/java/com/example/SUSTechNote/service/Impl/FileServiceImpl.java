@@ -33,30 +33,32 @@ public class FileServiceImpl implements FileService {
     // 需加入同步锁防止同时上传多个文件时出现文件ID重复的情况
     @Override
     public synchronized String uploadFile(String noteID, String fileName,
-                             MultipartFile file) throws IOException {
+                                          MultipartFile file) throws IOException {
         Note note = authorityService.checkNoteAuthority(noteID);
-        var notebookID = note.getNotebookID();
-        var files = fileRepository.findFilesByNotebook(notebookID);
+//        var noteID = note.getNoteID();
+        var files = fileRepository.findFilesByNotebook(noteID);
         int lastFileNum = files.stream()
-            .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
-            .max(Integer::compareTo).orElse(0);
-        // 新建文件，生成新的文件ID
-        String fileID = notebookID + "_" + (lastFileNum + 1);
+                .map(f -> Integer.parseInt(f.getFileID().substring(f.getFileID().lastIndexOf("_") + 1)))
+                .max(Integer::compareTo).orElse(0);
+        // 新建文件，生成新的文件ID, 注意实际保存到文件夹的时候应该保留文件后缀名，但是存入数据库时应该去掉
+        String fileType = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
+        String fileID = noteID + "_" + (lastFileNum + 1) + fileType;
 
         // 若笔记的文件夹不存在，则创建
         File noteFile = new File(staticPathHelper.getStaticPath(), note.getSavingPath());
         if (!noteFile.exists()) {
-            logger.warn("note file not exist, create new one: " + noteFile.getAbsolutePath());
+            logger.warn("note dir not exist, create new one: " + noteFile.getAbsolutePath());
             if (!noteFile.mkdirs()) {
                 logger.error("create note file failed: " + noteFile.getAbsolutePath());
                 throw new IOException("create note file failed");
             }
         }
-        String relativePath = note.getSavingPath()  + "/" + fileID;
+        String relativePath = note.getSavingPath() + "/" + fileID;
         File targetFile = new File(noteFile, fileID);
         file.transferTo(targetFile); // this method will automatically delete file if already exist
         String fileUrl = "/api/static" + relativePath;
 
+        fileID = fileID.substring(0, fileID.lastIndexOf(".")); // 去掉文件后缀名
         fileRepository.save(new Files(fileID, fileName, fileUrl,
                 relativePath, file.getContentType(), note));
         logger.debug("add file " + fileName + " to "
@@ -78,7 +80,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean deleteFile(String fileID){
+    public boolean deleteFile(String fileID) {
         Files file = authorityService.checkFileAuthority(fileID);
         File filePath = new File(staticPathHelper.getStaticPath(), file.getSavingPath());
         if (!filePath.exists() || !filePath.isFile()) {
@@ -97,7 +99,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void renameFile(String fileID, String newName){
+    public void renameFile(String fileID, String newName) {
         Files file = authorityService.checkFileAuthority(fileID);
         file.setFileName(newName);
         fileRepository.save(file);
@@ -106,7 +108,7 @@ public class FileServiceImpl implements FileService {
 
     // 需加入同步锁防止同时移动多个文件时出现文件ID重复的情况
     @Override
-    public synchronized boolean moveFile(String fileID, String noteID){
+    public synchronized boolean moveFile(String fileID, String noteID) {
         Files file = authorityService.checkFileAuthority(fileID);
         Note note = authorityService.checkNoteAuthority(noteID);
         if (!Objects.equals(file.getNote().getNotebookID(), note.getNotebookID())) {
@@ -122,20 +124,20 @@ public class FileServiceImpl implements FileService {
         //判断目标位置是否已存在同名文件
         File originFile = new File(staticPathHelper.getStaticPath(), file.getSavingPath());
         File destinationFile = new File(staticPathHelper.getStaticPath(), relativeSavingPath);
-        if (destinationFile.exists()){
+        if (destinationFile.exists()) {
             logger.error("file existed in target note");
             return false;
         }
         System.out.println();
         logger.debug("rename file " + originFile.getAbsolutePath() + " to " + destinationFile.getAbsolutePath());
-        if(originFile.renameTo(destinationFile)){
+        if (originFile.renameTo(destinationFile)) {
             //更新数据库
             file.setFileUrl("/api/static" + relativeSavingPath);
             file.setNote(note);
             file.setSavingPath(relativeSavingPath);
             fileRepository.save(file);
             return true;
-        }else {
+        } else {
             logger.error("file move failed");
             return false;
         }

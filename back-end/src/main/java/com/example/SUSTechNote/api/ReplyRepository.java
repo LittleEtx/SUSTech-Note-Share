@@ -15,7 +15,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "delete from reply where comment_id = ?1 and reply_content = ?2", nativeQuery = true)
+    @Query(value = "delete from reply where comment_id = ?1 and replyid = ?2", nativeQuery = true)
     void deleteReply(String commentID, String reply);
 
     @Query(value = "select user_id from reply where comment_id = ?1 and replyid = ?2", nativeQuery = true)
