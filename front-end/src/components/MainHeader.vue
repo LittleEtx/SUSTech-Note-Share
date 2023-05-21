@@ -7,7 +7,13 @@
            @click="$router.push({ name:'home' })" alt="">
     </el-col>
     <el-col :span="6">
-      <el-input placeholder="搜索笔记" class="search-input" v-show="showSearchBar">
+      <el-input
+        placeholder="搜索笔记"
+        class="search-input"
+        v-show="showSearchBar"
+        v-model="searchKey"
+        @change="searchNote"
+      >
         <template #prefix>
           <el-icon>
             <Search/>
@@ -96,6 +102,11 @@ export default {
       required: false
     }
   },
+  data () {
+    return {
+      searchKey: ''
+    }
+  },
   components: { UserAvatar, ArrowRight, Search },
   computed: {
     Clock () {
@@ -127,6 +138,10 @@ export default {
     }
   },
   methods: {
+    searchNote () {
+      if (this.searchKey === '') return
+      this.$router.push({ name: 'search', query: { q: this.searchKey } })
+    },
     async logout () {
       try {
         await apiLogout()
