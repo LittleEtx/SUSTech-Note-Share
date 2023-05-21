@@ -42,7 +42,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(value = "select user_id from user_group where group_id = ?1", nativeQuery = true)
     List<Integer> findGroupMembers(int groupID);
 
-    @Query(value = "select notebook_id from group_notebook where group_id = ?1", nativeQuery = true)
+    @Query(value = "select notebookid from notebook_share_group where groupid = ?1", nativeQuery = true)
     List<String> findGroupNotebooksByGroupID(int groupID);
 
     @Query(value = "select * from my_groups where groupid = ?1", nativeQuery = true)

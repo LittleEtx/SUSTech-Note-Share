@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 public record GroupInterface(
-    int GroupID,
+    int groupID,
     String groupName,
     String groupDescription,
     UserInterface owner,

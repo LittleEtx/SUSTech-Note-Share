@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class SearchApp {
         if (groups.size()>0){
             return ResponseEntity.ok(groups);
         } else {
-            return ResponseEntity.badRequest().body("No group found");
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 }

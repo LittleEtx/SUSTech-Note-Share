@@ -1,14 +1,18 @@
 package com.example.SUSTechNote.app.Interact;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import com.example.SUSTechNote.interfaces.GroupInterface;
 import com.example.SUSTechNote.interfaces.UserInterface;
 import com.example.SUSTechNote.service.Impl.AuthorityService;
 import com.example.SUSTechNote.service.NotebookService;
+import jdk.security.jarsigner.JarSigner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("interact/share")
@@ -32,7 +36,7 @@ public class InteractShareApp {
     public ResponseEntity<?> getShareUsers(@RequestParam("notebook") String notebookID){
         logger.info("getShareUsers: notebookID = {}", notebookID);
         Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
-        var users = UserInterface.fromUsers(notebook.getUsers());
+        List<JSONObject> users = notebookService.getShareUsers(notebookID);
         return ResponseEntity.ok().body(users);
     }
 
@@ -43,7 +47,8 @@ public class InteractShareApp {
     @GetMapping("/get-shared-groups")
     public ResponseEntity<?> getShareGroups(@RequestParam("notebook") String notebookID){
         Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
-        var groups = GroupInterface.fromGroups(notebook.getGroups());
+//        var groups = GroupInterface.fromGroups(notebook.getGroups());
+        List<JSONObject> groups = notebookService.getShareGroups(notebookID);
         return ResponseEntity.ok().body(groups);
     }
 
@@ -54,8 +59,8 @@ public class InteractShareApp {
      */
     @PostMapping("/share-to-user")
     public ResponseEntity<?> shareToUser(
-            @RequestParam("notebook") String notebookID,
-            @RequestParam("target") int userID
+            @RequestParam("notebookID") String notebookID,
+            @RequestParam("userID") int userID
     ){
         logger.info("shareToUser: notebookID = {}, userID = {}", notebookID, userID);
         if (notebookService.shareToUser(notebookID, userID)) {
@@ -74,10 +79,11 @@ public class InteractShareApp {
             @RequestParam("groupID") int groupID
     ){
         try {
+            logger.info("shareToGroup: notebookID = {}, groupID = {}", notebookID, groupID);
             String result = notebookService.shareToGroup(notebookID, groupID);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Share fail "+e.getMessage());
+            return ResponseEntity.badRequest().body("Share fail. "+e.getMessage());
         }
     }
 
@@ -86,14 +92,14 @@ public class InteractShareApp {
      */
     @PostMapping("/cancel-user-share")
     public ResponseEntity<?> cancelUserShare(
-            @RequestParam("notebook") String notebookID,
-            @RequestParam("target") int userID
+            @RequestParam("notebookID") String notebookID,
+            @RequestParam("userID") int userID
     ){
         try {
             String result = notebookService.cancelUserShare(notebookID, userID);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Cancel fail"+e.getMessage());
+            return ResponseEntity.badRequest().body("Cancel fail. "+e.getMessage());
         }
     }
 
@@ -102,14 +108,14 @@ public class InteractShareApp {
      */
     @PostMapping("/cancel-group-share")
     public ResponseEntity<?> cancelGroupShare(
-            @RequestParam("notebook") String notebookID,
-            @RequestParam("target") int groupID
+            @RequestParam("notebookID") String notebookID,
+            @RequestParam("groupID") int groupID
     ){
         try {
             String result = notebookService.cancelGroupShare(notebookID, groupID);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Cancel fail"+e.getMessage());
+            return ResponseEntity.badRequest().body("Cancel fail. "+e.getMessage());
         }
     }
 

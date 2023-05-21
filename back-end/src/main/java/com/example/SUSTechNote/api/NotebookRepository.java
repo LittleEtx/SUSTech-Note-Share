@@ -3,6 +3,7 @@ package com.example.SUSTechNote.api;
 import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
+import com.example.SUSTechNote.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
@@ -64,10 +66,10 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
             "and remove_time is null", nativeQuery = true)
     List<Notebook> findSharedNotebooksByUserID(int userID);
 
-    @Query(value = "select * from my_groups " +
+    @Query(value = "select groupid, group_name, group_description, group_ownerid, group_owner_name, create_time from my_groups " +
             "where groupid in " +
             "(select groupid from notebook_share_group where notebookid = ?1) ", nativeQuery = true)
-    List<Group> getSharedGroups(String notebookID);
+    List<Object[]> getSharedGroups(String notebookID);
 
     @Modifying
     @Transactional
@@ -156,4 +158,7 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     void cancelGroupShare(String notebookID, int groupID);
 
 
+    @Query(value = "select userid, user_name, email, avatar, description, gender, birth from users where userid in " +
+            "(select userid from notebook_share_user where notebookid = ?1)", nativeQuery = true)
+    List<Object[]> getSharedUsers(String notebookID);
 }
