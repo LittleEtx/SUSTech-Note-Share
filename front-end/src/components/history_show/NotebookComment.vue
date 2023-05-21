@@ -170,11 +170,8 @@ export default {
         this.comments = res.data
         for (let i = 0; i < res.data.length; i++) {
             this.comments[i].comment.inputShow = false
-            axios.get('/api/user/get-info', {
-              params:{
-                userID : this.comments[i].comment.userID
-              },
-            }).then(op => {
+          apiGetUserInfo(this.comments[i].comment.userID).
+          then(op => {
               this.comments[i].comment.name = op.data.userName
               this.comments[i].comment.headImg = op.data.avatar
           })
