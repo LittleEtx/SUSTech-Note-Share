@@ -45,7 +45,7 @@ public class SearchApp {
     @GetMapping("/notebook")
     public ResponseEntity<?> searchNotebook(@RequestParam("key") String key){
         //搜索公开的笔记本
-        List<Map<String,Object>> notebooks = notebookService.searchPublicNotebookWithLimit(key,10);
+        List<JSONObject> notebooks = notebookService.searchPublicNotebookWithLimit(key,10);
         if (notebooks.size()>0){
             return ResponseEntity.ok(notebooks);
         } else {
