@@ -41,7 +41,8 @@ export const router = createRouter({
       component: NotebookPage
     },
     {
-      path: '/user/:userId',
+      path: '/user/:userID',
+      name: 'user',
       component: PersonalCenterPage
     },
     {

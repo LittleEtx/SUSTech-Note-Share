@@ -29,13 +29,13 @@
                   <b> {{ history.notebook.title }} </b>
                 </el-text>
                 <span class="text-truncated" style="font-size: 10px; margin-top: 5px">
-                {{ history.notebook.description }}
-              </span>
+                  {{ history.notebook.description }}
+                </span>
                 <span class="text-truncated" style="margin-top: 3px">
-                <el-tag size="small" type="success" v-if="history.notebook.isPublic">公开</el-tag>
-                <el-tag size="small" type="info" v-else>私有</el-tag>
-                <el-tag size="small" v-for="tag in history.notebook.tags" style="margin-left: 5px">{{ tag }}</el-tag>
-              </span>
+                  <el-tag size="small" type="success" v-if="history.notebook.isPublic">公开</el-tag>
+                  <el-tag size="small" type="info" v-else>私有</el-tag>
+                  <el-tag size="small" v-for="tag in history.notebook.tags" style="margin-left: 5px">{{ tag }}</el-tag>
+                </span>
                 <div style="display: flex; align-items: center; margin-top: 10px">
                   <user-avatar
                     :avatar-url="history.author.avatar"

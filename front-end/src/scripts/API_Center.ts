@@ -18,7 +18,11 @@ export async function apiGetUserNotebooks (): Promise<NotebookInfo[]> {
  * @param userID
  */
 export async function apiGetPublicNotebooks (userID: number): Promise<NotebookInfo[]> {
-  const { data } = await axios.get('/api/center/get-public-notebooks', { params: { userID } })
+  const { data } = await axios.get('/api/center/public-notebooks', {
+    params: {
+      user: userID
+    }
+  })
   return data.map((notebook: any) => {
     notebook.tags = getTags(notebook.tag)
     return notebook
