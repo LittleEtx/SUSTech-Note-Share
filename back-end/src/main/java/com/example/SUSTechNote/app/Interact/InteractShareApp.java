@@ -33,7 +33,7 @@ public class InteractShareApp {
      * @param notebookID 笔记本ID
      */
     @GetMapping("/get-shared-users")
-    public ResponseEntity<?> getShareUsers(@RequestParam("notebook") String notebookID){
+    public ResponseEntity<?> getShareUsers(@RequestParam("notebookID") String notebookID){
         logger.info("getShareUsers: notebookID = {}", notebookID);
         Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
         List<JSONObject> users = notebookService.getShareUsers(notebookID);
@@ -45,7 +45,7 @@ public class InteractShareApp {
      * @param notebookID 笔记本ID
      */
     @GetMapping("/get-shared-groups")
-    public ResponseEntity<?> getShareGroups(@RequestParam("notebook") String notebookID){
+    public ResponseEntity<?> getShareGroups(@RequestParam("notebookID") String notebookID){
         Notebook notebook = authorityService.checkNotebookAuthority(notebookID);
 //        var groups = GroupInterface.fromGroups(notebook.getGroups());
         List<JSONObject> groups = notebookService.getShareGroups(notebookID);
