@@ -1,5 +1,6 @@
 package com.example.SUSTechNote.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Group;
 import com.example.SUSTechNote.entity.Notebook;
 import jakarta.transaction.Transactional;
@@ -10,7 +11,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 
 public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     List<Notebook> findNotebooksByNotebookID(String notebookID);
@@ -75,10 +75,30 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     void shareToUser(String notebookID, int userID);
 
     @Query(value = "SELECT notebook_name,tag,update_time,authorid,cover,description,is_public,like_num,star,directory,notebookid FROM notebooks WHERE (notebook_name LIKE ?1 OR tag LIKE ?1 or description LIKE ?1) and is_public = 1 ORDER BY notebook_name DESC", nativeQuery = true)
-    Page<Map<String,Object>> searchPublicNotebookWithLimit(String keyword, Pageable pageable);
+    Page<JSONObject> searchPublicNotebookWithLimit(String keyword, Pageable pageable);
 
     @Query(value = "select notebook_id from user_like_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
     List<String> findLikeNotebookIDByUserID(int userID, String notebookID);
+
+    @Query(value = "select count(user_id) from user_like_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
+    int findUserLikeByUserIDAndNotebookID(int userID, String notebookID);
+
+    @Query(value = "select count(user_id) from user_star_notebook where user_id = ?1 and notebook_id = ?2", nativeQuery = true)
+    int findUserStarByUserIDAndNotebookID(int userID, String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_like_notebook where user_id = ?1 and notebook_id = ?2 ", nativeQuery = true)
+    void removeOneLikeData(int userID, String notebookID);
+    @Modifying
+    @Transactional
+    @Query(value = "delete from user_star_notebook where user_id = ?1 and notebook_id = ?2 ", nativeQuery = true)
+    void removeOneStarData(int userID, String notebookID);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into user_star_notebook(notebook_id, user_id) values (?1, ?2)", nativeQuery = true)
+    void starNotebook(int userID, String notebookID);
 
     @Modifying
     @Transactional
@@ -134,4 +154,6 @@ public interface NotebookRepository extends JpaRepository<Notebook, Integer> {
     @Transactional
     @Query(value = "delete from notebook_share_group where notebookid = ?1 and groupid = ?2", nativeQuery = true)
     void cancelGroupShare(String notebookID, int groupID);
+
+
 }

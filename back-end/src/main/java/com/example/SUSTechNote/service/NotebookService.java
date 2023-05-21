@@ -1,12 +1,12 @@
 package com.example.SUSTechNote.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.Notebook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -48,5 +48,15 @@ public interface NotebookService {
     String cancelUserShare(String notebookID, int userID);
 
     String cancelGroupShare(String notebookID, int groupID);
-    List<Map<String,Object>> searchPublicNotebookWithLimit(String key, int limit);
+    List<JSONObject> searchPublicNotebookWithLimit(String key, int limit);
+
+    boolean findUserLikeExistByNotebookID(String notebookID);
+
+    boolean findUserStarExistByNotebookID(String notebookID);
+
+    void removeOneStarData(String notebookID);
+
+    void removeOneLikeData(String notebookID);
+
+    void StarNotebook(String notebookID);
 }

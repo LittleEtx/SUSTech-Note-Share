@@ -1,6 +1,7 @@
 package com.example.SUSTechNote.service.Impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.api.GroupRepository;
 import com.example.SUSTechNote.api.NotebookRepository;
 import com.example.SUSTechNote.api.UserRepository;
@@ -22,8 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -319,10 +320,75 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public  List<Map<String,Object>> searchPublicNotebookWithLimit(String key, int limit){
+    public  List<JSONObject> searchPublicNotebookWithLimit(String key, int limit){
         PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "notebook_name"));
         key = "%" + key + "%";
-        Page<Map<String,Object>> notebooks = notebookRepository.searchPublicNotebookWithLimit(key,pageRequest);
-        return notebooks.getContent();
+        Page<JSONObject> notebooks = notebookRepository.searchPublicNotebookWithLimit(key,pageRequest);
+        List<JSONObject> notebooksContent = notebooks.getContent();
+        List<JSONObject> notebookList = new ArrayList<>();
+        for (JSONObject notebook: notebooksContent
+             ) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("authorid",notebook.get("authorid"));
+            jsonObject.put("like_num",notebook.get("like_num"));
+            jsonObject.put("notebookid",notebook.get("notebookid"));
+            jsonObject.put("tag",notebook.get("tag"));
+            jsonObject.put("directory",notebook.get("directory"));
+            jsonObject.put("cover",notebook.get("cover"));
+            jsonObject.put("star",notebook.get("star"));
+            jsonObject.put("update_time",notebook.get("update_time"));
+            jsonObject.put("description",notebook.get("description"));
+            jsonObject.put("is_public",notebook.get("is_public"));
+            jsonObject.put("notebook_name",notebook.get("notebook_name"));
+            jsonObject.put("userName",userRepository.findUserByUserID((int)notebook.get("authorid")).getUserName());
+            jsonObject.put("userAvatar",userRepository.findUserByUserID((int)notebook.get("authorid")).getAvatar());
+            notebookList.add(jsonObject);
+//
+        }
+        return notebookList;
     }
+
+    @Override
+    public boolean findUserLikeExistByNotebookID(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        int count = notebookRepository.findUserLikeByUserIDAndNotebookID(loginID,notebookID);
+        if (count == 0){
+            logger.info("user has not like this notebook!");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    @Override
+    public boolean findUserStarExistByNotebookID(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        int count = notebookRepository.findUserStarByUserIDAndNotebookID(loginID,notebookID);
+        if (count == 0){
+            logger.info("user has not star this notebook!");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    @Override
+    public void removeOneLikeData(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        notebookRepository.removeOneLikeData(loginID,notebookID);
+    }
+
+    @Override
+    public void removeOneStarData(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        notebookRepository.removeOneStarData(loginID,notebookID);
+    }
+
+    @Override
+    public void StarNotebook(String notebookID){
+        int loginID = StpUtil.getLoginIdAsInt();
+        notebookRepository.starNotebook(loginID,notebookID);
+    }
+
+
 }
