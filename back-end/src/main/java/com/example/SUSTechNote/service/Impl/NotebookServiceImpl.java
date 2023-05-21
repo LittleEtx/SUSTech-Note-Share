@@ -329,17 +329,17 @@ public class NotebookServiceImpl implements NotebookService {
         for (JSONObject notebook: notebooksContent
              ) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("authorid",notebook.get("authorid"));
-            jsonObject.put("like_num",notebook.get("like_num"));
-            jsonObject.put("notebookid",notebook.get("notebookid"));
-            jsonObject.put("tag",notebook.get("tag"));
+            jsonObject.put("authorID",notebook.get("authorid"));
+            jsonObject.put("likeCount",notebook.get("like_num"));
+            jsonObject.put("notebookID",notebook.get("notebookid"));
+            jsonObject.put("tags",notebook.get("tag"));
             jsonObject.put("directory",notebook.get("directory"));
             jsonObject.put("cover",notebook.get("cover"));
-            jsonObject.put("star",notebook.get("star"));
-            jsonObject.put("update_time",notebook.get("update_time"));
+            jsonObject.put("starCount",notebook.get("star"));
+            jsonObject.put("updateTime",notebook.get("update_time"));
             jsonObject.put("description",notebook.get("description"));
-            jsonObject.put("is_public",notebook.get("is_public"));
-            jsonObject.put("notebook_name",notebook.get("notebook_name"));
+            jsonObject.put("isPublic",notebook.get("is_public"));
+            jsonObject.put("title",notebook.get("notebook_name"));
             jsonObject.put("userName",userRepository.findUserByUserID((int)notebook.get("authorid")).getUserName());
             jsonObject.put("userAvatar",userRepository.findUserByUserID((int)notebook.get("authorid")).getAvatar());
             notebookList.add(jsonObject);
@@ -376,18 +376,24 @@ public class NotebookServiceImpl implements NotebookService {
     public void removeOneLikeData(String notebookID){
         int loginID = StpUtil.getLoginIdAsInt();
         notebookRepository.removeOneLikeData(loginID,notebookID);
+        Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
+        notebook.setLikeNum(notebook.getLikeNum()-1);
     }
 
     @Override
     public void removeOneStarData(String notebookID){
         int loginID = StpUtil.getLoginIdAsInt();
         notebookRepository.removeOneStarData(loginID,notebookID);
+        Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
+        notebook.setStar(notebook.getStar()-1);
     }
 
     @Override
     public void StarNotebook(String notebookID){
         int loginID = StpUtil.getLoginIdAsInt();
         notebookRepository.starNotebook(loginID,notebookID);
+        Notebook notebook = notebookRepository.findNotebookByNotebookID(notebookID);
+        notebook.setStar(notebook.getStar()+1);
     }
 
 
