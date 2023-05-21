@@ -23,7 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class NotebookServiceImpl implements NotebookService {
@@ -318,8 +321,8 @@ public class NotebookServiceImpl implements NotebookService {
     }
 
     @Override
-    public  List<JSONObject> searchPublicNotebookWithLimit(String key, int limit){
-        PageRequest pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "notebook_name"));
+    public  List<JSONObject> searchPublicNotebookWithLimit(String key,  int pageNumber, int pageSize){
+        PageRequest pageRequest = PageRequest.of(pageNumber,pageSize, Sort.by(Sort.Direction.DESC, "notebook_name"));
         key = "%" + key + "%";
         Page<JSONObject> notebooks = notebookRepository.searchPublicNotebookWithLimit(key,pageRequest);
         List<JSONObject> notebooksContent = notebooks.getContent();
