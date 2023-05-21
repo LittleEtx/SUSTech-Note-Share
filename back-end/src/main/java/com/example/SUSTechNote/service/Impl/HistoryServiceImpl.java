@@ -35,6 +35,9 @@ public class HistoryServiceImpl implements HistoryService {
     @Override
     public List<History> getHistory(int userID, int start, int limit) {
         List<History> histories = historyRepository.getHistory(userID); // 默认按时间降序排列
+        if (start < 0 || start >= histories.size()) {
+            return List.of();
+        }
         return histories.subList(start, Math.min(start + limit, histories.size()));
     }
 

@@ -43,7 +43,7 @@ public class HistoryApp {
             @RequestParam(name = "limit", required = false, defaultValue = "10") Integer limit
     ) {
         int userID = StpUtil.getLoginIdAsInt();
-        logger.debug("User {} get history", userID);
+        logger.debug("User {} get history, start = {}, limit = {}", userID, start, limit);
         try {
             var historyList = historyService.getHistory(userID, start, limit);
             JSONArray jsonArray = new JSONArray();
