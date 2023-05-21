@@ -214,7 +214,6 @@ const rules = reactive<FormRules>({
 })
 const form = ref<InstanceType<typeof ElForm>>(null)
 const submitEditFileInfo = async () => {
-  console.log(form.value)
   try {
     await form.value!.validate()
   } catch (e) {

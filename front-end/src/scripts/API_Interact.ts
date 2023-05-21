@@ -63,8 +63,8 @@ export const apiCancelUserShare = async (notebookID: string, targetUserID: numbe
 export const apiShareNotebookToGroup = async (notebookID: string, targetGroupID: number): Promise<void> => {
   await axios.post('/api/interact/share/share-to-group', {}, {
     params: {
-      notebook: notebookID,
-      group: targetGroupID
+      notebookID: notebookID,
+      groupID: targetGroupID
     }
   })
 }
@@ -77,8 +77,8 @@ export const apiShareNotebookToGroup = async (notebookID: string, targetGroupID:
 export const apiCancelGroupShare = async (notebookID: string, targetGroupID: number): Promise<void> => {
   await axios.post('/api/interact/share/cancel-group-share', {}, {
     params: {
-      notebook: notebookID,
-      group: targetGroupID
+      notebookID: notebookID,
+      groupID: targetGroupID
     }
   })
 }
@@ -101,6 +101,56 @@ export const apiSetNotebookPublic = async (notebookID: string): Promise<void> =>
  */
 export const apiSetNotebookPrivate = async (notebookID: string): Promise<void> => {
   await axios.post('/api/interact/set-notebook-private', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+export const apiIfLikeNotebook = async (notebookID: string): Promise<boolean> => {
+  const { data } = await axios.get('/api/interact/if-like', {
+    params: {
+      notebook: notebookID
+    }
+  })
+  return data
+}
+
+export const apiLikeNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/like-notebook', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+export const apiCancelLikeNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/cancel-like-notebook', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+export const apiIfStarNotebook = async (notebookID: string): Promise<boolean> => {
+  const { data } = await axios.get('/api/interact/if-star', {
+    params: {
+      notebook: notebookID
+    }
+  })
+  return data
+}
+
+export const apiStarNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/star-notebook', {}, {
+    params: {
+      notebook: notebookID
+    }
+  })
+}
+
+export const apiCancelStarNotebook = async (notebookID: string): Promise<void> => {
+  await axios.post('/api/interact/cancel-star-notebook', {}, {
     params: {
       notebook: notebookID
     }

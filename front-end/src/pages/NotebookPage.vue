@@ -10,7 +10,7 @@
       <div style="display: flex; flex-direction: row; width: 100%">
         <img-uploader
           style="min-width: 200px"
-          :origin-url="notebookCover ? DefaultCover : notebookCover"
+          :origin-url="notebookCover"
           type="cover" :height="120" :width="200"
           :show-tip="false"
           @change="file => onUploadCover(file as File)"

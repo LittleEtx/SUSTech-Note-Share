@@ -44,7 +44,8 @@ export interface GroupInfo {
   groupName: string // 群组名字
   groupDescription: string // 群组描述
   createTime: string // 群组创建时间
-  owner: UserInfo // 群组的创建者
+  groupOwnerID: number // 群组创建者的ID
+  groupOwnerName: string // 群组创建者的名字
 }
 
 export interface HistoryInfo {

@@ -8,7 +8,7 @@ import groupShow from '@/components/group/GroupShow.vue'
 import NotebookPage from '@/pages/NotebookPage.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import HistoryPage from '@/pages/HistoryPage.vue'
-import search from "@/components/history_show/search.vue";
+import SearchPage from '@/pages/SearchPage.vue'
 
 export const router = createRouter({
   history: createWebHashHistory(), // 暂时使用Hash模式，线上部署时再改成History模式
@@ -60,8 +60,10 @@ export const router = createRouter({
       component: HistoryPage
     },
     {
-      path: '/showTest',
-      component: search
+      path: '/search',
+      name: 'search',
+      component: SearchPage,
+      props: route => ({ query: route.query.q })
     }
   ]
 })

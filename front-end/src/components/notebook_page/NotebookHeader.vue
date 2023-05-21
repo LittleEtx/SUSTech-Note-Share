@@ -30,18 +30,21 @@
         style="width: 60%"
       ></el-input>
       <div style="display: flex; flex-direction: row; min-width: 150px; margin-left: 10px">
-        <el-button type="primary" :plain="!hasLiked" style="width: 70px">
-          <el-icon>
-            <CaretTop/>
-          </el-icon>
-          <span style="margin-left: 5px">{{ notebook?.likeCount }}</span>
+        <!--    点赞与收藏    -->
+        <el-button
+          type="primary" :plain="!hasLiked"
+          style="width: 70px"
+          @click="onLike"
+          :icon="CaretTop"
+        >{{ notebook?.likeCount }}
         </el-button>
         <div style="margin-left: 10px"></div>
-        <el-button type="warning" :plain="!hasStarred" style="width: 70px">
-          <el-icon>
-            <StarFilled/>
-          </el-icon>
-          <span style="margin-left: 5px">{{ notebook?.starCount }}</span>
+        <el-button
+          type="warning" :plain="!hasStarred"
+          style="width: 70px"
+          @click="onStar"
+          :icon="StarFilled"
+        >{{ notebook?.starCount }}
         </el-button>
       </div>
     </div>
@@ -102,6 +105,14 @@ import { apiUpdateBasicInfo } from '@/scripts/API_Notebook'
 import { computed, nextTick, ref, watch } from 'vue'
 import type { NotebookInfo } from '@/scripts/interfaces'
 import { ElInput, ElMessage } from 'element-plus'
+import {
+  apiCancelLikeNotebook,
+  apiCancelStarNotebook,
+  apiIfLikeNotebook,
+  apiIfStarNotebook,
+  apiLikeNotebook,
+  apiStarNotebook
+} from '@/scripts/API_Interact'
 
 interface Props {
   notebook?: NotebookInfo
@@ -188,8 +199,41 @@ const updateDescription = async () => {
 const hasLiked = ref(false)
 const hasStarred = ref(false)
 watch(() => props.notebook, async () => {
-  // TODO: 从后端获取是否点赞/收藏
+  hasLiked.value = await apiIfLikeNotebook(props.notebook!.notebookID)
+  hasStarred.value = await apiIfStarNotebook(props.notebook!.notebookID)
 })
+
+const onLike = async () => {
+  try {
+    if (!hasLiked.value) {
+      await apiLikeNotebook(props.notebook!.notebookID)
+      ++props.notebook!.likeCount
+    } else {
+      await apiCancelLikeNotebook(props.notebook!.notebookID)
+      --props.notebook!.likeCount
+    }
+  } catch (e) {
+  }
+  hasLiked.value = await apiIfLikeNotebook(props.notebook!.notebookID)
+}
+
+const onStar = async () => {
+  try {
+    if (!hasStarred.value) {
+      await apiStarNotebook(props.notebook!.notebookID)
+      ++props.notebook!.starCount
+      console.log('star')
+    } else {
+      await apiCancelStarNotebook(props.notebook!.notebookID)
+      --props.notebook!.starCount
+      console.log('cancel star')
+    }
+  } catch (e) {
+  }
+  hasStarred.value = await apiIfStarNotebook(props.notebook!.notebookID)
+  console.log(hasStarred.value)
+}
+
 </script>
 
 <style scoped>
