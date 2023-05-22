@@ -106,7 +106,6 @@ public class UserDetailApp {
             user.setUserName(newName);
             user.setUpdateTime(now);
         }
-        user.setUpdateTime(now);
         user.setDescription(jsonObject.getString("description"));
         user.setGender(jsonObject.getInteger("gender"));
         user.setBirth(jsonObject.getSqlDate("birth"));
