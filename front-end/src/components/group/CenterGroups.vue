@@ -114,10 +114,9 @@
 </template>
 
 <script>
-import { Notebook, Plus, BellFilled  } from '@element-plus/icons-vue'
+import { BellFilled, Notebook, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
-import { store } from '@/store/store'
 
 // 打开页面时从后端读取存在的群组并做过滤，然后保存到groupList中；
 // 读取当前用户加入的群组(群组名称、描述信息、创建日期)
@@ -175,7 +174,7 @@ export default {
     BellFilled () {
       return BellFilled
     }
-    },
+  },
   methods: {
     getData () {
       axios.get('/api/group/loadJoinedGroup').then(res => {

@@ -2,7 +2,7 @@
   <el-container class="container">
     <el-aside width="300px" style="padding: 20px">
       <el-card class="group-card" shadow="hover">
-        <div slot="header">
+        <template #header>
           <h3>
             <el-button class="card-button" text @click="goBack">
               <el-icon size="25px">
@@ -12,7 +12,7 @@
             <img :src="SUSTechLogo" alt="" style="width: 70px">
             {{ group.groupName }}
           </h3>
-        </div>
+        </template>
         <div class="group-description">
           描述：{{ group.groupDescription }}
         </div>
@@ -55,15 +55,13 @@ import { getTags } from '@/scripts/interfaces'
 import NotebookCard from '@/components/NotebookCard.vue'
 import { Back } from '@element-plus/icons-vue'
 import SUSTechLogo from '@/assets/icon/icon_with_words_shadow.svg'
-import UserAvatar from '@/components/UserAvatar.vue'
 
 export default {
-  components: { NotebookCard, Back, UserAvatar },
+  components: { NotebookCard, Back },
   computed: {
     SUSTechLogo () {
       return SUSTechLogo
-    },
-
+    }
   },
   mounted () {
     const route = useRoute()
@@ -155,7 +153,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/login-page/background-img/2023.05.png");
+  background-image: url("/static/background-img/2023.05.png");
   background-size: cover;
   background-position: center;
   /*background-image: linear-gradient(45deg, #f5f5f5, #e8e8e8);*/

@@ -13,10 +13,16 @@
   :on-change="handleChange!"
   :before-upload="checkImage!"
 >
-  <el-image v-if="imageUrl" :src="imageUrl" :style="imgStyle" alt=""/>
+  <el-image v-if="imageUrl" :src="imageUrl" :style="imgStyle" alt="">
+    <template #error v-if="type === 'cover'">
+      <img :src="DefaultCover" class="cover" alt=""/>
+    </template>
+  </el-image>
   <div v-else class="avatar-waiting" :style="imgStyle">
     <slot>
-      <el-icon size="50px"><Plus /></el-icon>
+      <el-icon size="50px">
+        <Plus/>
+      </el-icon>
     </slot>
   </div>
   <template #tip v-if="showTip">
@@ -33,6 +39,7 @@ import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { ElMessage, genFileId } from 'element-plus'
 import type { File } from 'buffer'
 import { Plus } from '@element-plus/icons-vue'
+import DefaultCover from '@/assets/default-file/default-notebook-cover.png'
 
 interface Props {
   type: 'avatar' | 'cover'
@@ -117,8 +124,16 @@ defineExpose({
   justify-content: center;
   align-items: center;
 }
+
 .avatar-waiting:hover {
   border-color: var(--el-color-primary);
   color: var(--el-color-primary);
 }
+
+.cover {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
 </style>

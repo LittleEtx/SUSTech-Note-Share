@@ -63,7 +63,7 @@ export default {
       const year = date.getFullYear() //  返回的是年份
       let month = date.getMonth() + 1 //  返回的月份上个月的月份，记得+1才是当月
       if (month < 10) { month = '0' + month } // 格式化
-      return new URL('../assets/login-page/background-img/' + year + '.' + month + '.png', import.meta.url).href
+      return `/static/background-img/${ year }.${ month }.png`
     }
   },
   beforeMount () {

@@ -19,7 +19,7 @@
             v-loading="loadingCover"
             element-loading-background="rgba(255, 255, 255, 0.3)"
           ></img-uploader>
-          <el-image v-else style="height: 120px; width: 200px" :src="notebookCover" alt=""/>
+          <el-image v-else style="height: 120px; width: 200px; border-radius: 10%" :src="notebookCover" alt=""/>
         </div>
         <div style="margin-left: 20px"></div>
         <div style="display: flex; flex-direction: column; width: 100%">

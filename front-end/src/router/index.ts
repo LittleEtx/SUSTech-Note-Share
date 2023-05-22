@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '@/pages/LoginPage.vue'
 import ResetPasswordPage from '@/pages/ResetPasswordPage.vue'
 import HomePage from '@/pages/HomePage.vue'
@@ -11,7 +11,7 @@ import HistoryPage from '@/pages/HistoryPage.vue'
 import SearchPage from '@/pages/SearchPage.vue'
 
 export const router = createRouter({
-  history: createWebHashHistory(), // 暂时使用Hash模式，线上部署时再改成History模式
+  history: createWebHistory(), // 暂时使用Hash模式，线上部署时再改成History模式
   routes: [
     {
       path: '/:pathMatch(.*)',

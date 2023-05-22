@@ -2,7 +2,7 @@
   <div style="width: 100%; height: 100%">
     <iframe
       v-if="fileType === 'pdf'"
-      :src="'static/pdf/web/viewer.html?file=' + file.url"
+      :src="'/static/pdf/web/viewer.html?file=' + file.url"
       style="width: 100%; height: 100%"
     ></iframe>
     <monaco-editor
