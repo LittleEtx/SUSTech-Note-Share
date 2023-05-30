@@ -1,0 +1,40 @@
+html,body,div{
+  padding: 0;
+  margin: 0;
+}
+html,body{
+  height: 100%;
+}
+
+/* 头部导航栏的默认样式 */
+.header {
+  top: 0;
+  width: 100%;
+  height: 60px;
+  background-color: white;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+/* 主色 */
+.main-blue-color {
+  color: #0babeab8;
+}
+
+/* 步骤样式 */
+.el-steps {
+  background-color: #fff;
+}
+
+/* 使icon总是垂直居中 */
+.el-icon {
+  vertical-align: middle;
+}
+
+/* 文字超出显示省略号 */
+.text-truncated {
+  display: inline-block;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

@@ -1,29 +1,49 @@
 package com.example.SUSTechNote.service;
 
-import com.example.SUSTechNote.config.SaTokenConfigure;
+import com.alibaba.fastjson.JSONObject;
 import com.example.SUSTechNote.entity.User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
 @Service
 public interface UserService {
-    public int login(Integer userID, String password);
-    public int register(Integer userID, String password, String email, String userName);
+    boolean login(String email, String password, boolean rememberMe);
+    void login(String email, boolean rememberMe);
 
-    public int updateUser(User user);
+    void register(String email, String userName, String password);
 
-    public int checkUser(Integer userID);
+    List<JSONObject> searchUsersWithLimit(String key, int pageSize);
+    /**
+     * Auto register will default username and password
+     * @param email email to be register
+     */
+    void register(String email);
 
-    public int deleteUser(Integer userID);
+    void updateUser(User user);
 
-    public List<User> findAllUser();
+    boolean deleteUser(Integer userID);
 
-    public int logout();
+    List<User> findAllUser();
 
-    public int resetPassword();
-    public User findUserById(int userID);
+    void logout();
 
-    public User findUserByEmail(String email);
+    int resetPassword();
+
+    boolean hasUser(Integer userID);
+
+    boolean hasUser(String email);
+    User findUserById(int userID);
+
+    User findUserByEmail(String email);
+
+    /**
+     * 处理头像上传的相关逻辑
+     * @param avatar 头像文件
+     * @return 头像文件的url
+     */
+    String updateAvatar(int userID, MultipartFile avatar) throws IOException;
 }

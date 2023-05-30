@@ -52,6 +52,14 @@ public class User {
 
     @ManyToMany
     @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groupList;
+
+    @ManyToMany
+    @JoinTable(
             name = "user_course",    // 自动生成的第三方表名，可省略
             joinColumns = @JoinColumn(name = "user_id"),       // 将本表id，存储到第三方表，列名为per_id
             inverseJoinColumns = @JoinColumn(name = "course_id")       // 将对方表id，存储到第三方表，列名为dept_id
@@ -113,7 +121,7 @@ public class User {
 
     public void setPermission(String permission) {
         this.permission = permission;
-    };
+    }
 
     public LocalDateTime getUpdateTime() {
         return updateTime;
@@ -144,5 +152,37 @@ public class User {
 
     public void setBirth(Date birth) {
         this.birth = birth;
+    }
+
+    public List<Notebook> getLikeNotebookList() {
+        return likeNotebookList;
+    }
+
+    public void setLikeNotebookList(List<Notebook> likeNotebookList) {
+        this.likeNotebookList = likeNotebookList;
+    }
+
+    public List<Notebook> getStarNotebookList() {
+        return starNotebookList;
+    }
+
+    public void setStarNotebookList(List<Notebook> starNotebookList) {
+        this.starNotebookList = starNotebookList;
+    }
+
+    public List<Group> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<Group> groupList) {
+        this.groupList = groupList;
+    }
+
+    public List<Course> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(List<Course> courseList) {
+        this.courseList = courseList;
     }
 }
