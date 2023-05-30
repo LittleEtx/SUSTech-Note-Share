@@ -18,7 +18,7 @@ See [UserReference.pdf](UserReference.pdf)
 See [README.md](README.md)
 
 ## 3. Tests
-See [Tests.md](Testing.md)
+See [Testing.md](Testing.md)
 
 ## 4. Build
 #### Backend (SpringBoot)

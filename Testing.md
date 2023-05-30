@@ -1,4 +1,4 @@
-## **test part**
+## test part
 The testing method for this software engineering project 
 is manual testing. The reason for not using automated testing 
 is that manual testing has been adopted from the beginning of 
@@ -12,7 +12,7 @@ After weighing the pros and cons, our team still chose to use
 manual testing for the project.
 
 
-## **software and process for test**
+## software and process for test
 In this project, our team uses a testing software called eolink. 
 This software not only provides API development documentation 
 but also offers us interface testing capabilities. 
@@ -29,7 +29,7 @@ in the diagram.
 ![图片2](markdown-resources/testing/图片1.png)
 
 ## **example for test**
-*   Here is an example of how our team uses eolink for testing.*
+*   Here is an example of how our team uses eolink for testing.
 
 *   We start with a login operation. 
     ![图片2](markdown-resources/testing/图片2.png)
