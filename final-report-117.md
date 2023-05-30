@@ -18,7 +18,7 @@ See [UserReference.pdf](UserReference.pdf)
 See [README.md](README.md)
 
 ## 3. Tests
-
+See [Tests.md](Testing.md)
 
 ## 4. Build
 #### Backend (SpringBoot)
@@ -33,7 +33,7 @@ By running `npm run build`, the project will be built and the static files will 
 
 ## 5. Deployment
 For both backend and frontend, we use `docker` to deploy the project.
-The service can be reached at http://120.24.234.8:8080.
+The final deployed service can be reached at http://120.24.234.8:8080.
 (Note: Since the server is deployed on a low-performance and low-bandwidth VM brought from AliCloud, it may take a while to load the page.)
 ### 5.1 Backend
 ![img.png](markdown-resources/milestone3/backend_docker.png)
