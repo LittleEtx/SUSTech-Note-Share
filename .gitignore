@@ -1,4 +1,4 @@
-.idea
-!.idea/modules.xml
+/.idea
+!/.idea/modules.xml
 *.log
-static
+/static
