@@ -9,14 +9,15 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>SUSTechNote</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>SUSTechNote</name>
+	<artifactId>sustech-note</artifactId>
+	<version>0.0.1</version>
+	<name>sustech-note</name>
 	<description>project for CS304 Software engineering</description>
 	<packaging>jar</packaging>
 	<properties>
 		<java.version>17</java.version>
 		<redis.version>5.0.14</redis.version>
+	  <skipTests>true</skipTests>
 	</properties>
 	<dependencies>
 		<dependency>
