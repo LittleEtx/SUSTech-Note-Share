@@ -1,21 +1,26 @@
 package com.example.SUSTechNote.service;
 
+import com.example.SUSTechNote.entity.Files;
 import com.example.SUSTechNote.entity.Note;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface NoteService {
+    Map<Note, List<Files>> findNotesUnderNotebook(String notebookID);
 
-    public int addNote(String noteID,Integer isPublic );
+    void addNote(String noteID, int userID, String noteBookID, String realPath, String title, int isPublic);
 
-    public int updateNote(Note note);
+    boolean deleteNote(String noteID, String target);
 
-    public int checkNote(String noteID);
+    List<Note> findAllNote();
 
-    public int deleteNote(String noteID);
+    int findNotesCountByNotebookID(String notebookID);
 
-    public List<Note> findAllNote();
+    void renameNote(String noteID, String name);
+
+    List<String> findNoteIDsByNotebookID(String noteBookID);
 }

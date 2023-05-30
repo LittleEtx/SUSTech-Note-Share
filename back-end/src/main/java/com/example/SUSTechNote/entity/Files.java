@@ -6,13 +6,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "files")
-public class File {
+public class Files {
     @Id
     private String fileID;
     private String fileName;
     private String fileUrl;
+    private String savingPath;
     private Integer status;
     private LocalDateTime removeTime;
+    private String contentType;
 
     /**
      * 多对一关系，由多方维系关系
@@ -21,6 +23,19 @@ public class File {
     @ManyToOne
     @JoinColumn(name = "note_id")
     private Note note;
+
+    public Files(String fileID, String fileName, String fileUrl,
+                 String savingPath, String contentType, Note note) {
+        this.fileID = fileID;
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
+        this.savingPath = savingPath;
+        this.contentType = contentType;
+        this.note = note;
+    }
+
+    public Files() {
+    }
 
     public String getFileID() {
         return fileID;
@@ -68,5 +83,20 @@ public class File {
 
     public void setNote(Note note) {
         this.note = note;
+    }
+
+    public String getSavingPath() {
+        return savingPath;
+    }
+    public void setSavingPath(String savingPath) {
+        this.savingPath = savingPath;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

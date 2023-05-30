@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,13 +17,30 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
         #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
         debug: true
+  mvc:
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      max-file-size: 10MB  # 上传文件大小为 10MB 10*1024*1024
+      max-request-size: 15MB
+
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          no-store: on # 不缓存静态文件，使得前端总是能拉取到最新的静态文件
+
+
+server:
+  servlet:
+    context-path: /api
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:
   # token名称 (同时也是cookie名称)
   token-name: satoken
-  # token有效期，单位s 默认30天, -1代表永不过期
-  timeout: 3600
+  # token有效期，单位s 设置为7天
+  timeout: 604800
   # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
   activity-timeout: -1
   # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
