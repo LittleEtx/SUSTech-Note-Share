@@ -41,10 +41,10 @@ For the backend deployment, we first transmit the packaged jar file
 to the server and build the docker image on fly. The `Dockerfile`
 is demonstrated in the figure above. A simple openjdk java image is used.
 ### 5.2 Frontend
-For the frontend deployment, we first build the docker container on local machine
+For the frontend deployment, we first build the docker image on local machine
 to test the usability. Here is the [Dockerfile](front-end/Dockerfile).
-The service is deployed on the nginx. Its configuration file is [nginx.conf](front-end/default.conf).
+The service is deployed on the nginx. Its configuration file is [default.conf](front-end/default.conf).
 
 ![img.png](markdown-resources/milestone3/docker_deployment.png)
 After the checking the usability, we transmit the docker image to the server
-via IDEA docker tool. Then we run both the frontend and backend container on the server.
+via IDEA docker tool. Then we run both the frontend and backend images on the server.
