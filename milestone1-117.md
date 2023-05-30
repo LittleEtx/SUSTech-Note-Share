@@ -1,4 +1,4 @@
-# [CS307] Milestone 1 Report
+# [CS304] Milestone 1 Report
 
 Project Team ID: 117
 
